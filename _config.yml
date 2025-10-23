@@ -2,7 +2,6 @@ theme: jekyll-theme-minimal
 title: samco
 description: Personal homepage for swcollard's blog and projects
 github_username: swcollard
-
-# Build settings
+paginate: 5
 markdown: kramdown
 permalink: /:year/:title:output_ext
