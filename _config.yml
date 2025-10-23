@@ -5,3 +5,8 @@ github_username: swcollard
 paginate: 5
 markdown: kramdown
 permalink: /:year/:title:output_ext
+
+plugins:
+  - jekyll-paginate
+  - jekyll-sitemap
+  - jekyll-seo-tag
