@@ -424,6 +424,57 @@ select.filter-select:hover, select.filter-select:focus {
   margin-top: 2px;
 }
 
+.card-safety {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.safety-stars {
+  display: flex;
+  gap: 3px;
+}
+
+.safety-star {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+}
+
+.safety-star.filled { background: var(--amber); }
+.safety-star.empty { background: var(--bg-deep); border: 1px solid var(--border); }
+
+.iihs-badge {
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.iihs-tspplus {
+  background: rgba(93, 232, 138, 0.12);
+  color: var(--green);
+  border: 1px solid rgba(93, 232, 138, 0.25);
+}
+
+.iihs-tsp {
+  background: rgba(232, 168, 56, 0.12);
+  color: var(--amber);
+  border: 1px solid rgba(232, 168, 56, 0.25);
+}
+
+.safety-label {
+  font-size: 10px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .card-footer {
   display: flex;
   justify-content: space-between;
@@ -988,6 +1039,8 @@ footer p {
             <div class="h2h-spec"><span class="h2h-spec-val">2,500 lb</span><span class="h2h-spec-key">Towing</span></div>
             <div class="h2h-spec"><span class="h2h-spec-val">37.5 ft&sup3;</span><span class="h2h-spec-key">Cargo</span></div>
             <div class="h2h-spec"><span class="h2h-spec-val">10yr/150K</span><span class="h2h-spec-key">Battery Wrty</span></div>
+            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; NHTSA</span><span class="h2h-spec-key">Safety</span></div>
+            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">IIHS TSP+</span><span class="h2h-spec-key">Award</span></div>
           </div>
         </div>
         <div class="h2h-model">
@@ -1000,6 +1053,8 @@ footer p {
             <div class="h2h-spec"><span class="h2h-spec-val">5.7s</span><span class="h2h-spec-key">0-60</span></div>
             <div class="h2h-spec"><span class="h2h-spec-val">33.1 ft&sup3;</span><span class="h2h-spec-key">Cargo</span></div>
             <div class="h2h-spec"><span class="h2h-spec-val">No</span><span class="h2h-spec-key">Tax Credit</span></div>
+            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; NHTSA</span><span class="h2h-spec-key">Safety</span></div>
+            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">IIHS TSP+</span><span class="h2h-spec-key">Award</span></div>
           </div>
         </div>
         <div class="h2h-model">
@@ -1010,6 +1065,8 @@ footer p {
             <div class="h2h-spec"><span class="h2h-spec-val">46 MPG</span><span class="h2h-spec-key">Combined</span></div>
             <div class="h2h-spec"><span class="h2h-spec-val">194 hp</span><span class="h2h-spec-key">Power</span></div>
             <div class="h2h-spec"><span class="h2h-spec-val">2,000 lb</span><span class="h2h-spec-key">Towing</span></div>
+            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; NHTSA</span><span class="h2h-spec-key">Safety</span></div>
+            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">IIHS TSP+</span><span class="h2h-spec-key">Award</span></div>
           </div>
         </div>
         <div class="h2h-model">
@@ -1020,6 +1077,8 @@ footer p {
             <div class="h2h-spec"><span class="h2h-spec-val">34 MPG</span><span class="h2h-spec-key">Combined</span></div>
             <div class="h2h-spec"><span class="h2h-spec-val">243 hp</span><span class="h2h-spec-key">Power</span></div>
             <div class="h2h-spec"><span class="h2h-spec-val">3,500 lb</span><span class="h2h-spec-key">Towing</span></div>
+            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; NHTSA</span><span class="h2h-spec-key">Safety</span></div>
+            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">IIHS TSP+</span><span class="h2h-spec-key">Award</span></div>
           </div>
         </div>
         <div class="h2h-model">
@@ -1032,12 +1091,14 @@ footer p {
             <div class="h2h-spec"><span class="h2h-spec-val">3,500 lb</span><span class="h2h-spec-key">Towing</span></div>
             <div class="h2h-spec"><span class="h2h-spec-val">97.5 ft&sup3;</span><span class="h2h-spec-key">Max Cargo</span></div>
             <div class="h2h-spec"><span class="h2h-spec-val">7-8</span><span class="h2h-spec-key">Seats</span></div>
+            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; NHTSA</span><span class="h2h-spec-key">Safety</span></div>
+            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">IIHS TSP+</span><span class="h2h-spec-key">Award</span></div>
           </div>
         </div>
       </div>
       <div class="h2h-verdict">
         <div class="h2h-verdict-title">Brand Verdict</div>
-        <div class="h2h-verdict-text">The widest hybrid lineup from subcompact to 3-row. Industry-best reliability and resale value. The 10yr/150K hybrid battery warranty is a standout. Downside: interiors can feel plain on lower trims and no tax credit on the PHEV.</div>
+        <div class="h2h-verdict-text">The widest hybrid lineup from subcompact to 3-row. Industry-best reliability and resale value. The 10yr/150K hybrid battery warranty is a standout. Every model earns 5&#9733; NHTSA and IIHS TSP+ &mdash; perfect safety across the board. Downside: interiors can feel plain on lower trims and no tax credit on the PHEV.</div>
       </div>
     </div>
 
@@ -1058,6 +1119,8 @@ footer p {
             <div class="h2h-spec"><span class="h2h-spec-val">1,000 lb</span><span class="h2h-spec-key">Towing</span></div>
             <div class="h2h-spec"><span class="h2h-spec-val">76.5 ft&sup3;</span><span class="h2h-spec-key">Max Cargo</span></div>
             <div class="h2h-spec"><span class="h2h-spec-val">5yr/60K*</span><span class="h2h-spec-key">Battery Wrty</span></div>
+            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; NHTSA</span><span class="h2h-spec-key">Safety</span></div>
+            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">IIHS TSP+</span><span class="h2h-spec-key">Award</span></div>
           </div>
         </div>
         <div class="h2h-model">
@@ -1070,12 +1133,14 @@ footer p {
             <div class="h2h-spec"><span class="h2h-spec-val">47 mi</span><span class="h2h-spec-key">EV Range</span></div>
             <div class="h2h-spec"><span class="h2h-spec-val">~34 ft&sup3;</span><span class="h2h-spec-key">Cargo</span></div>
             <div class="h2h-spec"><span class="h2h-spec-val">Likely</span><span class="h2h-spec-key">Tax Credit</span></div>
+            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; NHTSA</span><span class="h2h-spec-key">Safety</span></div>
+            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">IIHS TSP+</span><span class="h2h-spec-key">Award</span></div>
           </div>
         </div>
       </div>
       <div class="h2h-verdict">
         <div class="h2h-verdict-title">Brand Verdict</div>
-        <div class="h2h-verdict-text">Only two models, but both are top-tier. The CR-V Hybrid has class-leading max cargo (76.5 ft&sup3;) and the PHEV has the best EV range (47mi) plus likely tax credit eligibility. Big weakness: only 1,000 lb towing on both, and the shorter battery warranty (5yr vs Toyota's 10yr) unless you're in a CARB state.</div>
+        <div class="h2h-verdict-text">Only two models, but both are top-tier. The CR-V Hybrid has class-leading max cargo (76.5 ft&sup3;) and the PHEV has the best EV range (47mi) plus likely tax credit eligibility. Both earn 5&#9733; NHTSA and IIHS TSP+ &mdash; the CR-V is an IIHS Top Safety Pick+ with Honda Sensing standard on all trims. Big weakness: only 1,000 lb towing on both, and the shorter battery warranty (5yr vs Toyota's 10yr) unless you're in a CARB state.</div>
       </div>
     </div>
 
@@ -1096,6 +1161,8 @@ footer p {
             <div class="h2h-spec"><span class="h2h-spec-val">2,000 lb</span><span class="h2h-spec-key">Towing</span></div>
             <div class="h2h-spec"><span class="h2h-spec-val">~22 ft&sup3;</span><span class="h2h-spec-key">Cargo</span></div>
             <div class="h2h-spec"><span class="h2h-spec-val">8.7 in</span><span class="h2h-spec-key">Clearance</span></div>
+            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; NHTSA</span><span class="h2h-spec-key">Safety</span></div>
+            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">IIHS TSP+</span><span class="h2h-spec-key">Award</span></div>
           </div>
         </div>
         <div class="h2h-model">
@@ -1108,12 +1175,14 @@ footer p {
             <div class="h2h-spec"><span class="h2h-spec-val">~1,500 lb</span><span class="h2h-spec-key">Towing</span></div>
             <div class="h2h-spec"><span class="h2h-spec-val">~29 ft&sup3;</span><span class="h2h-spec-key">Cargo</span></div>
             <div class="h2h-spec"><span class="h2h-spec-val">8.7 in</span><span class="h2h-spec-key">Clearance</span></div>
+            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; NHTSA</span><span class="h2h-spec-key">Safety</span></div>
+            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">IIHS TSP+</span><span class="h2h-spec-key">Award</span></div>
           </div>
         </div>
       </div>
       <div class="h2h-verdict">
         <div class="h2h-verdict-title">Brand Verdict</div>
-        <div class="h2h-verdict-text">Subaru's "hybrids" are mild systems that barely improve fuel economy over conventional models. At 29-33 MPG vs Toyota's 40+ and Honda's 40, they're significantly behind. The real Subaru advantage is symmetrical AWD and 8.7" ground clearance for off-road capability. If fuel economy matters (the whole point of a hybrid), Toyota and Honda are far better choices.</div>
+        <div class="h2h-verdict-text">Subaru's "hybrids" are mild systems that barely improve fuel economy over conventional models. At 29-33 MPG vs Toyota's 40+ and Honda's 40, they're significantly behind. The real Subaru advantages are symmetrical AWD, 8.7" ground clearance, and excellent safety &mdash; both earn 5&#9733; NHTSA and IIHS TSP+ with EyeSight standard on all trims. If fuel economy matters (the whole point of a hybrid), Toyota and Honda are far better choices. But if safety + AWD + off-road is your priority, Subaru competes well.</div>
       </div>
     </div>
   </div>
@@ -1236,6 +1305,27 @@ footer p {
         <div class="compare-label">Forester</div>
         <div class="compare-bar-track"><div class="compare-bar-fill bar-subaru" data-width="75">$36,000</div></div>
       </div>
+    </div>
+
+    <div class="compare-category">
+      <div class="compare-cat-title">Safety Ratings</div>
+      <div class="compare-row">
+        <div class="compare-label">RAV4 Hybrid</div>
+        <div class="compare-bar-track"><div class="compare-bar-fill bar-toyota" data-width="100">5&#9733; NHTSA &bull; IIHS TSP+</div></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-label">CR-V Hybrid</div>
+        <div class="compare-bar-track"><div class="compare-bar-fill bar-honda" data-width="100">5&#9733; NHTSA &bull; IIHS TSP+</div></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-label">Forester</div>
+        <div class="compare-bar-track"><div class="compare-bar-fill bar-subaru" data-width="100">5&#9733; NHTSA &bull; IIHS TSP+</div></div>
+      </div>
+    </div>
+
+    <div style="margin-top: 24px; padding: 20px; background: var(--bg-card); border-radius: var(--radius-sm); border-left: 3px solid var(--green);">
+      <div style="font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Safety Verdict</div>
+      <div style="font-size: 14px; color: var(--text-secondary); line-height: 1.6;">All three brands earn top marks: <strong style="color: var(--text-primary);">5-star NHTSA and IIHS Top Safety Pick+</strong> across the board. This is a tie &mdash; Toyota, Honda, and Subaru are all excellent choices for safety. Notably, <strong style="color: var(--red);">Ford and Mitsubishi</strong> are the brands in this comparison with weaker safety results (Explorer: 4&#9733; NHTSA; Outlander PHEV: 4&#9733; NHTSA; both only TSP, not TSP+).</div>
     </div>
   </div>
 </section>
@@ -1414,6 +1504,7 @@ const vehicles = [
   {
     brand: "Kia", name: "Niro Hybrid", size: "subcompact", type: "hybrid",
     hp: 139, mpg: 49, cargo: 22.8, cargoMax: 63.7, tow: 0, msrp: 29590, drivetrain: "FWD",
+    nhtsa: 5, iihs: "TSP+",
     rating: 8.0, ratingSource: "C&D 8/10",
     trims: "LX $29,590 | EX $33,390 | EX Touring $35,590 | SX Touring $37,190",
     pros: ["Best fuel economy in any SUV (49 MPG)", "Lowest starting price", "10yr/100K powertrain warranty", "Dual 10.25\" screens"],
@@ -1423,6 +1514,7 @@ const vehicles = [
   {
     brand: "Toyota", name: "Corolla Cross Hybrid", size: "subcompact", type: "hybrid",
     hp: 194, mpg: 46, cargo: 26, cargoMax: 63, tow: 2000, msrp: 30500, drivetrain: "FWD/AWD",
+    nhtsa: 5, iihs: "TSP+",
     rating: 8.4, ratingSource: "US News 8.4",
     trims: "S $30,500 | SE $33,300 | XSE $35,300",
     pros: ["Excellent fuel economy (46 MPG)", "Toyota reliability", "Available AWD", "10yr/150K hybrid battery warranty"],
@@ -1432,6 +1524,7 @@ const vehicles = [
   {
     brand: "Hyundai", name: "Kona Hybrid", size: "subcompact", type: "hybrid",
     hp: 190, mpg: 45, cargo: 27, cargoMax: 63, tow: 0, msrp: 31500, drivetrain: "FWD/AWD",
+    nhtsa: 5, iihs: "TSP+",
     rating: 8.0, ratingSource: "US News 8.0",
     trims: "SEL $31,500 | Limited $35,500",
     pros: ["Good fuel economy", "City-friendly size", "Modern redesigned interior", "Hyundai warranty"],
@@ -1441,6 +1534,7 @@ const vehicles = [
   {
     brand: "Toyota", name: "RAV4 Hybrid", size: "compact", type: "hybrid",
     hp: 219, mpg: 40, cargo: 37.5, cargoMax: 69.8, tow: 2500, msrp: 32350, drivetrain: "AWD std",
+    nhtsa: 5, iihs: "TSP+",
     rating: 8.5, ratingSource: "US News 8.5 | CR Top Pick",
     trims: "LE $32,350 | XLE $34,400 | XLE Prem $37,000 | SE $36,500 | XSE $38,000 | Limited $40,300",
     pros: ["#1 rated hybrid SUV across all publications", "Best-in-class reliability and resale", "AWD standard all trims", "10yr/150K hybrid battery warranty", "2,500 lb towing"],
@@ -1450,6 +1544,7 @@ const vehicles = [
   {
     brand: "Honda", name: "CR-V Hybrid", size: "compact", type: "hybrid",
     hp: 204, mpg: 40, cargo: 36.3, cargoMax: 76.5, tow: 1000, msrp: 33150, drivetrain: "AWD std",
+    nhtsa: 5, iihs: "TSP+",
     rating: 8.5, ratingSource: "C&D 8.5 | CR Top Pick",
     trims: "Sport $33,150 | Sport-L $36,700 | Sport Touring $39,845",
     pros: ["Class-leading max cargo (76.5 cu ft)", "Refined, comfortable ride", "IIHS Top Safety Pick+", "Intuitive interior layout"],
@@ -1459,6 +1554,7 @@ const vehicles = [
   {
     brand: "Kia", name: "Sportage Hybrid", size: "compact", type: "hybrid",
     hp: 227, mpg: 40, cargo: 39.6, cargoMax: 74.1, tow: 2000, msrp: 33290, drivetrain: "FWD/AWD",
+    nhtsa: 5, iihs: "TSP+",
     rating: 8.0, ratingSource: "C&D 8/10",
     trims: "LX FWD $33,290 | LX AWD $35,090 | EX AWD $38,090 | SX-Prestige AWD $41,290",
     pros: ["Most cargo behind 2nd row (39.6 cu ft)", "Gorgeous curved dual 12.3\" screens", "Best features-per-dollar", "10yr/100K powertrain warranty"],
@@ -1468,6 +1564,7 @@ const vehicles = [
   {
     brand: "Ford", name: "Escape Hybrid", size: "compact", type: "hybrid",
     hp: 210, mpg: 41, cargo: 37.5, cargoMax: 65.4, tow: 1500, msrp: 33500, drivetrain: "FWD/AWD",
+    nhtsa: 5, iihs: "TSP", safetyNote: "Headlight variability by trim prevents TSP+",
     rating: 7.5, ratingSource: "Edmunds 7.5",
     trims: "Base $33,500 | ST-Line $36,600 | Platinum $40,500",
     pros: ["Good fuel economy (41 MPG)", "Large 13.2\" SYNC 4 screen", "Competitive pricing"],
@@ -1477,6 +1574,7 @@ const vehicles = [
   {
     brand: "Mazda", name: "CX-50 Hybrid", size: "compact", type: "hybrid",
     hp: 219, mpg: 36, cargo: 31.4, cargoMax: 56.3, tow: 2500, msrp: 33500, drivetrain: "AWD std",
+    nhtsa: 5, iihs: "TSP+",
     rating: 7.8, ratingSource: "Favorable early reviews",
     trims: "S Preferred $33,500 | S Premium $36,350 | S Premium Plus $40,050",
     pros: ["Best driving dynamics in class", "Premium interior feel for the price", "Rugged outdoor styling", "2,500 lb towing (tied for best)", "Toyota hybrid tech underneath"],
@@ -1486,6 +1584,7 @@ const vehicles = [
   {
     brand: "Hyundai", name: "Tucson Hybrid", size: "compact", type: "hybrid",
     hp: 231, mpg: 38, cargo: 38.7, cargoMax: 74.8, tow: 2000, msrp: 34500, drivetrain: "FWD/AWD",
+    nhtsa: 5, iihs: "TSP+",
     rating: 8.2, ratingSource: "C&D Editors' Choice",
     trims: "Blue FWD $34,500 | SEL AWD $37,200 | SEL Conv AWD $39,400 | Limited AWD $41,500",
     pros: ["Best warranty in class (5yr/60K + 10yr/100K)", "12.3\" dual screens on all trims (2025)", "231 hp turbo hybrid — strong power", "Sharp 2025 refresh styling"],
@@ -1495,6 +1594,7 @@ const vehicles = [
   {
     brand: "Subaru", name: "Crosstrek", size: "subcompact", type: "mild",
     hp: 182, mpg: 30, cargo: 22, cargoMax: 55, tow: 2000, msrp: 30000, drivetrain: "AWD std",
+    nhtsa: 5, iihs: "TSP+",
     rating: 8.0, ratingSource: "US News 8.0",
     trims: "Base $30,000 | Premium $32,000 | Sport $33,500 | Limited $35,500",
     pros: ["Standard symmetrical AWD", "8.7\" ground clearance (best in class)", "Excellent off-road capability for size", "Good visibility"],
@@ -1505,6 +1605,7 @@ const vehicles = [
     brand: "Kia", name: "Niro PHEV", size: "subcompact", type: "phev",
     hp: 180, mpg: 46, cargo: 19.4, cargoMax: 59.7, tow: 0, msrp: 33740, drivetrain: "FWD",
     evRange: 33, mpge: 108,
+    nhtsa: 5, iihs: "TSP+",
     rating: 7.8, ratingSource: "Strong efficiency",
     trims: "LX $33,740 | EX $37,740 | EX Touring $39,740 | SX Touring $41,590",
     pros: ["108 MPGe — most efficient PHEV", "33 miles EV range", "Kia warranty"],
@@ -1514,6 +1615,7 @@ const vehicles = [
   {
     brand: "Subaru", name: "Forester", size: "compact", type: "mild",
     hp: 180, mpg: 31, cargo: 29, cargoMax: 74, tow: 1500, msrp: 36000, drivetrain: "AWD std",
+    nhtsa: 5, iihs: "TSP+",
     rating: 8.0, ratingSource: "US News 8.0",
     trims: "Base $36,000 | Premium $38,000 | Sport $39,500 | Limited $41,000 | Touring $43,500",
     pros: ["Standard symmetrical AWD", "8.7\" ground clearance", "Excellent visibility (largest windows in class)", "Redesigned for 2025"],
@@ -1523,6 +1625,7 @@ const vehicles = [
   {
     brand: "Kia", name: "Sorento Hybrid", size: "midsize", type: "hybrid",
     hp: 227, mpg: 37, cargo: 38.4, cargoMax: 75.5, tow: 2000, msrp: 38290, drivetrain: "FWD/AWD",
+    nhtsa: 5, iihs: "TSP+",
     rating: 8.0, ratingSource: "C&D 8/10",
     trims: "LX FWD $38,290 | LX AWD $40,090 | EX AWD $43,590 | SX AWD $45,590 | SX-Prestige AWD $48,590",
     pros: ["Most affordable 3-row hybrid", "Good fuel economy for size (37 MPG)", "Kia warranty", "Practical for families"],
@@ -1533,6 +1636,7 @@ const vehicles = [
     brand: "Ford", name: "Escape PHEV", size: "compact", type: "phev",
     hp: 210, mpg: 37, cargo: 30.7, cargoMax: 60, tow: 0, msrp: 38500, drivetrain: "FWD only",
     evRange: 37, mpge: 105,
+    nhtsa: 5, iihs: "TSP", safetyNote: "Headlight variability prevents TSP+",
     rating: 7.3, ratingSource: "Edmunds ~7.5",
     trims: "Base $38,500 | ST-Line Select $42,000",
     pros: ["37-mile EV range", "Likely partial tax credit (US-built)", "Competitive pricing"],
@@ -1543,6 +1647,7 @@ const vehicles = [
     brand: "Honda", name: "CR-V PHEV", size: "compact", type: "phev",
     hp: 230, mpg: 40, cargo: 34, cargoMax: 70, tow: 1000, msrp: 39000, drivetrain: "FWD/AWD",
     evRange: 47, mpge: 80,
+    nhtsa: 5, iihs: "TSP+",
     rating: 8.2, ratingSource: "New — promising",
     trims: "Sport Direct $39,000 | Sport-L Direct ~$42,500",
     pros: ["Best EV range in compact class (47 mi)", "Honda interior quality", "Likely eligible for $7,500 tax credit (US-built)", "Spacious for a PHEV"],
@@ -1552,6 +1657,7 @@ const vehicles = [
   {
     brand: "Hyundai", name: "Santa Fe Hybrid", size: "midsize", type: "hybrid",
     hp: 231, mpg: 36, cargo: 40.9, cargoMax: 72.1, tow: 2500, msrp: 40500, drivetrain: "AWD std",
+    nhtsa: 5, iihs: "TSP+",
     rating: 8.5, ratingSource: "US News 8.5",
     trims: "SEL AWD $40,500 | SEL Conv $43,000 | Limited $46,500 | Calligraphy $50,000",
     pros: ["Stunning 2025 redesign", "Dual 12.3\" panoramic curved displays", "Great fuel economy for midsize (36 MPG)", "Hyundai warranty", "40.9 cu ft cargo"],
@@ -1562,6 +1668,7 @@ const vehicles = [
     brand: "Hyundai", name: "Tucson PHEV", size: "compact", type: "phev",
     hp: 268, mpg: 35, cargo: 38.7, cargoMax: 74.8, tow: 2000, msrp: 40500, drivetrain: "AWD std",
     evRange: 33, mpge: 80,
+    nhtsa: 5, iihs: "TSP+",
     rating: 8.0, ratingSource: "Strong value",
     trims: "SEL AWD $40,500 | Limited AWD $45,450",
     pros: ["268 hp — strong power", "AWD standard", "Cargo barely affected by battery", "Hyundai warranty"],
@@ -1572,6 +1679,7 @@ const vehicles = [
     brand: "Mitsubishi", name: "Outlander PHEV", size: "compact", type: "phev",
     hp: 248, mpg: 26, cargo: 34, cargoMax: 67, tow: 2000, msrp: 40500, drivetrain: "AWD std",
     evRange: 38, mpge: 64,
+    nhtsa: 4, iihs: "TSP", safetyNote: "4-star NHTSA (frontal concern); headlight issues on lower trims",
     rating: 7.5, ratingSource: "US News 7.5",
     trims: "SEL $40,500 | SE Launch $43,000 | GT $48,000",
     pros: ["3 rows / 7 seats (rare for compact PHEV)", "38 miles EV range", "AWD standard", "Decent towing (2,000 lb)"],
@@ -1581,6 +1689,7 @@ const vehicles = [
   {
     brand: "Toyota", name: "Highlander Hybrid", size: "midsize", type: "hybrid",
     hp: 243, mpg: 34, cargo: 41.7, cargoMax: 73.3, tow: 3500, msrp: 40500, drivetrain: "AWD std",
+    nhtsa: 5, iihs: "TSP+",
     rating: 8.2, ratingSource: "CR Recommended",
     trims: "LE $40,500 | XLE $43,500 | XSE $46,000 | Limited $48,500 | Platinum $51,500",
     pros: ["Proven nameplate", "3-row seating (7-8)", "3,500 lb towing", "Strong resale value"],
@@ -1590,6 +1699,7 @@ const vehicles = [
   {
     brand: "Ford", name: "Explorer Hybrid", size: "midsize", type: "hybrid",
     hp: 318, mpg: 28, cargo: 47.9, cargoMax: 87.8, tow: 5000, msrp: 42000, drivetrain: "AWD",
+    nhtsa: 4, iihs: "TSP", safetyNote: "4-star NHTSA (rollover concern); headlights limit IIHS award",
     rating: 7.2, ratingSource: "Mixed reviews",
     trims: "Base $42,000 | ST $48,000 | Platinum $54,000+",
     pros: ["Best towing in class (5,000 lbs)", "Most powerful (318 hp V6)", "Spacious 3-row", "BlueCruise hands-free driving"],
@@ -1600,6 +1710,7 @@ const vehicles = [
     brand: "Kia", name: "Sportage PHEV", size: "compact", type: "phev",
     hp: 268, mpg: 35, cargo: 39.6, cargoMax: 74.1, tow: 2000, msrp: 42990, drivetrain: "AWD std",
     evRange: 34, mpge: 84,
+    nhtsa: 5, iihs: "TSP+",
     rating: 8.0, ratingSource: "C&D 8/10",
     trims: "X-Line AWD $42,990 | X-Line Prestige $46,490 | SX-Prestige $48,090",
     pros: ["268 hp with AWD", "34 mi EV range", "Cargo unaffected by battery (39.6 cu ft)", "Kia warranty"],
@@ -1610,6 +1721,7 @@ const vehicles = [
     brand: "Toyota", name: "RAV4 Prime", size: "compact", type: "phev",
     hp: 302, mpg: 38, cargo: 33.1, cargoMax: 63.2, tow: 2500, msrp: 43400, drivetrain: "AWD std",
     evRange: 42, mpge: 94,
+    nhtsa: 5, iihs: "TSP+",
     rating: 8.5, ratingSource: "Top PHEV pick",
     trims: "SE $43,400 | XSE $47,100 | XSE Premium $50,000+",
     pros: ["302 hp — quickest compact hybrid (0-60 in 5.7s)", "42 miles EV range", "AWD standard", "Toyota reliability", "2,500 lb towing"],
@@ -1619,6 +1731,7 @@ const vehicles = [
   {
     brand: "Lexus", name: "NX 350h", size: "midsize", type: "hybrid",
     hp: 239, mpg: 39, cargo: 22.7, cargoMax: 46.9, tow: 2000, msrp: 43350, drivetrain: "AWD std",
+    nhtsa: 5, iihs: "TSP+",
     rating: 8.8, ratingSource: "US News 8.8 | CR Rec",
     trims: "Base $43,350 | Premium ~$45,000 | Luxury $48,600 | F Sport $48,900 | F Sport Prem $50,500+",
     pros: ["Quietest cabin in class", "Excellent build quality", "Toyota hybrid reliability underneath", "Mark Levinson audio outstanding", "Strong resale"],
@@ -1628,6 +1741,7 @@ const vehicles = [
   {
     brand: "Toyota", name: "Grand Highlander Hybrid", size: "midsize", type: "hybrid",
     hp: 243, mpg: 34, cargo: 47.5, cargoMax: 97.5, tow: 3500, msrp: 44400, drivetrain: "AWD std",
+    nhtsa: 5, iihs: "TSP+",
     rating: 8.5, ratingSource: "CR Recommended | US News 8.5",
     trims: "XLE $44,400 | Limited $49,600 | Platinum $53,400",
     pros: ["Class-leading max cargo (97.5 cu ft)", "Usable 3rd row (rare)", "Toyota reliability", "3,500 lb towing (5,000 with Hybrid Max)"],
@@ -1638,6 +1752,7 @@ const vehicles = [
     brand: "Hyundai", name: "Santa Fe PHEV", size: "midsize", type: "phev",
     hp: 268, mpg: 33, cargo: 40, cargoMax: 72, tow: 2500, msrp: 45500, drivetrain: "AWD std",
     evRange: 32, mpge: 76,
+    nhtsa: 5, iihs: "TSP+",
     rating: 8.3, ratingSource: "US News 8.5 (platform)",
     trims: "SEL AWD $45,500 | Limited AWD $49,500 | Calligraphy AWD $53,000",
     pros: ["Likely tax credit eligible (US-built, Georgia)", "Strong features and tech", "Good cargo space", "AWD standard"],
@@ -1648,6 +1763,7 @@ const vehicles = [
     brand: "Kia", name: "Sorento PHEV", size: "midsize", type: "phev",
     hp: 261, mpg: 34, cargo: 38.4, cargoMax: 75.5, tow: 2000, msrp: 48590, drivetrain: "AWD std",
     evRange: 32, mpge: 79,
+    nhtsa: 5, iihs: "TSP+",
     rating: 7.8, ratingSource: "Decent reviews",
     trims: "SX AWD $48,590 | SX-Prestige AWD $52,590",
     pros: ["Rare 3-row PHEV under $55K", "32 miles EV range", "Kia warranty"],
@@ -1722,6 +1838,11 @@ function renderCards() {
           <div><div class="card-stat-value">${v.cargo}</div><div class="card-stat-label">Cargo ft&sup3;</div></div>
           <div><div class="card-stat-value">${v.tow ? v.tow.toLocaleString() : 'N/R'}</div><div class="card-stat-label">Tow lbs</div></div>
         </div>
+        <div class="card-safety">
+          <div class="safety-stars">${Array.from({length: 5}, (_, i) => `<div class="safety-star ${i < v.nhtsa ? 'filled' : 'empty'}"></div>`).join('')}</div>
+          <span class="safety-label">NHTSA</span>
+          <span class="iihs-badge ${v.iihs === 'TSP+' ? 'iihs-tspplus' : 'iihs-tsp'}">${v.iihs === 'TSP+' ? 'IIHS TSP+' : 'IIHS TSP'}</span>
+        </div>
         <div class="card-footer">
           <div class="card-price">${formatPrice(v.msrp)} <span>from</span></div>
           <div class="card-rating">
@@ -1740,6 +1861,12 @@ function renderCards() {
                 <li>Max Cargo: ${v.cargoMax} cu ft</li>
                 ${v.evRange ? `<li>EV Range: ${v.evRange} miles | ${v.mpge} MPGe</li>` : ''}
                 <li>${v.details}</li>
+              </ul>
+              <h4 style="margin-top:16px">Safety</h4>
+              <ul>
+                <li>NHTSA: ${v.nhtsa}/5 stars overall</li>
+                <li>IIHS: ${v.iihs === 'TSP+' ? 'Top Safety Pick+' : 'Top Safety Pick'}</li>
+                ${v.safetyNote ? `<li class="con">${v.safetyNote}</li>` : '<li class="pro">No notable safety concerns</li>'}
               </ul>
             </div>
             <div class="detail-section">
