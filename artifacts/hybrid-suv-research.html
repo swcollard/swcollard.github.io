@@ -7,7 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
 :root {
   --bg-deep: #0a0a0c;
   --bg-card: #141418;
@@ -30,867 +29,163 @@
   --radius-sm: 8px;
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
 html { scroll-behavior: smooth; }
-
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--bg-deep);
-  color: var(--text-primary);
-  line-height: 1.6;
-  overflow-x: hidden;
-}
-
-/* Scrollbar */
+body { font-family: 'DM Sans', sans-serif; background: var(--bg-deep); color: var(--text-primary); line-height: 1.6; overflow-x: hidden; }
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-deep); }
 ::-webkit-scrollbar-thumb { background: var(--text-dim); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+body::after { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; }
 
-/* Grain overlay */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 9999;
-}
-
-/* NAVIGATION */
-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  padding: 16px 40px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  backdrop-filter: blur(20px);
-  background: rgba(10, 10, 12, 0.85);
-  border-bottom: 1px solid var(--border);
-}
-
-nav .logo {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: 18px;
-  letter-spacing: -0.5px;
-  color: var(--amber);
-}
-
-nav .nav-links {
-  display: flex;
-  gap: 32px;
-  list-style: none;
-}
-
-nav .nav-links a {
-  text-decoration: none;
-  color: var(--text-secondary);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  transition: color var(--transition);
-  position: relative;
-}
-
-nav .nav-links a::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--amber);
-  transition: width var(--transition);
-}
-
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 16px 40px; display: flex; align-items: center; justify-content: space-between; backdrop-filter: blur(20px); background: rgba(10, 10, 12, 0.85); border-bottom: 1px solid var(--border); }
+nav .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: -0.5px; color: var(--amber); }
+nav .nav-links { display: flex; gap: 32px; list-style: none; }
+nav .nav-links a { text-decoration: none; color: var(--text-secondary); font-size: 13px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; transition: color var(--transition); position: relative; }
+nav .nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: var(--amber); transition: width var(--transition); }
 nav .nav-links a:hover { color: var(--amber); }
 nav .nav-links a:hover::after { width: 100%; }
 
-/* HERO */
-.hero {
-  padding: 140px 40px 80px;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero::before {
-  content: '';
-  position: absolute;
-  top: -200px;
-  right: -200px;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, var(--amber-glow) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.hero::after {
-  content: '';
-  position: absolute;
-  bottom: -100px;
-  left: -100px;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, var(--teal-glow) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.hero-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--amber);
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  margin-bottom: 20px;
-  opacity: 0;
-  animation: fadeInUp 0.6s ease forwards 0.1s;
-}
-
-.hero h1 {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(42px, 6vw, 72px);
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -2px;
-  margin-bottom: 24px;
-  opacity: 0;
-  animation: fadeInUp 0.6s ease forwards 0.2s;
-}
-
+.hero { padding: 140px 40px 80px; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; top: -200px; right: -200px; width: 600px; height: 600px; background: radial-gradient(circle, var(--amber-glow) 0%, transparent 70%); pointer-events: none; }
+.hero::after { content: ''; position: absolute; bottom: -100px; left: -100px; width: 400px; height: 400px; background: radial-gradient(circle, var(--teal-glow) 0%, transparent 70%); pointer-events: none; }
+.hero-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; color: var(--amber); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px; opacity: 0; animation: fadeInUp 0.6s ease forwards 0.1s; }
+.hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(42px, 6vw, 72px); font-weight: 800; line-height: 1.05; letter-spacing: -2px; margin-bottom: 24px; opacity: 0; animation: fadeInUp 0.6s ease forwards 0.2s; }
 .hero h1 span { color: var(--amber); }
+.hero p { font-size: 18px; color: var(--text-secondary); max-width: 600px; opacity: 0; animation: fadeInUp 0.6s ease forwards 0.35s; }
+.hero-stats { display: flex; gap: 48px; margin-top: 48px; opacity: 0; animation: fadeInUp 0.6s ease forwards 0.5s; }
+.hero-stat .number { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; color: var(--amber); }
+.hero-stat .label { font-size: 13px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-.hero p {
-  font-size: 18px;
-  color: var(--text-secondary);
-  max-width: 600px;
-  opacity: 0;
-  animation: fadeInUp 0.6s ease forwards 0.35s;
-}
+section { padding: 80px 40px; max-width: 1400px; margin: 0 auto; }
+.section-header { margin-bottom: 48px; }
+.section-tag { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--teal); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; }
+.section-title { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 700; letter-spacing: -1px; margin-bottom: 12px; }
+.section-subtitle { color: var(--text-secondary); font-size: 16px; max-width: 600px; }
 
-.hero-stats {
-  display: flex;
-  gap: 48px;
-  margin-top: 48px;
-  opacity: 0;
-  animation: fadeInUp 0.6s ease forwards 0.5s;
-}
+.filters { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 32px; align-items: center; }
+.filter-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.filter-group label { font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+.filter-btn { padding: 8px 16px; border: 1px solid var(--border); background: transparent; color: var(--text-secondary); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; border-radius: 100px; cursor: pointer; transition: all var(--transition); }
+.filter-btn:hover { border-color: var(--text-dim); color: var(--text-primary); }
+.filter-btn.active { background: var(--amber); border-color: var(--amber); color: var(--bg-deep); font-weight: 600; }
+select.filter-select { padding: 8px 32px 8px 14px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-secondary); font-family: 'DM Sans', sans-serif; font-size: 13px; border-radius: 100px; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%239a9690'%3E%3Cpath d='M6 8.5L1 3.5h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; transition: all var(--transition); }
+select.filter-select:hover, select.filter-select:focus { border-color: var(--amber); outline: none; }
+.filter-divider { width: 1px; height: 24px; background: var(--border); margin: 0 4px; }
 
-.hero-stat .number {
-  font-family: 'Syne', sans-serif;
-  font-size: 36px;
-  font-weight: 800;
-  color: var(--amber);
-}
-
-.hero-stat .label {
-  font-size: 13px;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-top: 4px;
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* SECTIONS */
-section {
-  padding: 80px 40px;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-.section-header {
-  margin-bottom: 48px;
-}
-
-.section-tag {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  color: var(--teal);
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  margin-bottom: 12px;
-}
-
-.section-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 36px;
-  font-weight: 700;
-  letter-spacing: -1px;
-  margin-bottom: 12px;
-}
-
-.section-subtitle {
-  color: var(--text-secondary);
-  font-size: 16px;
-  max-width: 600px;
-}
-
-/* FILTERS */
-.filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 32px;
-  align-items: center;
-}
-
-.filter-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.filter-group label {
-  font-size: 12px;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-weight: 600;
-}
-
-.filter-btn {
-  padding: 8px 16px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text-secondary);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  border-radius: 100px;
-  cursor: pointer;
-  transition: all var(--transition);
-}
-
-.filter-btn:hover {
-  border-color: var(--text-dim);
-  color: var(--text-primary);
-}
-
-.filter-btn.active {
-  background: var(--amber);
-  border-color: var(--amber);
-  color: var(--bg-deep);
-  font-weight: 600;
-}
-
-select.filter-select {
-  padding: 8px 32px 8px 14px;
-  border: 1px solid var(--border);
-  background: var(--bg-card);
-  color: var(--text-secondary);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  border-radius: 100px;
-  cursor: pointer;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%239a9690'%3E%3Cpath d='M6 8.5L1 3.5h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  transition: all var(--transition);
-}
-
-select.filter-select:hover, select.filter-select:focus {
-  border-color: var(--amber);
-  outline: none;
-}
-
-/* VEHICLE GRID */
-.vehicle-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-  gap: 20px;
-}
-
-.vehicle-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 28px;
-  cursor: pointer;
-  transition: all var(--transition);
-  position: relative;
-  overflow: hidden;
-}
-
-.vehicle-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--amber), var(--teal));
-  opacity: 0;
-  transition: opacity var(--transition);
-}
-
-.vehicle-card:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--border-light);
-  transform: translateY(-2px);
-}
-
+.vehicle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 20px; }
+.vehicle-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; cursor: pointer; transition: all var(--transition); position: relative; overflow: hidden; }
+.vehicle-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--amber), var(--teal)); opacity: 0; transition: opacity var(--transition); }
+.vehicle-card:hover { background: var(--bg-card-hover); border-color: var(--border-light); transform: translateY(-2px); }
 .vehicle-card:hover::before { opacity: 1; }
-
-.vehicle-card.expanded {
-  grid-column: 1 / -1;
-  background: var(--bg-card-hover);
-  border-color: var(--amber-dim);
-}
-
+.vehicle-card.expanded { grid-column: 1 / -1; background: var(--bg-card-hover); border-color: var(--amber-dim); }
 .vehicle-card.expanded::before { opacity: 1; }
-
-.card-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 16px;
-}
-
-.card-brand {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  color: var(--text-dim);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-
-.card-name {
-  font-family: 'Syne', sans-serif;
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  margin-top: 4px;
-}
-
-.card-badge {
-  padding: 4px 10px;
-  border-radius: 100px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-
-.badge-hybrid {
-  background: var(--teal-glow);
-  color: var(--teal);
-  border: 1px solid rgba(78, 205, 196, 0.3);
-}
-
-.badge-phev {
-  background: var(--amber-glow);
-  color: var(--amber);
-  border: 1px solid rgba(232, 168, 56, 0.3);
-}
-
-.badge-mild {
-  background: rgba(150, 150, 150, 0.1);
-  color: var(--text-dim);
-  border: 1px solid var(--border);
-}
-
-.card-stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border);
-}
-
-.card-stat-value {
-  font-family: 'Syne', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.card-stat-label {
-  font-size: 10px;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-top: 2px;
-}
-
-.card-safety {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
-}
-
-.safety-stars {
-  display: flex;
-  gap: 3px;
-}
-
-.safety-star {
-  width: 14px;
-  height: 14px;
-  border-radius: 2px;
-}
-
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+.card-brand { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; }
+.card-name { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: -0.5px; margin-top: 4px; }
+.card-badge { padding: 4px 10px; border-radius: 100px; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; }
+.badge-hybrid { background: var(--teal-glow); color: var(--teal); border: 1px solid rgba(78, 205, 196, 0.3); }
+.badge-phev { background: var(--amber-glow); color: var(--amber); border: 1px solid rgba(232, 168, 56, 0.3); }
+.badge-mild { background: rgba(150, 150, 150, 0.1); color: var(--text-dim); border: 1px solid var(--border); }
+.card-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+.card-stat-value { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; color: var(--text-primary); }
+.card-stat-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+.card-safety { display: flex; align-items: center; gap: 10px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+.safety-stars { display: flex; gap: 3px; }
+.safety-star { width: 14px; height: 14px; border-radius: 2px; }
 .safety-star.filled { background: var(--amber); }
 .safety-star.empty { background: var(--bg-deep); border: 1px solid var(--border); }
+.iihs-badge { padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+.iihs-tspplus { background: rgba(93, 232, 138, 0.12); color: var(--green); border: 1px solid rgba(93, 232, 138, 0.25); }
+.iihs-tsp { background: rgba(232, 168, 56, 0.12); color: var(--amber); border: 1px solid rgba(232, 168, 56, 0.25); }
+.safety-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+.card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+.card-price { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; color: var(--amber); }
+.card-price span { font-size: 12px; color: var(--text-dim); font-family: 'DM Sans', sans-serif; font-weight: 400; }
+.card-rating { display: flex; align-items: center; gap: 6px; }
+.rating-bar { width: 60px; height: 6px; background: var(--bg-deep); border-radius: 3px; overflow: hidden; }
+.rating-bar-fill { height: 100%; border-radius: 3px; transition: width 0.8s ease; }
+.rating-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-secondary); }
+.expand-hint { font-size: 11px; color: var(--text-dim); text-align: center; margin-top: 12px; opacity: 0.6; transition: opacity var(--transition); }
+.vehicle-card:hover .expand-hint { opacity: 1; color: var(--amber); }
+.vehicle-card.expanded .expand-hint { display: none; }
 
-.iihs-badge {
-  padding: 3px 8px;
-  border-radius: 4px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-.iihs-tspplus {
-  background: rgba(93, 232, 138, 0.12);
-  color: var(--green);
-  border: 1px solid rgba(93, 232, 138, 0.25);
-}
-
-.iihs-tsp {
-  background: rgba(232, 168, 56, 0.12);
-  color: var(--amber);
-  border: 1px solid rgba(232, 168, 56, 0.25);
-}
-
-.safety-label {
-  font-size: 10px;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.card-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border);
-}
-
-.card-price {
-  font-family: 'Syne', sans-serif;
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--amber);
-}
-
-.card-price span {
-  font-size: 12px;
-  color: var(--text-dim);
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 400;
-}
-
-.card-rating {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.rating-bar {
-  width: 60px;
-  height: 6px;
-  background: var(--bg-deep);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.rating-bar-fill {
-  height: 100%;
-  border-radius: 3px;
-  transition: width 0.8s ease;
-}
-
-.rating-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  color: var(--text-secondary);
-}
-
-/* Expanded card details */
-.card-details {
-  display: none;
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border);
-}
-
+.card-details { display: none; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); animation: fadeInUp 0.3s ease; }
 .vehicle-card.expanded .card-details { display: block; }
-
-.details-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
-}
-
-.detail-section h4 {
-  font-family: 'Syne', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--amber);
-  margin-bottom: 12px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.detail-section ul {
-  list-style: none;
-}
-
-.detail-section li {
-  font-size: 14px;
-  color: var(--text-secondary);
-  padding: 4px 0;
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.detail-section li::before {
-  content: '';
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--teal);
-  flex-shrink: 0;
-  margin-top: 8px;
-}
-
+.details-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+.detail-section h4 { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 600; color: var(--amber); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+.detail-section ul { list-style: none; }
+.detail-section li { font-size: 14px; color: var(--text-secondary); padding: 4px 0; display: flex; align-items: flex-start; gap: 8px; }
+.detail-section li::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--teal); flex-shrink: 0; margin-top: 8px; }
 .pro { color: var(--green) !important; }
 .con { color: var(--red) !important; }
 .pro::before { background: var(--green) !important; }
 .con::before { background: var(--red) !important; }
+.dims-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; margin-bottom: 16px; }
+.dim-item { background: var(--bg-deep); padding: 10px 12px; border-radius: var(--radius-sm); }
+.dim-value { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 600; color: var(--text-primary); }
+.dim-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
 
-/* HEAD TO HEAD */
-.h2h-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
-}
-
-.h2h-brand-section {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-
-.h2h-brand-header {
-  padding: 24px 28px;
-  border-bottom: 1px solid var(--border);
-  position: relative;
-  overflow: hidden;
-}
-
+/* H2H */
+.h2h-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+.h2h-brand-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.h2h-brand-header { padding: 24px 28px; border-bottom: 1px solid var(--border); }
 .h2h-brand-header.toyota { background: linear-gradient(135deg, rgba(235, 50, 50, 0.08), transparent); }
 .h2h-brand-header.honda { background: linear-gradient(135deg, rgba(50, 100, 235, 0.08), transparent); }
 .h2h-brand-header.subaru { background: linear-gradient(135deg, rgba(0, 100, 180, 0.08), transparent); }
-
-.h2h-brand-name {
-  font-family: 'Syne', sans-serif;
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: -1px;
-}
-
-.h2h-brand-tagline {
-  font-size: 13px;
-  color: var(--text-dim);
-  margin-top: 4px;
-}
-
+.h2h-brand-name { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -1px; }
+.h2h-brand-tagline { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
 .h2h-model-list { padding: 8px; }
-
-.h2h-model {
-  padding: 20px;
-  border-radius: var(--radius-sm);
-  margin-bottom: 4px;
-  transition: background var(--transition);
-}
-
+.h2h-model { padding: 20px; border-radius: var(--radius-sm); margin-bottom: 4px; transition: background var(--transition); }
 .h2h-model:hover { background: var(--bg-surface); }
+.h2h-model-name { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.h2h-model-type { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+.h2h-specs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.h2h-spec { display: flex; flex-direction: column; }
+.h2h-spec-val { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 600; color: var(--text-primary); }
+.h2h-spec-key { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+.h2h-verdict { padding: 16px 20px; margin: 8px 20px 20px; background: var(--bg-deep); border-radius: var(--radius-sm); border-left: 3px solid var(--amber); }
+.h2h-verdict-title { font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; color: var(--amber); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.h2h-verdict-text { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+.winner-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; background: var(--amber-glow); border: 1px solid rgba(232, 168, 56, 0.3); border-radius: 100px; font-size: 10px; font-weight: 700; color: var(--amber); letter-spacing: 0.5px; text-transform: uppercase; margin-left: 8px; }
 
-.h2h-model-name {
-  font-family: 'Syne', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.h2h-model-type {
-  font-size: 11px;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 12px;
-}
-
-.h2h-specs {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-}
-
-.h2h-spec {
-  display: flex;
-  flex-direction: column;
-}
-
-.h2h-spec-val {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.h2h-spec-key {
-  font-size: 10px;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.h2h-verdict {
-  padding: 16px 20px;
-  margin: 8px 20px 20px;
-  background: var(--bg-deep);
-  border-radius: var(--radius-sm);
-  border-left: 3px solid var(--amber);
-}
-
-.h2h-verdict-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--amber);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 6px;
-}
-
-.h2h-verdict-text {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-
-/* COMPARISON BARS */
-.compare-section {
-  margin-top: 48px;
-}
-
-.compare-category {
-  margin-bottom: 32px;
-}
-
-.compare-cat-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 16px;
-  color: var(--text-secondary);
-}
-
-.compare-row {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 10px;
-}
-
-.compare-label {
-  width: 200px;
-  flex-shrink: 0;
-  font-size: 13px;
-  color: var(--text-secondary);
-  text-align: right;
-}
-
-.compare-bar-track {
-  flex: 1;
-  height: 28px;
-  background: var(--bg-card);
-  border-radius: 4px;
-  overflow: hidden;
-  position: relative;
-}
-
-.compare-bar-fill {
-  height: 100%;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  padding: 0 12px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--bg-deep);
-  transition: width 1s ease;
-  min-width: fit-content;
-}
-
+.compare-section { margin-top: 48px; }
+.compare-category { margin-bottom: 32px; }
+.compare-cat-title { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--text-secondary); }
+.compare-row { display: flex; align-items: center; gap: 16px; margin-bottom: 10px; }
+.compare-label { width: 200px; flex-shrink: 0; font-size: 13px; color: var(--text-secondary); text-align: right; }
+.compare-bar-track { flex: 1; height: 28px; background: var(--bg-card); border-radius: 4px; overflow: hidden; }
+.compare-bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding: 0 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; color: var(--bg-deep); transition: width 1s ease; min-width: fit-content; }
 .bar-toyota { background: linear-gradient(90deg, #eb3232, #ff5555); }
 .bar-honda { background: linear-gradient(90deg, #3264eb, #5588ff); }
 .bar-subaru { background: linear-gradient(90deg, #0064b4, #2290dd); }
 
-.compare-value {
-  width: 80px;
-  flex-shrink: 0;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-/* CHECKLIST */
-.checklist-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: 24px;
-}
-
-.checklist-category {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 28px;
-  transition: border-color var(--transition);
-}
-
+.checklist-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 24px; }
+.checklist-category { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; transition: border-color var(--transition); }
 .checklist-category:hover { border-color: var(--border-light); }
-
-.checklist-icon {
-  font-size: 28px;
-  margin-bottom: 12px;
-}
-
-.checklist-cat-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.checklist-cat-desc {
-  font-size: 13px;
-  color: var(--text-dim);
-  margin-bottom: 20px;
-}
-
-.checklist-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(42, 42, 48, 0.5);
-  cursor: pointer;
-  transition: opacity var(--transition);
-}
-
+.checklist-icon { font-size: 28px; margin-bottom: 12px; }
+.checklist-cat-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.checklist-cat-desc { font-size: 13px; color: var(--text-dim); margin-bottom: 20px; }
+.checklist-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(42, 42, 48, 0.5); cursor: pointer; transition: opacity var(--transition); }
 .checklist-item:last-child { border-bottom: none; }
-
 .checklist-item.checked { opacity: 0.45; }
-
-.check-box {
-  width: 20px;
-  height: 20px;
-  border: 2px solid var(--border-light);
-  border-radius: 4px;
-  flex-shrink: 0;
-  margin-top: 1px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all var(--transition);
-}
-
-.checklist-item.checked .check-box {
-  background: var(--amber);
-  border-color: var(--amber);
-}
-
-.check-box svg {
-  width: 12px;
-  height: 12px;
-  opacity: 0;
-  transition: opacity var(--transition);
-}
-
+.check-box { width: 20px; height: 20px; border: 2px solid var(--border-light); border-radius: 4px; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all var(--transition); }
+.checklist-item.checked .check-box { background: var(--amber); border-color: var(--amber); }
+.check-box svg { width: 12px; height: 12px; opacity: 0; transition: opacity var(--transition); }
 .checklist-item.checked .check-box svg { opacity: 1; }
-
-.check-text {
-  font-size: 14px;
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-
-.check-text strong {
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
+.check-text { font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+.check-text strong { color: var(--text-primary); font-weight: 600; }
 .checklist-item.checked .check-text { text-decoration: line-through; }
+.checklist-progress { margin-bottom: 32px; display: flex; align-items: center; gap: 16px; }
+.progress-bar { flex: 1; height: 8px; background: var(--bg-card); border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--amber), var(--teal)); border-radius: 4px; transition: width 0.5s ease; }
+.progress-text { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text-secondary); flex-shrink: 0; }
 
-.checklist-progress {
-  margin-bottom: 32px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
+footer { text-align: center; padding: 60px 40px; border-top: 1px solid var(--border); margin-top: 40px; }
+footer p { font-size: 13px; color: var(--text-dim); }
+.no-results { grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-dim); font-size: 16px; }
+.reveal { opacity: 0; transform: translateY(30px); transition: all 0.6s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
 
-.progress-bar {
-  flex: 1;
-  height: 8px;
-  background: var(--bg-card);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--amber), var(--teal));
-  border-radius: 4px;
-  transition: width 0.5s ease;
-}
-
-.progress-text {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
-  color: var(--text-secondary);
-  flex-shrink: 0;
-}
-
-/* FOOTER */
-footer {
-  text-align: center;
-  padding: 60px 40px;
-  border-top: 1px solid var(--border);
-  margin-top: 40px;
-}
-
-footer p {
-  font-size: 13px;
-  color: var(--text-dim);
-}
-
-/* Responsive */
 @media (max-width: 768px) {
   nav { padding: 12px 20px; }
   nav .nav-links { gap: 16px; }
@@ -903,43 +198,7 @@ footer p {
   .compare-label { width: 120px; font-size: 11px; }
   .filters { gap: 8px; }
   .h2h-container { grid-template-columns: 1fr; }
-}
-
-/* Animate in on scroll */
-.reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: all 0.6s ease;
-}
-
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Winner badge */
-.winner-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
-  background: var(--amber-glow);
-  border: 1px solid rgba(232, 168, 56, 0.3);
-  border-radius: 100px;
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--amber);
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  margin-left: 8px;
-}
-
-.no-results {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--text-dim);
-  font-size: 16px;
+  .dims-grid { grid-template-columns: repeat(2, 1fr); }
 }
 </style>
 </head>
@@ -954,35 +213,23 @@ footer p {
   </ul>
 </nav>
 
-<!-- HERO -->
 <header class="hero">
   <div class="hero-label">2025-2026 US Market Research</div>
   <h1>Find Your<br>Next <span>Hybrid SUV</span></h1>
-  <p>Comprehensive research covering every hybrid and plug-in hybrid SUV under $55K — specs, ratings, and expert consensus in one place.</p>
+  <p>Comprehensive research covering every hybrid and plug-in hybrid SUV up to $70K — specs, ratings, safety, and expert consensus in one place.</p>
   <div class="hero-stats">
-    <div class="hero-stat">
-      <div class="number">24</div>
-      <div class="label">Models Tracked</div>
-    </div>
-    <div class="hero-stat">
-      <div class="number">7</div>
-      <div class="label">Brands Compared</div>
-    </div>
-    <div class="hero-stat">
-      <div class="number">6</div>
-      <div class="label">Expert Sources</div>
-    </div>
+    <div class="hero-stat"><div class="number" id="model-count">36</div><div class="label">Models Tracked</div></div>
+    <div class="hero-stat"><div class="number">10</div><div class="label">Brands Compared</div></div>
+    <div class="hero-stat"><div class="number">6</div><div class="label">Expert Sources</div></div>
   </div>
 </header>
 
-<!-- EXPLORER -->
 <section id="explorer">
   <div class="section-header">
     <div class="section-tag">Interactive Explorer</div>
     <h2 class="section-title">Every Model at a Glance</h2>
-    <p class="section-subtitle">Filter, sort, and click any card to expand full details including trims, pros/cons, and expert ratings.</p>
+    <p class="section-subtitle">Filter, sort, and click any card to expand full details including dimensions, trims, safety, and pros/cons.</p>
   </div>
-
   <div class="filters">
     <div class="filter-group">
       <label>Size</label>
@@ -990,13 +237,26 @@ footer p {
       <button class="filter-btn" data-filter="size" data-value="subcompact">Subcompact</button>
       <button class="filter-btn" data-filter="size" data-value="compact">Compact</button>
       <button class="filter-btn" data-filter="size" data-value="midsize">Midsize</button>
+      <button class="filter-btn" data-filter="size" data-value="full-size">Full-Size</button>
+      <button class="filter-btn" data-filter="size" data-value="luxury">Luxury</button>
     </div>
+    <div class="filter-divider"></div>
     <div class="filter-group">
       <label>Type</label>
       <button class="filter-btn active" data-filter="type" data-value="all">All</button>
       <button class="filter-btn" data-filter="type" data-value="hybrid">Hybrid</button>
       <button class="filter-btn" data-filter="type" data-value="phev">PHEV</button>
     </div>
+    <div class="filter-divider"></div>
+    <div class="filter-group">
+      <label>Price</label>
+      <button class="filter-btn active" data-filter="price" data-value="all">All</button>
+      <button class="filter-btn" data-filter="price" data-value="0-35000">Under $35K</button>
+      <button class="filter-btn" data-filter="price" data-value="35000-45000">$35-45K</button>
+      <button class="filter-btn" data-filter="price" data-value="45000-55000">$45-55K</button>
+      <button class="filter-btn" data-filter="price" data-value="55000-70000">$55-70K</button>
+    </div>
+    <div class="filter-divider"></div>
     <div class="filter-group">
       <label>Sort</label>
       <select class="filter-select" id="sort-select">
@@ -1009,7 +269,6 @@ footer p {
       </select>
     </div>
   </div>
-
   <div class="vehicle-grid" id="vehicle-grid"></div>
 </section>
 
@@ -1018,776 +277,153 @@ footer p {
   <div class="section-header reveal">
     <div class="section-tag">Head to Head</div>
     <h2 class="section-title">Toyota vs Honda vs Subaru</h2>
-    <p class="section-subtitle">A deep comparison of every hybrid model from these three Japanese brands — from powertrains to warranties.</p>
+    <p class="section-subtitle">A deep comparison of every hybrid model from these three Japanese brands — from powertrains to warranties to safety.</p>
   </div>
-
   <div class="h2h-container reveal">
-    <!-- TOYOTA -->
     <div class="h2h-brand-section">
-      <div class="h2h-brand-header toyota">
-        <div class="h2h-brand-name">Toyota</div>
-        <div class="h2h-brand-tagline">The hybrid pioneer &mdash; 5 models, proven reliability</div>
-      </div>
+      <div class="h2h-brand-header toyota"><div class="h2h-brand-name">Toyota</div><div class="h2h-brand-tagline">The hybrid pioneer &mdash; 5 models, proven reliability, all 5&#9733; NHTSA + IIHS TSP+</div></div>
       <div class="h2h-model-list">
-        <div class="h2h-model">
-          <div class="h2h-model-name">RAV4 Hybrid <span class="winner-badge">Best Overall</span></div>
-          <div class="h2h-model-type">Standard Hybrid &bull; Compact &bull; AWD Standard</div>
-          <div class="h2h-specs">
-            <div class="h2h-spec"><span class="h2h-spec-val">$32,350</span><span class="h2h-spec-key">From</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">40 MPG</span><span class="h2h-spec-key">Combined</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">219 hp</span><span class="h2h-spec-key">Power</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">2,500 lb</span><span class="h2h-spec-key">Towing</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">37.5 ft&sup3;</span><span class="h2h-spec-key">Cargo</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">10yr/150K</span><span class="h2h-spec-key">Battery Wrty</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; NHTSA</span><span class="h2h-spec-key">Safety</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">IIHS TSP+</span><span class="h2h-spec-key">Award</span></div>
-          </div>
-        </div>
-        <div class="h2h-model">
-          <div class="h2h-model-name">RAV4 Prime <span class="winner-badge">Quickest</span></div>
-          <div class="h2h-model-type">PHEV &bull; Compact &bull; AWD Standard &bull; 42mi EV</div>
-          <div class="h2h-specs">
-            <div class="h2h-spec"><span class="h2h-spec-val">$43,400</span><span class="h2h-spec-key">From</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">94 MPGe</span><span class="h2h-spec-key">Combined</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">302 hp</span><span class="h2h-spec-key">Power</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">5.7s</span><span class="h2h-spec-key">0-60</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">33.1 ft&sup3;</span><span class="h2h-spec-key">Cargo</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">No</span><span class="h2h-spec-key">Tax Credit</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; NHTSA</span><span class="h2h-spec-key">Safety</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">IIHS TSP+</span><span class="h2h-spec-key">Award</span></div>
-          </div>
-        </div>
-        <div class="h2h-model">
-          <div class="h2h-model-name">Corolla Cross Hybrid</div>
-          <div class="h2h-model-type">Standard Hybrid &bull; Subcompact &bull; FWD/AWD</div>
-          <div class="h2h-specs">
-            <div class="h2h-spec"><span class="h2h-spec-val">$30,500</span><span class="h2h-spec-key">From</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">46 MPG</span><span class="h2h-spec-key">Combined</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">194 hp</span><span class="h2h-spec-key">Power</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">2,000 lb</span><span class="h2h-spec-key">Towing</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; NHTSA</span><span class="h2h-spec-key">Safety</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">IIHS TSP+</span><span class="h2h-spec-key">Award</span></div>
-          </div>
-        </div>
-        <div class="h2h-model">
-          <div class="h2h-model-name">Highlander Hybrid</div>
-          <div class="h2h-model-type">Turbo Hybrid &bull; Midsize 3-Row &bull; AWD Standard</div>
-          <div class="h2h-specs">
-            <div class="h2h-spec"><span class="h2h-spec-val">$40,500</span><span class="h2h-spec-key">From</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">34 MPG</span><span class="h2h-spec-key">Combined</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">243 hp</span><span class="h2h-spec-key">Power</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">3,500 lb</span><span class="h2h-spec-key">Towing</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; NHTSA</span><span class="h2h-spec-key">Safety</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">IIHS TSP+</span><span class="h2h-spec-key">Award</span></div>
-          </div>
-        </div>
-        <div class="h2h-model">
-          <div class="h2h-model-name">Grand Highlander Hybrid <span class="winner-badge">Best 3-Row</span></div>
-          <div class="h2h-model-type">Standard Hybrid &bull; Midsize 3-Row &bull; AWD Standard</div>
-          <div class="h2h-specs">
-            <div class="h2h-spec"><span class="h2h-spec-val">$44,400</span><span class="h2h-spec-key">From</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">34 MPG</span><span class="h2h-spec-key">Combined</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">243 hp</span><span class="h2h-spec-key">Power</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">3,500 lb</span><span class="h2h-spec-key">Towing</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">97.5 ft&sup3;</span><span class="h2h-spec-key">Max Cargo</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">7-8</span><span class="h2h-spec-key">Seats</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; NHTSA</span><span class="h2h-spec-key">Safety</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">IIHS TSP+</span><span class="h2h-spec-key">Award</span></div>
-          </div>
-        </div>
+        <div class="h2h-model"><div class="h2h-model-name">RAV4 Hybrid <span class="winner-badge">Best Overall</span></div><div class="h2h-model-type">Hybrid &bull; Compact &bull; AWD Std</div><div class="h2h-specs"><div class="h2h-spec"><span class="h2h-spec-val">$32,350</span><span class="h2h-spec-key">From</span></div><div class="h2h-spec"><span class="h2h-spec-val">40 MPG</span><span class="h2h-spec-key">Combined</span></div><div class="h2h-spec"><span class="h2h-spec-val">219 hp</span><span class="h2h-spec-key">Power</span></div><div class="h2h-spec"><span class="h2h-spec-val">2,500 lb</span><span class="h2h-spec-key">Towing</span></div><div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; / TSP+</span><span class="h2h-spec-key">Safety</span></div><div class="h2h-spec"><span class="h2h-spec-val">10yr/150K</span><span class="h2h-spec-key">Battery Wrty</span></div></div></div>
+        <div class="h2h-model"><div class="h2h-model-name">RAV4 Prime <span class="winner-badge">Quickest</span></div><div class="h2h-model-type">PHEV &bull; Compact &bull; AWD Std &bull; 42mi EV</div><div class="h2h-specs"><div class="h2h-spec"><span class="h2h-spec-val">$43,400</span><span class="h2h-spec-key">From</span></div><div class="h2h-spec"><span class="h2h-spec-val">94 MPGe</span><span class="h2h-spec-key">Combined</span></div><div class="h2h-spec"><span class="h2h-spec-val">302 hp</span><span class="h2h-spec-key">Power</span></div><div class="h2h-spec"><span class="h2h-spec-val">5.7s</span><span class="h2h-spec-key">0-60</span></div><div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; / TSP+</span><span class="h2h-spec-key">Safety</span></div><div class="h2h-spec"><span class="h2h-spec-val">No</span><span class="h2h-spec-key">Tax Credit</span></div></div></div>
+        <div class="h2h-model"><div class="h2h-model-name">Corolla Cross Hybrid</div><div class="h2h-model-type">Hybrid &bull; Subcompact &bull; FWD/AWD</div><div class="h2h-specs"><div class="h2h-spec"><span class="h2h-spec-val">$30,500</span><span class="h2h-spec-key">From</span></div><div class="h2h-spec"><span class="h2h-spec-val">46 MPG</span><span class="h2h-spec-key">Combined</span></div><div class="h2h-spec"><span class="h2h-spec-val">194 hp</span><span class="h2h-spec-key">Power</span></div><div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; / TSP+</span><span class="h2h-spec-key">Safety</span></div></div></div>
+        <div class="h2h-model"><div class="h2h-model-name">Highlander Hybrid</div><div class="h2h-model-type">Turbo Hybrid &bull; Midsize 3-Row &bull; AWD Std</div><div class="h2h-specs"><div class="h2h-spec"><span class="h2h-spec-val">$40,500</span><span class="h2h-spec-key">From</span></div><div class="h2h-spec"><span class="h2h-spec-val">34 MPG</span><span class="h2h-spec-key">Combined</span></div><div class="h2h-spec"><span class="h2h-spec-val">243 hp</span><span class="h2h-spec-key">Power</span></div><div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; / TSP+</span><span class="h2h-spec-key">Safety</span></div></div></div>
+        <div class="h2h-model"><div class="h2h-model-name">Grand Highlander Hybrid <span class="winner-badge">Best 3-Row</span></div><div class="h2h-model-type">Hybrid &bull; Midsize 3-Row &bull; AWD Std</div><div class="h2h-specs"><div class="h2h-spec"><span class="h2h-spec-val">$44,400</span><span class="h2h-spec-key">From</span></div><div class="h2h-spec"><span class="h2h-spec-val">34 MPG</span><span class="h2h-spec-key">Combined</span></div><div class="h2h-spec"><span class="h2h-spec-val">97.5 ft&sup3;</span><span class="h2h-spec-key">Max Cargo</span></div><div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; / TSP+</span><span class="h2h-spec-key">Safety</span></div></div></div>
       </div>
-      <div class="h2h-verdict">
-        <div class="h2h-verdict-title">Brand Verdict</div>
-        <div class="h2h-verdict-text">The widest hybrid lineup from subcompact to 3-row. Industry-best reliability and resale value. The 10yr/150K hybrid battery warranty is a standout. Every model earns 5&#9733; NHTSA and IIHS TSP+ &mdash; perfect safety across the board. Downside: interiors can feel plain on lower trims and no tax credit on the PHEV.</div>
-      </div>
+      <div class="h2h-verdict"><div class="h2h-verdict-title">Brand Verdict</div><div class="h2h-verdict-text">The widest hybrid lineup from subcompact to 3-row. Industry-best reliability and resale value. 10yr/150K hybrid battery warranty is a standout. Every model earns 5&#9733; NHTSA and IIHS TSP+. Downside: interiors can feel plain on lower trims and no tax credit on the PHEV. Also see Lexus (NX, RX, TX, GX) in the Luxury filter for Toyota's premium offerings.</div></div>
     </div>
-
-    <!-- HONDA -->
     <div class="h2h-brand-section">
-      <div class="h2h-brand-header honda">
-        <div class="h2h-brand-name">Honda</div>
-        <div class="h2h-brand-tagline">Two models, both excellent &mdash; quality over quantity</div>
-      </div>
+      <div class="h2h-brand-header honda"><div class="h2h-brand-name">Honda</div><div class="h2h-brand-tagline">Two models, both excellent &mdash; quality over quantity, all 5&#9733; NHTSA + TSP+</div></div>
       <div class="h2h-model-list">
-        <div class="h2h-model">
-          <div class="h2h-model-name">CR-V Hybrid <span class="winner-badge">Best Cargo</span></div>
-          <div class="h2h-model-type">Standard Hybrid &bull; Compact &bull; AWD Standard</div>
-          <div class="h2h-specs">
-            <div class="h2h-spec"><span class="h2h-spec-val">$33,150</span><span class="h2h-spec-key">From</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">40 MPG</span><span class="h2h-spec-key">Combined</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">204 hp</span><span class="h2h-spec-key">Power</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">1,000 lb</span><span class="h2h-spec-key">Towing</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">76.5 ft&sup3;</span><span class="h2h-spec-key">Max Cargo</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">5yr/60K*</span><span class="h2h-spec-key">Battery Wrty</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; NHTSA</span><span class="h2h-spec-key">Safety</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">IIHS TSP+</span><span class="h2h-spec-key">Award</span></div>
-          </div>
-        </div>
-        <div class="h2h-model">
-          <div class="h2h-model-name">CR-V PHEV <span class="winner-badge">Best EV Range</span></div>
-          <div class="h2h-model-type">PHEV &bull; Compact &bull; FWD/AWD &bull; 47mi EV</div>
-          <div class="h2h-specs">
-            <div class="h2h-spec"><span class="h2h-spec-val">$39,000</span><span class="h2h-spec-key">From</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">~80 MPGe</span><span class="h2h-spec-key">Combined</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">~230 hp</span><span class="h2h-spec-key">Power</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">47 mi</span><span class="h2h-spec-key">EV Range</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">~34 ft&sup3;</span><span class="h2h-spec-key">Cargo</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">Likely</span><span class="h2h-spec-key">Tax Credit</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; NHTSA</span><span class="h2h-spec-key">Safety</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">IIHS TSP+</span><span class="h2h-spec-key">Award</span></div>
-          </div>
-        </div>
+        <div class="h2h-model"><div class="h2h-model-name">CR-V Hybrid <span class="winner-badge">Best Cargo</span></div><div class="h2h-model-type">Hybrid &bull; Compact &bull; AWD Std</div><div class="h2h-specs"><div class="h2h-spec"><span class="h2h-spec-val">$33,150</span><span class="h2h-spec-key">From</span></div><div class="h2h-spec"><span class="h2h-spec-val">40 MPG</span><span class="h2h-spec-key">Combined</span></div><div class="h2h-spec"><span class="h2h-spec-val">76.5 ft&sup3;</span><span class="h2h-spec-key">Max Cargo</span></div><div class="h2h-spec"><span class="h2h-spec-val">1,000 lb</span><span class="h2h-spec-key">Towing</span></div><div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; / TSP+</span><span class="h2h-spec-key">Safety</span></div><div class="h2h-spec"><span class="h2h-spec-val">5yr/60K*</span><span class="h2h-spec-key">Battery Wrty</span></div></div></div>
+        <div class="h2h-model"><div class="h2h-model-name">CR-V PHEV <span class="winner-badge">Best EV Range</span></div><div class="h2h-model-type">PHEV &bull; Compact &bull; FWD/AWD &bull; 47mi EV</div><div class="h2h-specs"><div class="h2h-spec"><span class="h2h-spec-val">$39,000</span><span class="h2h-spec-key">From</span></div><div class="h2h-spec"><span class="h2h-spec-val">~80 MPGe</span><span class="h2h-spec-key">Combined</span></div><div class="h2h-spec"><span class="h2h-spec-val">47 mi</span><span class="h2h-spec-key">EV Range</span></div><div class="h2h-spec"><span class="h2h-spec-val">Likely</span><span class="h2h-spec-key">Tax Credit</span></div><div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; / TSP+</span><span class="h2h-spec-key">Safety</span></div><div class="h2h-spec"><span class="h2h-spec-val">~230 hp</span><span class="h2h-spec-key">Power</span></div></div></div>
       </div>
-      <div class="h2h-verdict">
-        <div class="h2h-verdict-title">Brand Verdict</div>
-        <div class="h2h-verdict-text">Only two models, but both are top-tier. The CR-V Hybrid has class-leading max cargo (76.5 ft&sup3;) and the PHEV has the best EV range (47mi) plus likely tax credit eligibility. Both earn 5&#9733; NHTSA and IIHS TSP+ &mdash; the CR-V is an IIHS Top Safety Pick+ with Honda Sensing standard on all trims. Big weakness: only 1,000 lb towing on both, and the shorter battery warranty (5yr vs Toyota's 10yr) unless you're in a CARB state.</div>
-      </div>
+      <div class="h2h-verdict"><div class="h2h-verdict-title">Brand Verdict</div><div class="h2h-verdict-text">Only two models, but both top-tier. CR-V Hybrid has class-leading max cargo (76.5 ft&sup3;) and the PHEV has the best EV range (47mi) plus likely tax credit. Both earn 5&#9733; NHTSA and IIHS TSP+ with Honda Sensing standard. Big weakness: only 1,000 lb towing on both, and shorter battery warranty (5yr vs Toyota's 10yr) unless in a CARB state.</div></div>
     </div>
-
-    <!-- SUBARU -->
     <div class="h2h-brand-section">
-      <div class="h2h-brand-header subaru">
-        <div class="h2h-brand-name">Subaru</div>
-        <div class="h2h-brand-tagline">AWD specialists &mdash; mild hybrids only, for now</div>
-      </div>
+      <div class="h2h-brand-header subaru"><div class="h2h-brand-name">Subaru</div><div class="h2h-brand-tagline">AWD specialists &mdash; mild hybrids only, but top safety marks</div></div>
       <div class="h2h-model-list">
-        <div class="h2h-model">
-          <div class="h2h-model-name">Crosstrek</div>
-          <div class="h2h-model-type">Mild Hybrid &bull; Subcompact &bull; AWD Standard</div>
-          <div class="h2h-specs">
-            <div class="h2h-spec"><span class="h2h-spec-val">$30,000</span><span class="h2h-spec-key">From</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">29-32</span><span class="h2h-spec-key">MPG</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">~182 hp</span><span class="h2h-spec-key">Power</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">2,000 lb</span><span class="h2h-spec-key">Towing</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">~22 ft&sup3;</span><span class="h2h-spec-key">Cargo</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">8.7 in</span><span class="h2h-spec-key">Clearance</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; NHTSA</span><span class="h2h-spec-key">Safety</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">IIHS TSP+</span><span class="h2h-spec-key">Award</span></div>
-          </div>
-        </div>
-        <div class="h2h-model">
-          <div class="h2h-model-name">Forester</div>
-          <div class="h2h-model-type">Mild Hybrid &bull; Compact &bull; AWD Standard</div>
-          <div class="h2h-specs">
-            <div class="h2h-spec"><span class="h2h-spec-val">$36,000</span><span class="h2h-spec-key">From</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">29-33</span><span class="h2h-spec-key">MPG</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">~180 hp</span><span class="h2h-spec-key">Power</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">~1,500 lb</span><span class="h2h-spec-key">Towing</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">~29 ft&sup3;</span><span class="h2h-spec-key">Cargo</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val">8.7 in</span><span class="h2h-spec-key">Clearance</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; NHTSA</span><span class="h2h-spec-key">Safety</span></div>
-            <div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">IIHS TSP+</span><span class="h2h-spec-key">Award</span></div>
-          </div>
-        </div>
+        <div class="h2h-model"><div class="h2h-model-name">Crosstrek</div><div class="h2h-model-type">Mild Hybrid &bull; Subcompact &bull; AWD Std</div><div class="h2h-specs"><div class="h2h-spec"><span class="h2h-spec-val">$30,000</span><span class="h2h-spec-key">From</span></div><div class="h2h-spec"><span class="h2h-spec-val">29-32</span><span class="h2h-spec-key">MPG</span></div><div class="h2h-spec"><span class="h2h-spec-val">8.7 in</span><span class="h2h-spec-key">Clearance</span></div><div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; / TSP+</span><span class="h2h-spec-key">Safety</span></div></div></div>
+        <div class="h2h-model"><div class="h2h-model-name">Forester</div><div class="h2h-model-type">Mild Hybrid &bull; Compact &bull; AWD Std</div><div class="h2h-specs"><div class="h2h-spec"><span class="h2h-spec-val">$36,000</span><span class="h2h-spec-key">From</span></div><div class="h2h-spec"><span class="h2h-spec-val">29-33</span><span class="h2h-spec-key">MPG</span></div><div class="h2h-spec"><span class="h2h-spec-val">8.7 in</span><span class="h2h-spec-key">Clearance</span></div><div class="h2h-spec"><span class="h2h-spec-val" style="color:var(--green)">5&#9733; / TSP+</span><span class="h2h-spec-key">Safety</span></div></div></div>
       </div>
-      <div class="h2h-verdict">
-        <div class="h2h-verdict-title">Brand Verdict</div>
-        <div class="h2h-verdict-text">Subaru's "hybrids" are mild systems that barely improve fuel economy over conventional models. At 29-33 MPG vs Toyota's 40+ and Honda's 40, they're significantly behind. The real Subaru advantages are symmetrical AWD, 8.7" ground clearance, and excellent safety &mdash; both earn 5&#9733; NHTSA and IIHS TSP+ with EyeSight standard on all trims. If fuel economy matters (the whole point of a hybrid), Toyota and Honda are far better choices. But if safety + AWD + off-road is your priority, Subaru competes well.</div>
-      </div>
+      <div class="h2h-verdict"><div class="h2h-verdict-title">Brand Verdict</div><div class="h2h-verdict-text">Subaru's "hybrids" are mild systems: 29-33 MPG vs Toyota/Honda's 40+. The real advantages are symmetrical AWD, 8.7" ground clearance, and excellent safety (5&#9733; NHTSA + IIHS TSP+ with EyeSight standard). If fuel economy matters, Toyota and Honda win. If safety + AWD + off-road is your priority, Subaru competes well.</div></div>
     </div>
   </div>
 
-  <!-- VISUAL COMPARISON BARS -->
   <div class="compare-section reveal">
-    <div class="section-header" style="margin-top: 48px;">
-      <div class="section-tag">Visual Comparison</div>
-      <h2 class="section-title">Key Metrics Side by Side</h2>
-      <p class="section-subtitle">Comparing the top compact model from each brand: RAV4 Hybrid vs CR-V Hybrid vs Forester</p>
-    </div>
-
-    <div class="compare-category">
-      <div class="compare-cat-title">Fuel Economy (Combined MPG)</div>
-      <div class="compare-row">
-        <div class="compare-label">RAV4 Hybrid</div>
-        <div class="compare-bar-track"><div class="compare-bar-fill bar-toyota" data-width="82">40 MPG</div></div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-label">CR-V Hybrid</div>
-        <div class="compare-bar-track"><div class="compare-bar-fill bar-honda" data-width="82">40 MPG</div></div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-label">Forester</div>
-        <div class="compare-bar-track"><div class="compare-bar-fill bar-subaru" data-width="60">29-33 MPG</div></div>
-      </div>
-    </div>
-
-    <div class="compare-category">
-      <div class="compare-cat-title">Cargo Space (Behind 2nd Row, cu ft)</div>
-      <div class="compare-row">
-        <div class="compare-label">RAV4 Hybrid</div>
-        <div class="compare-bar-track"><div class="compare-bar-fill bar-toyota" data-width="78">37.5</div></div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-label">CR-V Hybrid</div>
-        <div class="compare-bar-track"><div class="compare-bar-fill bar-honda" data-width="75">36.3</div></div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-label">Forester</div>
-        <div class="compare-bar-track"><div class="compare-bar-fill bar-subaru" data-width="60">~29</div></div>
-      </div>
-    </div>
-
-    <div class="compare-category">
-      <div class="compare-cat-title">Max Cargo (cu ft)</div>
-      <div class="compare-row">
-        <div class="compare-label">RAV4 Hybrid</div>
-        <div class="compare-bar-track"><div class="compare-bar-fill bar-toyota" data-width="72">69.8</div></div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-label">CR-V Hybrid</div>
-        <div class="compare-bar-track"><div class="compare-bar-fill bar-honda" data-width="85">76.5</div></div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-label">Forester</div>
-        <div class="compare-bar-track"><div class="compare-bar-fill bar-subaru" data-width="59">~57</div></div>
-      </div>
-    </div>
-
-    <div class="compare-category">
-      <div class="compare-cat-title">Horsepower</div>
-      <div class="compare-row">
-        <div class="compare-label">RAV4 Hybrid</div>
-        <div class="compare-bar-track"><div class="compare-bar-fill bar-toyota" data-width="73">219 hp</div></div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-label">CR-V Hybrid</div>
-        <div class="compare-bar-track"><div class="compare-bar-fill bar-honda" data-width="68">204 hp</div></div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-label">Forester</div>
-        <div class="compare-bar-track"><div class="compare-bar-fill bar-subaru" data-width="60">~180 hp</div></div>
-      </div>
-    </div>
-
-    <div class="compare-category">
-      <div class="compare-cat-title">Towing Capacity (lbs)</div>
-      <div class="compare-row">
-        <div class="compare-label">RAV4 Hybrid</div>
-        <div class="compare-bar-track"><div class="compare-bar-fill bar-toyota" data-width="85">2,500</div></div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-label">CR-V Hybrid</div>
-        <div class="compare-bar-track"><div class="compare-bar-fill bar-honda" data-width="34">1,000</div></div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-label">Forester</div>
-        <div class="compare-bar-track"><div class="compare-bar-fill bar-subaru" data-width="51">~1,500</div></div>
-      </div>
-    </div>
-
-    <div class="compare-category">
-      <div class="compare-cat-title">Hybrid Battery Warranty (years)</div>
-      <div class="compare-row">
-        <div class="compare-label">Toyota</div>
-        <div class="compare-bar-track"><div class="compare-bar-fill bar-toyota" data-width="100">10yr / 150K mi</div></div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-label">Honda</div>
-        <div class="compare-bar-track"><div class="compare-bar-fill bar-honda" data-width="50">5yr / 60K*</div></div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-label">Subaru</div>
-        <div class="compare-bar-track"><div class="compare-bar-fill bar-subaru" data-width="50">5yr / 60K</div></div>
-      </div>
-    </div>
-
-    <div class="compare-category">
-      <div class="compare-cat-title">Starting MSRP</div>
-      <div class="compare-row">
-        <div class="compare-label">RAV4 Hybrid</div>
-        <div class="compare-bar-track"><div class="compare-bar-fill bar-toyota" data-width="67">$32,350</div></div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-label">CR-V Hybrid</div>
-        <div class="compare-bar-track"><div class="compare-bar-fill bar-honda" data-width="69">$33,150</div></div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-label">Forester</div>
-        <div class="compare-bar-track"><div class="compare-bar-fill bar-subaru" data-width="75">$36,000</div></div>
-      </div>
-    </div>
-
-    <div class="compare-category">
-      <div class="compare-cat-title">Safety Ratings</div>
-      <div class="compare-row">
-        <div class="compare-label">RAV4 Hybrid</div>
-        <div class="compare-bar-track"><div class="compare-bar-fill bar-toyota" data-width="100">5&#9733; NHTSA &bull; IIHS TSP+</div></div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-label">CR-V Hybrid</div>
-        <div class="compare-bar-track"><div class="compare-bar-fill bar-honda" data-width="100">5&#9733; NHTSA &bull; IIHS TSP+</div></div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-label">Forester</div>
-        <div class="compare-bar-track"><div class="compare-bar-fill bar-subaru" data-width="100">5&#9733; NHTSA &bull; IIHS TSP+</div></div>
-      </div>
-    </div>
-
-    <div style="margin-top: 24px; padding: 20px; background: var(--bg-card); border-radius: var(--radius-sm); border-left: 3px solid var(--green);">
-      <div style="font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Safety Verdict</div>
-      <div style="font-size: 14px; color: var(--text-secondary); line-height: 1.6;">All three brands earn top marks: <strong style="color: var(--text-primary);">5-star NHTSA and IIHS Top Safety Pick+</strong> across the board. This is a tie &mdash; Toyota, Honda, and Subaru are all excellent choices for safety. Notably, <strong style="color: var(--red);">Ford and Mitsubishi</strong> are the brands in this comparison with weaker safety results (Explorer: 4&#9733; NHTSA; Outlander PHEV: 4&#9733; NHTSA; both only TSP, not TSP+).</div>
-    </div>
+    <div class="section-header" style="margin-top: 48px;"><div class="section-tag">Visual Comparison</div><h2 class="section-title">Key Metrics Side by Side</h2><p class="section-subtitle">Comparing the top compact: RAV4 Hybrid vs CR-V Hybrid vs Forester</p></div>
+    <div class="compare-category"><div class="compare-cat-title">Fuel Economy (Combined MPG)</div><div class="compare-row"><div class="compare-label">RAV4 Hybrid</div><div class="compare-bar-track"><div class="compare-bar-fill bar-toyota" data-width="82">40 MPG</div></div></div><div class="compare-row"><div class="compare-label">CR-V Hybrid</div><div class="compare-bar-track"><div class="compare-bar-fill bar-honda" data-width="82">40 MPG</div></div></div><div class="compare-row"><div class="compare-label">Forester</div><div class="compare-bar-track"><div class="compare-bar-fill bar-subaru" data-width="60">29-33 MPG</div></div></div></div>
+    <div class="compare-category"><div class="compare-cat-title">Max Cargo (cu ft)</div><div class="compare-row"><div class="compare-label">RAV4 Hybrid</div><div class="compare-bar-track"><div class="compare-bar-fill bar-toyota" data-width="72">69.8</div></div></div><div class="compare-row"><div class="compare-label">CR-V Hybrid</div><div class="compare-bar-track"><div class="compare-bar-fill bar-honda" data-width="85">76.5</div></div></div><div class="compare-row"><div class="compare-label">Forester</div><div class="compare-bar-track"><div class="compare-bar-fill bar-subaru" data-width="59">~57</div></div></div></div>
+    <div class="compare-category"><div class="compare-cat-title">Horsepower</div><div class="compare-row"><div class="compare-label">RAV4 Hybrid</div><div class="compare-bar-track"><div class="compare-bar-fill bar-toyota" data-width="73">219 hp</div></div></div><div class="compare-row"><div class="compare-label">CR-V Hybrid</div><div class="compare-bar-track"><div class="compare-bar-fill bar-honda" data-width="68">204 hp</div></div></div><div class="compare-row"><div class="compare-label">Forester</div><div class="compare-bar-track"><div class="compare-bar-fill bar-subaru" data-width="60">~180 hp</div></div></div></div>
+    <div class="compare-category"><div class="compare-cat-title">Towing Capacity (lbs)</div><div class="compare-row"><div class="compare-label">RAV4 Hybrid</div><div class="compare-bar-track"><div class="compare-bar-fill bar-toyota" data-width="85">2,500</div></div></div><div class="compare-row"><div class="compare-label">CR-V Hybrid</div><div class="compare-bar-track"><div class="compare-bar-fill bar-honda" data-width="34">1,000</div></div></div><div class="compare-row"><div class="compare-label">Forester</div><div class="compare-bar-track"><div class="compare-bar-fill bar-subaru" data-width="51">~1,500</div></div></div></div>
+    <div class="compare-category"><div class="compare-cat-title">Hybrid Battery Warranty</div><div class="compare-row"><div class="compare-label">Toyota</div><div class="compare-bar-track"><div class="compare-bar-fill bar-toyota" data-width="100">10yr / 150K mi</div></div></div><div class="compare-row"><div class="compare-label">Honda</div><div class="compare-bar-track"><div class="compare-bar-fill bar-honda" data-width="50">5yr / 60K*</div></div></div><div class="compare-row"><div class="compare-label">Subaru</div><div class="compare-bar-track"><div class="compare-bar-fill bar-subaru" data-width="50">5yr / 60K</div></div></div></div>
+    <div class="compare-category"><div class="compare-cat-title">Safety Ratings</div><div class="compare-row"><div class="compare-label">RAV4 Hybrid</div><div class="compare-bar-track"><div class="compare-bar-fill bar-toyota" data-width="100">5&#9733; NHTSA &bull; IIHS TSP+</div></div></div><div class="compare-row"><div class="compare-label">CR-V Hybrid</div><div class="compare-bar-track"><div class="compare-bar-fill bar-honda" data-width="100">5&#9733; NHTSA &bull; IIHS TSP+</div></div></div><div class="compare-row"><div class="compare-label">Forester</div><div class="compare-bar-track"><div class="compare-bar-fill bar-subaru" data-width="100">5&#9733; NHTSA &bull; IIHS TSP+</div></div></div></div>
+    <div style="margin-top: 24px; padding: 20px; background: var(--bg-card); border-radius: var(--radius-sm); border-left: 3px solid var(--green);"><div style="font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Safety Verdict</div><div style="font-size: 14px; color: var(--text-secondary); line-height: 1.6;">All three brands earn top marks: <strong style="color: var(--text-primary);">5-star NHTSA and IIHS Top Safety Pick+</strong> across the board. This is a tie. Notably, <strong style="color: var(--red);">Ford and Mitsubishi</strong> are the brands with weaker results (Explorer: 4&#9733;; Outlander PHEV: 4&#9733;; both only TSP, not TSP+).</div></div>
   </div>
 </section>
 
 <!-- TEST DRIVE CHECKLIST -->
 <section id="checklist">
-  <div class="section-header reveal">
-    <div class="section-tag">First-Timer's Guide</div>
-    <h2 class="section-title">SUV Test Drive Checklist</h2>
-    <p class="section-subtitle">Coming from coupes and sedans? Here's everything to evaluate when test driving SUVs for the first time. Tap items to check them off.</p>
-  </div>
-
-  <div class="checklist-progress reveal">
-    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width: 0%"></div></div>
-    <div class="progress-text" id="progress-text">0 / 32 checked</div>
-  </div>
-
+  <div class="section-header reveal"><div class="section-tag">First-Timer's Guide</div><h2 class="section-title">SUV Test Drive Checklist</h2><p class="section-subtitle">Coming from coupes and sedans? Here's everything to evaluate. Tap items to check them off.</p></div>
+  <div class="checklist-progress reveal"><div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width: 0%"></div></div><div class="progress-text" id="progress-text">0 / 32 checked</div></div>
   <div class="checklist-grid reveal" id="checklist-container">
-
-    <div class="checklist-category">
-      <div class="checklist-icon">&#128663;</div>
-      <div class="checklist-cat-title">Getting In & Out</div>
-      <div class="checklist-cat-desc">SUVs sit higher than sedans — this changes everything about entry/exit</div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>Step-in height:</strong> Can you get in without awkwardly climbing or jumping? Is there a running board?</div>
-      </div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>Hip point:</strong> Unlike a sedan where you drop down, SUVs should feel like sliding into a chair. Note the difference.</div>
-      </div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>Door opening angle:</strong> Will the doors open wide enough in tight parking spots? Try simulating a parking garage.</div>
-      </div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>Rear hatch:</strong> How heavy is the liftgate? Does it have power open/close? Check if it clears your garage ceiling.</div>
-      </div>
+    <div class="checklist-category"><div class="checklist-icon">&#128663;</div><div class="checklist-cat-title">Getting In & Out</div><div class="checklist-cat-desc">SUVs sit higher than sedans — this changes everything about entry/exit</div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>Step-in height:</strong> Can you get in without climbing? Is there a running board?</div></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>Hip point:</strong> Unlike a sedan where you drop down, SUVs should feel like sliding into a chair.</div></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>Door opening angle:</strong> Will doors open wide enough in tight parking spots?</div></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>Rear hatch:</strong> How heavy is the liftgate? Power open/close? Clears your garage ceiling?</div></div>
     </div>
-
-    <div class="checklist-category">
-      <div class="checklist-icon">&#127919;</div>
-      <div class="checklist-cat-title">Driving Feel (vs Your Sedan)</div>
-      <div class="checklist-cat-desc">The biggest adjustment — higher center of gravity changes handling significantly</div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>Body roll in turns:</strong> Take a highway on-ramp at speed. SUVs lean more than sedans — is it manageable or unsettling?</div>
-      </div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>Braking feel:</strong> SUVs are heavier (3,500-4,500 lbs). Do a panic stop from 40mph. Note the stopping distance vs your sedan.</div>
-      </div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>Steering weight:</strong> Is it too light (floaty) or too heavy? Does it track straight on the highway?</div>
-      </div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>Wind noise:</strong> The taller profile catches more wind. Drive at 65+ mph and note cabin noise levels.</div>
-      </div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>Ride quality:</strong> Go over railroad tracks and potholes. SUVs can be either bouncier or more absorbent than sedans.</div>
-      </div>
+    <div class="checklist-category"><div class="checklist-icon">&#127919;</div><div class="checklist-cat-title">Driving Feel (vs Your Sedan)</div><div class="checklist-cat-desc">Higher center of gravity changes handling significantly</div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>Body roll in turns:</strong> Take a highway on-ramp at speed. Is the lean manageable?</div></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>Braking feel:</strong> SUVs are 3,500-4,500 lbs. Do a panic stop from 40mph.</div></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>Steering weight:</strong> Is it too light (floaty) or too heavy? Does it track straight?</div></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>Wind noise:</strong> Taller profile catches more wind. Drive at 65+ mph.</div></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>Ride quality:</strong> Railroad tracks and potholes — bouncier or more absorbent than your sedan?</div></div>
     </div>
-
-    <div class="checklist-category">
-      <div class="checklist-icon">&#9889;</div>
-      <div class="checklist-cat-title">Hybrid-Specific Checks</div>
-      <div class="checklist-cat-desc">Things unique to hybrid/PHEV powertrains that won't exist in your current car</div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>EV mode silence:</strong> Start the car — it may be completely silent. Drive on electric at low speed. Are you comfortable with the quiet?</div>
-      </div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>Engine on/off transitions:</strong> The gas engine cycles on and off. Is the transition smooth or jarring? Floor it to force the engine on.</div>
-      </div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>Regenerative braking:</strong> Lift off the accelerator. Some hybrids slow aggressively (regen), others coast. Which feels natural to you?</div>
-      </div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>CVT/transmission feel:</strong> Many hybrids use CVTs that "drone" under acceleration. Try a hard merge — is the sound tolerable?</div>
-      </div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>PHEV charge port location:</strong> If testing a PHEV, where's the charge port? Will it reach your home charger or outlet?</div>
-      </div>
+    <div class="checklist-category"><div class="checklist-icon">&#9889;</div><div class="checklist-cat-title">Hybrid-Specific Checks</div><div class="checklist-cat-desc">Things unique to hybrid/PHEV powertrains</div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>EV mode silence:</strong> Start the car — it may be completely silent. Comfortable with the quiet?</div></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>Engine on/off transitions:</strong> Floor it to force the engine on. Smooth or jarring?</div></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>Regenerative braking:</strong> Lift off the gas. Some hybrids slow aggressively. Which feels natural?</div></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>CVT/transmission drone:</strong> Try a hard merge — is the sound tolerable?</div></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>PHEV charge port:</strong> Where's the port? Will it reach your home charger?</div></div>
     </div>
-
-    <div class="checklist-category">
-      <div class="checklist-icon">&#128065;</div>
-      <div class="checklist-cat-title">Visibility & Parking</div>
-      <div class="checklist-cat-desc">SUVs have bigger blind spots but better forward visibility than sedans</div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>Forward visibility:</strong> Can you see the road clearly? You'll sit higher than a sedan — enjoy the commanding view but check hood visibility.</div>
-      </div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>Rear visibility:</strong> Look behind you without the camera. Many SUVs have tiny rear windows. Is the backup camera crisp and wide-angle?</div>
-      </div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>Blind spots:</strong> Check over your shoulder during a lane change. C-pillars on SUVs can be thick. Does BSM (blind spot monitoring) compensate?</div>
-      </div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>Parallel park it:</strong> This is mandatory. SUVs are 6-12" wider and 6-24" longer than your sedan. Use the camera and sensors.</div>
-      </div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>360-degree camera:</strong> If available, test the surround-view system. This feature is a game-changer for sedan converts.</div>
-      </div>
+    <div class="checklist-category"><div class="checklist-icon">&#128065;</div><div class="checklist-cat-title">Visibility & Parking</div><div class="checklist-cat-desc">Bigger blind spots but better forward view than sedans</div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>Forward visibility:</strong> Commanding view, but can you see the hood edge?</div></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>Rear visibility:</strong> Many SUVs have tiny rear windows. Is the backup camera wide-angle?</div></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>Blind spots:</strong> Check over your shoulder during a lane change. Does BSM compensate?</div></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>Parallel park it:</strong> Mandatory. SUVs are 6-12" wider and 6-24" longer than your sedan.</div></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>360-degree camera:</strong> If available, this is a game-changer for sedan converts.</div></div>
     </div>
-
-    <div class="checklist-category">
-      <div class="checklist-icon">&#128186;</div>
-      <div class="checklist-cat-title">Tech & Interior</div>
-      <div class="checklist-cat-desc">Infotainment and daily-use features you'll interact with every drive</div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>Phone pairing:</strong> Connect your phone via wireless CarPlay/Android Auto. How quickly does it pair? Is there lag?</div>
-      </div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>Climate controls:</strong> Are they physical buttons or buried in a touchscreen? Try adjusting temp while "driving" without looking.</div>
-      </div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>Driver assistance:</strong> Test adaptive cruise + lane centering on the highway. This is the biggest comfort upgrade from an older sedan.</div>
-      </div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>USB ports & wireless pad:</strong> Count the ports. Where's the wireless charger? Does your phone fit? Does it overheat while navigating?</div>
-      </div>
+    <div class="checklist-category"><div class="checklist-icon">&#128186;</div><div class="checklist-cat-title">Tech & Interior</div><div class="checklist-cat-desc">Features you'll interact with every drive</div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>Phone pairing:</strong> Connect wireless CarPlay/AA. How quick? Any lag?</div></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>Climate controls:</strong> Physical buttons or buried in touchscreen? Try adjusting without looking.</div></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>Driver assistance:</strong> Test adaptive cruise + lane centering on the highway.</div></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>USB ports & wireless pad:</strong> Count ports. Does your phone fit the wireless charger?</div></div>
     </div>
-
-    <div class="checklist-category">
-      <div class="checklist-icon">&#128715;</div>
-      <div class="checklist-cat-title">Practical & Lifestyle</div>
-      <div class="checklist-cat-desc">The real-world stuff that determines daily satisfaction</div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>Cargo floor height:</strong> How high do you need to lift groceries/luggage into the back? Is there a low load floor?</div>
-      </div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>Seat fold mechanism:</strong> Fold the rear seats. Is it one-touch? Do they fold flat? Can you fit a bike or IKEA flat-pack?</div>
-      </div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>Garage fit:</strong> Measure your garage before you go. Many compact SUVs are 180-185" long, 72-74" wide. Will it fit with room to open doors?</div>
-      </div>
-      <div class="checklist-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="check-text"><strong>Rear passenger comfort:</strong> Sit in your own back seat. You'll have passengers. Check legroom, headroom, and the floor hump.</div>
-      </div>
+    <div class="checklist-category"><div class="checklist-icon">&#128715;</div><div class="checklist-cat-title">Practical & Lifestyle</div><div class="checklist-cat-desc">Real-world stuff that determines daily satisfaction</div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>Cargo floor height:</strong> How high must you lift groceries/luggage into the back?</div></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>Seat fold mechanism:</strong> One-touch? Fold flat? Can you fit a bike or IKEA flat-pack?</div></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>Garage fit:</strong> Measure your garage first. Compact SUVs are 180-185" long, 72-74" wide.</div></div>
+      <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div><div class="check-text"><strong>Rear passenger comfort:</strong> Sit in your own back seat. Check legroom, headroom, floor hump.</div></div>
     </div>
-
   </div>
 </section>
 
-<footer>
-  <p>Hybrid SUV Research 2025-2026 &mdash; Prices, specs, and ratings are approximate. Always verify at manufacturer sites and fueleconomy.gov before purchase.</p>
-</footer>
+<footer><p>Hybrid SUV Research 2025-2026 &mdash; Prices, specs, and ratings are approximate. Verify at manufacturer sites, iihs.org, nhtsa.gov, and fueleconomy.gov.</p></footer>
 
 <script>
-// ========================
-// VEHICLE DATA
-// ========================
 const vehicles = [
-  {
-    brand: "Kia", name: "Niro Hybrid", size: "subcompact", type: "hybrid",
-    hp: 139, mpg: 49, cargo: 22.8, cargoMax: 63.7, tow: 0, msrp: 29590, drivetrain: "FWD",
-    nhtsa: 5, iihs: "TSP+",
-    rating: 8.0, ratingSource: "C&D 8/10",
-    trims: "LX $29,590 | EX $33,390 | EX Touring $35,590 | SX Touring $37,190",
-    pros: ["Best fuel economy in any SUV (49 MPG)", "Lowest starting price", "10yr/100K powertrain warranty", "Dual 10.25\" screens"],
-    cons: ["FWD only — no AWD option", "Only 139 hp — weakest in class", "Tiny cargo (22.8 cu ft)", "More hatchback than SUV", "DCT can be jerky at low speeds"],
-    details: "Warranty: 5yr/60K basic, 10yr/100K powertrain. Best for: city commuters who prioritize fuel economy above all."
-  },
-  {
-    brand: "Toyota", name: "Corolla Cross Hybrid", size: "subcompact", type: "hybrid",
-    hp: 194, mpg: 46, cargo: 26, cargoMax: 63, tow: 2000, msrp: 30500, drivetrain: "FWD/AWD",
-    nhtsa: 5, iihs: "TSP+",
-    rating: 8.4, ratingSource: "US News 8.4",
-    trims: "S $30,500 | SE $33,300 | XSE $35,300",
-    pros: ["Excellent fuel economy (46 MPG)", "Toyota reliability", "Available AWD", "10yr/150K hybrid battery warranty"],
-    cons: ["Small cargo area", "Not very powerful", "Basic interior on lower trims", "Limited rear legroom"],
-    details: "Warranty: 3yr/36K basic, 5yr/60K powertrain, 10yr/150K hybrid battery. Consumer Reports recommended."
-  },
-  {
-    brand: "Hyundai", name: "Kona Hybrid", size: "subcompact", type: "hybrid",
-    hp: 190, mpg: 45, cargo: 27, cargoMax: 63, tow: 0, msrp: 31500, drivetrain: "FWD/AWD",
-    nhtsa: 5, iihs: "TSP+",
-    rating: 8.0, ratingSource: "US News 8.0",
-    trims: "SEL $31,500 | Limited $35,500",
-    pros: ["Good fuel economy", "City-friendly size", "Modern redesigned interior", "Hyundai warranty"],
-    cons: ["No towing capacity", "Small cargo area", "Limited model choices", "Not much rear seat room"],
-    details: "Warranty: 5yr/60K basic, 10yr/100K powertrain."
-  },
-  {
-    brand: "Toyota", name: "RAV4 Hybrid", size: "compact", type: "hybrid",
-    hp: 219, mpg: 40, cargo: 37.5, cargoMax: 69.8, tow: 2500, msrp: 32350, drivetrain: "AWD std",
-    nhtsa: 5, iihs: "TSP+",
-    rating: 8.5, ratingSource: "US News 8.5 | CR Top Pick",
-    trims: "LE $32,350 | XLE $34,400 | XLE Prem $37,000 | SE $36,500 | XSE $38,000 | Limited $40,300",
-    pros: ["#1 rated hybrid SUV across all publications", "Best-in-class reliability and resale", "AWD standard all trims", "10yr/150K hybrid battery warranty", "2,500 lb towing"],
-    cons: ["CVT drones under hard acceleration", "Firm ride quality", "Interior materials dated on lower trims", "Infotainment can be sluggish"],
-    details: "Warranty: 3yr/36K basic, 5yr/60K powertrain, 10yr/150K hybrid battery. KBB Best Buy, C&D Editors' Choice."
-  },
-  {
-    brand: "Honda", name: "CR-V Hybrid", size: "compact", type: "hybrid",
-    hp: 204, mpg: 40, cargo: 36.3, cargoMax: 76.5, tow: 1000, msrp: 33150, drivetrain: "AWD std",
-    nhtsa: 5, iihs: "TSP+",
-    rating: 8.5, ratingSource: "C&D 8.5 | CR Top Pick",
-    trims: "Sport $33,150 | Sport-L $36,700 | Sport Touring $39,845",
-    pros: ["Class-leading max cargo (76.5 cu ft)", "Refined, comfortable ride", "IIHS Top Safety Pick+", "Intuitive interior layout"],
-    cons: ["Only 1,000 lb towing (major weakness)", "Less powerful (204 hp)", "Hybrid battery warranty only 5yr/60K*", "Engine sounds coarse when pushed"],
-    details: "*10yr/150K in CARB states (CA + 15 others). Warranty: 3yr/36K basic, 5yr/60K powertrain."
-  },
-  {
-    brand: "Kia", name: "Sportage Hybrid", size: "compact", type: "hybrid",
-    hp: 227, mpg: 40, cargo: 39.6, cargoMax: 74.1, tow: 2000, msrp: 33290, drivetrain: "FWD/AWD",
-    nhtsa: 5, iihs: "TSP+",
-    rating: 8.0, ratingSource: "C&D 8/10",
-    trims: "LX FWD $33,290 | LX AWD $35,090 | EX AWD $38,090 | SX-Prestige AWD $41,290",
-    pros: ["Most cargo behind 2nd row (39.6 cu ft)", "Gorgeous curved dual 12.3\" screens", "Best features-per-dollar", "10yr/100K powertrain warranty"],
-    cons: ["6-speed transmission less refined than CVT", "MPG drops with AWD (40 → 38)", "Ride stiff on larger wheels", "Average reliability scores"],
-    details: "Warranty: 5yr/60K basic, 10yr/100K powertrain. Also available as PHEV ($42,990+, 34mi EV, no tax credit)."
-  },
-  {
-    brand: "Ford", name: "Escape Hybrid", size: "compact", type: "hybrid",
-    hp: 210, mpg: 41, cargo: 37.5, cargoMax: 65.4, tow: 1500, msrp: 33500, drivetrain: "FWD/AWD",
-    nhtsa: 5, iihs: "TSP", safetyNote: "Headlight variability by trim prevents TSP+",
-    rating: 7.5, ratingSource: "Edmunds 7.5",
-    trims: "Base $33,500 | ST-Line $36,600 | Platinum $40,500",
-    pros: ["Good fuel economy (41 MPG)", "Large 13.2\" SYNC 4 screen", "Competitive pricing"],
-    cons: ["Aging platform", "Ford reliability concerns / recalls", "Less cargo than competitors", "Uncertain nameplate future"],
-    details: "Warranty: 3yr/36K basic, 5yr/60K powertrain, 8yr/100K hybrid battery. PHEV also available ($38,500+, 37mi EV, FWD only)."
-  },
-  {
-    brand: "Mazda", name: "CX-50 Hybrid", size: "compact", type: "hybrid",
-    hp: 219, mpg: 36, cargo: 31.4, cargoMax: 56.3, tow: 2500, msrp: 33500, drivetrain: "AWD std",
-    nhtsa: 5, iihs: "TSP+",
-    rating: 7.8, ratingSource: "Favorable early reviews",
-    trims: "S Preferred $33,500 | S Premium $36,350 | S Premium Plus $40,050",
-    pros: ["Best driving dynamics in class", "Premium interior feel for the price", "Rugged outdoor styling", "2,500 lb towing (tied for best)", "Toyota hybrid tech underneath"],
-    cons: ["Worst cargo space in segment (31.4 cu ft)", "Lower MPG than RAV4 Hybrid (36 vs 40)", "Tight rear seat", "Infotainment knob-controlled (divisive)"],
-    details: "Built at Mazda-Toyota joint plant in Alabama. Warranty: 3yr/36K basic, 5yr/60K powertrain."
-  },
-  {
-    brand: "Hyundai", name: "Tucson Hybrid", size: "compact", type: "hybrid",
-    hp: 231, mpg: 38, cargo: 38.7, cargoMax: 74.8, tow: 2000, msrp: 34500, drivetrain: "FWD/AWD",
-    nhtsa: 5, iihs: "TSP+",
-    rating: 8.2, ratingSource: "C&D Editors' Choice",
-    trims: "Blue FWD $34,500 | SEL AWD $37,200 | SEL Conv AWD $39,400 | Limited AWD $41,500",
-    pros: ["Best warranty in class (5yr/60K + 10yr/100K)", "12.3\" dual screens on all trims (2025)", "231 hp turbo hybrid — strong power", "Sharp 2025 refresh styling"],
-    cons: ["38 MPG trails RAV4/CR-V at 40", "6-speed less refined than CVT competitors", "Some cheap plastics on lower trims", "More road noise than competitors"],
-    details: "Warranty: 5yr/60K basic, 10yr/100K powertrain, lifetime hybrid battery (original owner). Also as PHEV ($40,500+, 33mi EV, no tax credit)."
-  },
-  {
-    brand: "Subaru", name: "Crosstrek", size: "subcompact", type: "mild",
-    hp: 182, mpg: 30, cargo: 22, cargoMax: 55, tow: 2000, msrp: 30000, drivetrain: "AWD std",
-    nhtsa: 5, iihs: "TSP+",
-    rating: 8.0, ratingSource: "US News 8.0",
-    trims: "Base $30,000 | Premium $32,000 | Sport $33,500 | Limited $35,500",
-    pros: ["Standard symmetrical AWD", "8.7\" ground clearance (best in class)", "Excellent off-road capability for size", "Good visibility"],
-    cons: ["Mild hybrid barely improves MPG", "Only 29-32 MPG vs 40+ for true hybrids", "Small cargo area", "Underwhelming acceleration"],
-    details: "Warranty: 3yr/36K basic, 5yr/60K powertrain. Best for: outdoor enthusiasts who prioritize AWD capability."
-  },
-  {
-    brand: "Kia", name: "Niro PHEV", size: "subcompact", type: "phev",
-    hp: 180, mpg: 46, cargo: 19.4, cargoMax: 59.7, tow: 0, msrp: 33740, drivetrain: "FWD",
-    evRange: 33, mpge: 108,
-    nhtsa: 5, iihs: "TSP+",
-    rating: 7.8, ratingSource: "Strong efficiency",
-    trims: "LX $33,740 | EX $37,740 | EX Touring $39,740 | SX Touring $41,590",
-    pros: ["108 MPGe — most efficient PHEV", "33 miles EV range", "Kia warranty"],
-    cons: ["FWD only", "Tiny cargo (19.4 cu ft)", "No federal tax credit", "Weak acceleration", "DCT concerns"],
-    details: "Tax Credit: No (Korean assembly). Warranty: 5yr/60K basic, 10yr/100K powertrain."
-  },
-  {
-    brand: "Subaru", name: "Forester", size: "compact", type: "mild",
-    hp: 180, mpg: 31, cargo: 29, cargoMax: 74, tow: 1500, msrp: 36000, drivetrain: "AWD std",
-    nhtsa: 5, iihs: "TSP+",
-    rating: 8.0, ratingSource: "US News 8.0",
-    trims: "Base $36,000 | Premium $38,000 | Sport $39,500 | Limited $41,000 | Touring $43,500",
-    pros: ["Standard symmetrical AWD", "8.7\" ground clearance", "Excellent visibility (largest windows in class)", "Redesigned for 2025"],
-    cons: ["Mild hybrid — only 29-33 MPG", "Significantly less efficient than true hybrids", "Underwhelming power", "Low tow rating (1,500 lb)"],
-    details: "Warranty: 3yr/36K basic, 5yr/60K powertrain. X-Mode for off-road driving."
-  },
-  {
-    brand: "Kia", name: "Sorento Hybrid", size: "midsize", type: "hybrid",
-    hp: 227, mpg: 37, cargo: 38.4, cargoMax: 75.5, tow: 2000, msrp: 38290, drivetrain: "FWD/AWD",
-    nhtsa: 5, iihs: "TSP+",
-    rating: 8.0, ratingSource: "C&D 8/10",
-    trims: "LX FWD $38,290 | LX AWD $40,090 | EX AWD $43,590 | SX AWD $45,590 | SX-Prestige AWD $48,590",
-    pros: ["Most affordable 3-row hybrid", "Good fuel economy for size (37 MPG)", "Kia warranty", "Practical for families"],
-    cons: ["3rd row is kids-only", "2,000 lb towing is weak for midsize", "Less refined ride than Toyota", "Cargo behind 3rd row is tight (12.4 cu ft)"],
-    details: "3 rows, 6-7 seats. Also as PHEV ($48,590+, 32mi EV, no tax credit). Warranty: 5yr/60K basic, 10yr/100K powertrain."
-  },
-  {
-    brand: "Ford", name: "Escape PHEV", size: "compact", type: "phev",
-    hp: 210, mpg: 37, cargo: 30.7, cargoMax: 60, tow: 0, msrp: 38500, drivetrain: "FWD only",
-    evRange: 37, mpge: 105,
-    nhtsa: 5, iihs: "TSP", safetyNote: "Headlight variability prevents TSP+",
-    rating: 7.3, ratingSource: "Edmunds ~7.5",
-    trims: "Base $38,500 | ST-Line Select $42,000",
-    pros: ["37-mile EV range", "Likely partial tax credit (US-built)", "Competitive pricing"],
-    cons: ["FWD only (unique disadvantage)", "Reduced cargo (30.7 cu ft)", "Aging platform", "Ford reliability concerns"],
-    details: "Tax Credit: Partial likely (built in Louisville, KY). Warranty: 3yr/36K basic, 5yr/60K powertrain, 8yr/100K battery."
-  },
-  {
-    brand: "Honda", name: "CR-V PHEV", size: "compact", type: "phev",
-    hp: 230, mpg: 40, cargo: 34, cargoMax: 70, tow: 1000, msrp: 39000, drivetrain: "FWD/AWD",
-    evRange: 47, mpge: 80,
-    nhtsa: 5, iihs: "TSP+",
-    rating: 8.2, ratingSource: "New — promising",
-    trims: "Sport Direct $39,000 | Sport-L Direct ~$42,500",
-    pros: ["Best EV range in compact class (47 mi)", "Honda interior quality", "Likely eligible for $7,500 tax credit (US-built)", "Spacious for a PHEV"],
-    cons: ["Brand new model — limited track record", "Still only 1,000 lb towing", "Price approaches RAV4 Prime territory"],
-    details: "Tax Credit: Likely yes (built in Ohio/Indiana). Warranty: 3yr/36K basic, 5yr/60K powertrain."
-  },
-  {
-    brand: "Hyundai", name: "Santa Fe Hybrid", size: "midsize", type: "hybrid",
-    hp: 231, mpg: 36, cargo: 40.9, cargoMax: 72.1, tow: 2500, msrp: 40500, drivetrain: "AWD std",
-    nhtsa: 5, iihs: "TSP+",
-    rating: 8.5, ratingSource: "US News 8.5",
-    trims: "SEL AWD $40,500 | SEL Conv $43,000 | Limited $46,500 | Calligraphy $50,000",
-    pros: ["Stunning 2025 redesign", "Dual 12.3\" panoramic curved displays", "Great fuel economy for midsize (36 MPG)", "Hyundai warranty", "40.9 cu ft cargo"],
-    cons: ["Bold styling is polarizing", "Optional 3rd row useless for adults", "2,500 lb towing low for midsize", "New design — limited reliability data"],
-    details: "Warranty: 5yr/60K basic, 10yr/100K powertrain. MotorTrend SUV of Year contender. PHEV: $45,500+, likely tax credit eligible (US-built)."
-  },
-  {
-    brand: "Hyundai", name: "Tucson PHEV", size: "compact", type: "phev",
-    hp: 268, mpg: 35, cargo: 38.7, cargoMax: 74.8, tow: 2000, msrp: 40500, drivetrain: "AWD std",
-    evRange: 33, mpge: 80,
-    nhtsa: 5, iihs: "TSP+",
-    rating: 8.0, ratingSource: "Strong value",
-    trims: "SEL AWD $40,500 | Limited AWD $45,450",
-    pros: ["268 hp — strong power", "AWD standard", "Cargo barely affected by battery", "Hyundai warranty"],
-    cons: ["No federal tax credit (Korean-built)", "33mi EV range trails CR-V PHEV (47mi)", "Mediocre hybrid-mode MPG (~35)"],
-    details: "Tax Credit: No (assembled in South Korea). Warranty: 5yr/60K basic, 10yr/100K powertrain."
-  },
-  {
-    brand: "Mitsubishi", name: "Outlander PHEV", size: "compact", type: "phev",
-    hp: 248, mpg: 26, cargo: 34, cargoMax: 67, tow: 2000, msrp: 40500, drivetrain: "AWD std",
-    evRange: 38, mpge: 64,
-    nhtsa: 4, iihs: "TSP", safetyNote: "4-star NHTSA (frontal concern); headlight issues on lower trims",
-    rating: 7.5, ratingSource: "US News 7.5",
-    trims: "SEL $40,500 | SE Launch $43,000 | GT $48,000",
-    pros: ["3 rows / 7 seats (rare for compact PHEV)", "38 miles EV range", "AWD standard", "Decent towing (2,000 lb)"],
-    cons: ["Poor gas-only economy (26 MPG)", "3rd row extremely tight", "Lower brand cachet", "Not as refined as competitors"],
-    details: "7-seat PHEV under $50K. Tax Credit: check eligibility. Warranty: 5yr/60K basic, 10yr/100K powertrain."
-  },
-  {
-    brand: "Toyota", name: "Highlander Hybrid", size: "midsize", type: "hybrid",
-    hp: 243, mpg: 34, cargo: 41.7, cargoMax: 73.3, tow: 3500, msrp: 40500, drivetrain: "AWD std",
-    nhtsa: 5, iihs: "TSP+",
-    rating: 8.2, ratingSource: "CR Recommended",
-    trims: "LE $40,500 | XLE $43,500 | XSE $46,000 | Limited $48,500 | Platinum $51,500",
-    pros: ["Proven nameplate", "3-row seating (7-8)", "3,500 lb towing", "Strong resale value"],
-    cons: ["New turbo hybrid less proven than old 2.5L", "Less cargo than Grand Highlander", "Tight 3rd row", "Prices have crept up significantly"],
-    details: "3 rows, 7-8 seats. Warranty: 3yr/36K basic, 5yr/60K powertrain, 10yr/150K hybrid battery."
-  },
-  {
-    brand: "Ford", name: "Explorer Hybrid", size: "midsize", type: "hybrid",
-    hp: 318, mpg: 28, cargo: 47.9, cargoMax: 87.8, tow: 5000, msrp: 42000, drivetrain: "AWD",
-    nhtsa: 4, iihs: "TSP", safetyNote: "4-star NHTSA (rollover concern); headlights limit IIHS award",
-    rating: 7.2, ratingSource: "Mixed reviews",
-    trims: "Base $42,000 | ST $48,000 | Platinum $54,000+",
-    pros: ["Best towing in class (5,000 lbs)", "Most powerful (318 hp V6)", "Spacious 3-row", "BlueCruise hands-free driving"],
-    cons: ["Worst MPG in class (28 combined)", "Ford reliability issues / multiple recalls", "Hybrid barely saves fuel vs non-hybrid", "Quality inconsistencies"],
-    details: "3 rows, 6-7 seats. Warranty: 3yr/36K basic, 5yr/60K powertrain, 8yr/100K hybrid battery."
-  },
-  {
-    brand: "Kia", name: "Sportage PHEV", size: "compact", type: "phev",
-    hp: 268, mpg: 35, cargo: 39.6, cargoMax: 74.1, tow: 2000, msrp: 42990, drivetrain: "AWD std",
-    evRange: 34, mpge: 84,
-    nhtsa: 5, iihs: "TSP+",
-    rating: 8.0, ratingSource: "C&D 8/10",
-    trims: "X-Line AWD $42,990 | X-Line Prestige $46,490 | SX-Prestige $48,090",
-    pros: ["268 hp with AWD", "34 mi EV range", "Cargo unaffected by battery (39.6 cu ft)", "Kia warranty"],
-    cons: ["No federal tax credit (Korean-built)", "Pricier than Tucson PHEV equivalent", "6-speed transmission concerns"],
-    details: "Tax Credit: No. Warranty: 5yr/60K basic, 10yr/100K powertrain."
-  },
-  {
-    brand: "Toyota", name: "RAV4 Prime", size: "compact", type: "phev",
-    hp: 302, mpg: 38, cargo: 33.1, cargoMax: 63.2, tow: 2500, msrp: 43400, drivetrain: "AWD std",
-    evRange: 42, mpge: 94,
-    nhtsa: 5, iihs: "TSP+",
-    rating: 8.5, ratingSource: "Top PHEV pick",
-    trims: "SE $43,400 | XSE $47,100 | XSE Premium $50,000+",
-    pros: ["302 hp — quickest compact hybrid (0-60 in 5.7s)", "42 miles EV range", "AWD standard", "Toyota reliability", "2,500 lb towing"],
-    cons: ["$10K+ premium over RAV4 Hybrid", "No federal tax credit (built in Japan)", "Less cargo than RAV4 Hybrid (33.1 vs 37.5)", "Dealer markups common"],
-    details: "Tax Credit: No (Japanese assembly). Warranty: 3yr/36K basic, 5yr/60K powertrain, 10yr/150K hybrid battery."
-  },
-  {
-    brand: "Lexus", name: "NX 350h", size: "midsize", type: "hybrid",
-    hp: 239, mpg: 39, cargo: 22.7, cargoMax: 46.9, tow: 2000, msrp: 43350, drivetrain: "AWD std",
-    nhtsa: 5, iihs: "TSP+",
-    rating: 8.8, ratingSource: "US News 8.8 | CR Rec",
-    trims: "Base $43,350 | Premium ~$45,000 | Luxury $48,600 | F Sport $48,900 | F Sport Prem $50,500+",
-    pros: ["Quietest cabin in class", "Excellent build quality", "Toyota hybrid reliability underneath", "Mark Levinson audio outstanding", "Strong resale"],
-    cons: ["Least cargo space (22.7 cu ft)", "Premium price for less space", "Some find 239 hp underwhelming for weight"],
-    details: "Luxury compact. Warranty: 4yr/50K basic, 6yr/72K powertrain, 10yr/150K hybrid battery."
-  },
-  {
-    brand: "Toyota", name: "Grand Highlander Hybrid", size: "midsize", type: "hybrid",
-    hp: 243, mpg: 34, cargo: 47.5, cargoMax: 97.5, tow: 3500, msrp: 44400, drivetrain: "AWD std",
-    nhtsa: 5, iihs: "TSP+",
-    rating: 8.5, ratingSource: "CR Recommended | US News 8.5",
-    trims: "XLE $44,400 | Limited $49,600 | Platinum $53,400",
-    pros: ["Class-leading max cargo (97.5 cu ft)", "Usable 3rd row (rare)", "Toyota reliability", "3,500 lb towing (5,000 with Hybrid Max)"],
-    cons: ["Base hybrid adequate but not quick", "Pricing climbs fast on upper trims", "Large footprint for parking/garages"],
-    details: "3 rows, 7-8 seats. Hybrid Max (362 hp, 5,000 lb tow) from ~$46K. Warranty: 3yr/36K basic, 5yr/60K powertrain, 10yr/150K hybrid battery."
-  },
-  {
-    brand: "Hyundai", name: "Santa Fe PHEV", size: "midsize", type: "phev",
-    hp: 268, mpg: 33, cargo: 40, cargoMax: 72, tow: 2500, msrp: 45500, drivetrain: "AWD std",
-    evRange: 32, mpge: 76,
-    nhtsa: 5, iihs: "TSP+",
-    rating: 8.3, ratingSource: "US News 8.5 (platform)",
-    trims: "SEL AWD $45,500 | Limited AWD $49,500 | Calligraphy AWD $53,000",
-    pros: ["Likely tax credit eligible (US-built, Georgia)", "Strong features and tech", "Good cargo space", "AWD standard"],
-    cons: ["30-33 mi EV range (lower end)", "Top trims push near $55K", "New model — limited reliability data"],
-    details: "Tax Credit: Likely yes (HMMA plant, Georgia). Warranty: 5yr/60K basic, 10yr/100K powertrain."
-  },
-  {
-    brand: "Kia", name: "Sorento PHEV", size: "midsize", type: "phev",
-    hp: 261, mpg: 34, cargo: 38.4, cargoMax: 75.5, tow: 2000, msrp: 48590, drivetrain: "AWD std",
-    evRange: 32, mpge: 79,
-    nhtsa: 5, iihs: "TSP+",
-    rating: 7.8, ratingSource: "Decent reviews",
-    trims: "SX AWD $48,590 | SX-Prestige AWD $52,590",
-    pros: ["Rare 3-row PHEV under $55K", "32 miles EV range", "Kia warranty"],
-    cons: ["No federal tax credit (Korean-built)", "Expensive for what you get", "2,000 lb towing is weak", "3rd row cramped"],
-    details: "3 rows, 6-7 seats. Tax Credit: No. Warranty: 5yr/60K basic, 10yr/100K powertrain."
-  }
+  // === SUBCOMPACT ===
+  { brand:"Kia", name:"Niro Hybrid", size:"subcompact", type:"hybrid", hp:139, mpg:49, cargo:22.8, cargoMax:63.7, tow:0, msrp:29590, drivetrain:"FWD", nhtsa:5, iihs:"TSP+", rating:8.0, ratingSource:"C&D 8/10", length:174.2, width:71.0, height:61.8, weight:3245, clearance:6.3, seats:5, trims:"LX $29,590 | EX $33,390 | EX Touring $35,590 | SX Touring $37,190", pros:["Best fuel economy in any SUV (49 MPG)","Lowest starting price","10yr/100K powertrain warranty","Dual 10.25\" screens"], cons:["FWD only","Only 139 hp — weakest in class","Tiny cargo (22.8 cu ft)","More hatchback than SUV","DCT can be jerky"], details:"Warranty: 5yr/60K basic, 10yr/100K powertrain." },
+  { brand:"Toyota", name:"Corolla Cross Hybrid", size:"subcompact", type:"hybrid", hp:194, mpg:46, cargo:26, cargoMax:63, tow:2000, msrp:30500, drivetrain:"FWD/AWD", nhtsa:5, iihs:"TSP+", rating:8.4, ratingSource:"US News 8.4", length:176.1, width:72.4, height:64.8, weight:3360, clearance:8.1, seats:5, trims:"S $30,500 | SE $33,300 | XSE $35,300", pros:["Excellent fuel economy (46 MPG)","Toyota reliability","Available AWD","10yr/150K hybrid battery warranty"], cons:["Small cargo area","Not very powerful","Basic interior on lower trims","Limited rear legroom"], details:"Warranty: 3yr/36K basic, 5yr/60K powertrain, 10yr/150K hybrid battery." },
+  { brand:"Subaru", name:"Crosstrek", size:"subcompact", type:"mild", hp:182, mpg:30, cargo:22, cargoMax:55, tow:2000, msrp:30000, drivetrain:"AWD std", nhtsa:5, iihs:"TSP+", rating:8.0, ratingSource:"US News 8.0", length:176.4, width:71.9, height:63.0, weight:3362, clearance:8.7, seats:5, trims:"Base $30,000 | Premium $32,000 | Sport $33,500 | Limited $35,500", pros:["Standard symmetrical AWD","8.7\" ground clearance (best in class)","Excellent off-road capability","Good visibility"], cons:["Mild hybrid barely improves MPG","Only 29-32 MPG vs 40+ for true hybrids","Small cargo area","Underwhelming acceleration"], details:"Warranty: 3yr/36K basic, 5yr/60K powertrain." },
+  { brand:"Hyundai", name:"Kona Hybrid", size:"subcompact", type:"hybrid", hp:190, mpg:45, cargo:27, cargoMax:63, tow:0, msrp:31500, drivetrain:"FWD/AWD", nhtsa:5, iihs:"TSP+", rating:8.0, ratingSource:"US News 8.0", length:171.2, width:72.0, height:61.6, weight:3230, clearance:6.8, seats:5, trims:"SEL $31,500 | Limited $35,500", pros:["Good fuel economy","City-friendly size","Modern redesigned interior","Hyundai warranty"], cons:["No towing capacity","Small cargo area","Limited model choices","Not much rear seat room"], details:"Warranty: 5yr/60K basic, 10yr/100K powertrain." },
+  // === COMPACT ===
+  { brand:"Toyota", name:"RAV4 Hybrid", size:"compact", type:"hybrid", hp:219, mpg:40, cargo:37.5, cargoMax:69.8, tow:2500, msrp:32350, drivetrain:"AWD std", nhtsa:5, iihs:"TSP+", rating:8.5, ratingSource:"US News 8.5 | CR Top Pick", length:180.9, width:73.0, height:67.0, weight:4235, clearance:8.1, seats:5, trims:"LE $32,350 | XLE $34,400 | XLE Prem $37,000 | SE $36,500 | XSE $38,000 | Limited $40,300", pros:["#1 rated hybrid SUV across all publications","Best-in-class reliability and resale","AWD standard all trims","10yr/150K hybrid battery warranty","2,500 lb towing"], cons:["CVT drones under hard acceleration","Firm ride quality","Interior materials dated on lower trims","Infotainment can be sluggish"], details:"Warranty: 3yr/36K basic, 5yr/60K powertrain, 10yr/150K hybrid battery. KBB Best Buy." },
+  { brand:"Honda", name:"CR-V Hybrid", size:"compact", type:"hybrid", hp:204, mpg:40, cargo:36.3, cargoMax:76.5, tow:1000, msrp:33150, drivetrain:"AWD std", nhtsa:5, iihs:"TSP+", rating:8.5, ratingSource:"C&D 8.5 | CR Top Pick", length:184.8, width:73.0, height:67.5, weight:3896, clearance:7.8, seats:5, trims:"Sport $33,150 | Sport-L $36,700 | Sport Touring $39,845", pros:["Class-leading max cargo (76.5 cu ft)","Refined, comfortable ride","IIHS Top Safety Pick+","Intuitive interior layout"], cons:["Only 1,000 lb towing (major weakness)","Less powerful (204 hp)","Battery warranty only 5yr/60K*","Engine coarse when pushed"], details:"*10yr/150K in CARB states. Warranty: 3yr/36K basic, 5yr/60K powertrain." },
+  { brand:"Kia", name:"Sportage Hybrid", size:"compact", type:"hybrid", hp:227, mpg:40, cargo:39.6, cargoMax:74.1, tow:2000, msrp:33290, drivetrain:"FWD/AWD", nhtsa:5, iihs:"TSP+", rating:8.0, ratingSource:"C&D 8/10", length:183.5, width:73.4, height:66.1, weight:3836, clearance:7.1, seats:5, trims:"LX FWD $33,290 | LX AWD $35,090 | EX AWD $38,090 | SX-Prestige AWD $41,290", pros:["Most cargo behind 2nd row (39.6 cu ft)","Gorgeous curved dual 12.3\" screens","Best features-per-dollar","10yr/100K powertrain warranty"], cons:["6-speed transmission less refined than CVT","MPG drops with AWD (40 to 38)","Ride stiff on larger wheels","Average reliability scores"], details:"Warranty: 5yr/60K basic, 10yr/100K powertrain." },
+  { brand:"Ford", name:"Escape Hybrid", size:"compact", type:"hybrid", hp:210, mpg:41, cargo:37.5, cargoMax:65.4, tow:1500, msrp:33500, drivetrain:"FWD/AWD", nhtsa:5, iihs:"TSP", safetyNote:"Headlight variability by trim prevents TSP+", rating:7.5, ratingSource:"Edmunds 7.5", length:180.5, width:74.1, height:66.1, weight:3800, clearance:7.1, seats:5, trims:"Base $33,500 | ST-Line $36,600 | Platinum $40,500", pros:["Good fuel economy (41 MPG)","Large 13.2\" SYNC 4 screen","Competitive pricing"], cons:["Aging platform","Ford reliability concerns / recalls","Less cargo than competitors","Uncertain nameplate future"], details:"Warranty: 3yr/36K basic, 5yr/60K powertrain, 8yr/100K hybrid battery." },
+  { brand:"Mazda", name:"CX-50 Hybrid", size:"compact", type:"hybrid", hp:219, mpg:36, cargo:31.4, cargoMax:56.3, tow:2500, msrp:33500, drivetrain:"AWD std", nhtsa:5, iihs:"TSP+", rating:7.8, ratingSource:"Favorable early reviews", length:185.8, width:72.8, height:65.7, weight:4100, clearance:8.3, seats:5, trims:"S Preferred $33,500 | S Premium $36,350 | S Premium Plus $40,050", pros:["Best driving dynamics in class","Premium interior feel for the price","Rugged outdoor styling","2,500 lb towing","Toyota hybrid tech"], cons:["Worst cargo space in segment (31.4 cu ft)","Lower MPG than RAV4 Hybrid (36 vs 40)","Tight rear seat","Infotainment knob divisive"], details:"Built at Mazda-Toyota joint plant in Alabama. Warranty: 3yr/36K basic, 5yr/60K powertrain." },
+  { brand:"Kia", name:"Niro PHEV", size:"subcompact", type:"phev", hp:180, mpg:46, cargo:19.4, cargoMax:59.7, tow:0, msrp:33740, drivetrain:"FWD", evRange:33, mpge:108, nhtsa:5, iihs:"TSP+", rating:7.8, ratingSource:"Strong efficiency", length:174.2, width:71.0, height:61.8, weight:3549, clearance:6.3, seats:5, trims:"LX $33,740 | EX $37,740 | EX Touring $39,740 | SX Touring $41,590", pros:["108 MPGe — most efficient PHEV","33 miles EV range","Kia warranty"], cons:["FWD only","Tiny cargo (19.4 cu ft)","No federal tax credit","Weak acceleration","DCT concerns"], details:"Tax Credit: No (Korean assembly). Warranty: 5yr/60K basic, 10yr/100K powertrain." },
+  { brand:"Hyundai", name:"Tucson Hybrid", size:"compact", type:"hybrid", hp:231, mpg:38, cargo:38.7, cargoMax:74.8, tow:2000, msrp:34500, drivetrain:"FWD/AWD", nhtsa:5, iihs:"TSP+", rating:8.2, ratingSource:"C&D Editors' Choice", length:183.3, width:73.4, height:65.8, weight:3907, clearance:7.3, seats:5, trims:"Blue FWD $34,500 | SEL AWD $37,200 | SEL Conv AWD $39,400 | Limited AWD $41,500", pros:["Best warranty in class (5yr/60K + 10yr/100K)","12.3\" dual screens on all trims (2025)","231 hp turbo hybrid","Sharp 2025 refresh styling"], cons:["38 MPG trails RAV4/CR-V at 40","6-speed less refined than CVT","Some cheap plastics on lower trims","More road noise"], details:"Warranty: 5yr/60K basic, 10yr/100K powertrain, lifetime hybrid battery (orig owner)." },
+  { brand:"Subaru", name:"Forester", size:"compact", type:"mild", hp:180, mpg:31, cargo:29, cargoMax:74, tow:1500, msrp:36000, drivetrain:"AWD std", nhtsa:5, iihs:"TSP+", rating:8.0, ratingSource:"US News 8.0", length:182.3, width:72.2, height:67.7, weight:3640, clearance:8.7, seats:5, trims:"Base $36,000 | Premium $38,000 | Sport $39,500 | Limited $41,000 | Touring $43,500", pros:["Standard symmetrical AWD","8.7\" ground clearance","Excellent visibility (largest windows in class)","Redesigned for 2025"], cons:["Mild hybrid — only 29-33 MPG","Significantly less efficient than true hybrids","Underwhelming power","Low tow rating (1,500 lb)"], details:"Warranty: 3yr/36K basic, 5yr/60K powertrain. X-Mode for off-road." },
+  // === COMPACT PHEVs ===
+  { brand:"Ford", name:"Escape PHEV", size:"compact", type:"phev", hp:210, mpg:37, cargo:30.7, cargoMax:60, tow:0, msrp:38500, drivetrain:"FWD only", evRange:37, mpge:105, nhtsa:5, iihs:"TSP", safetyNote:"Headlight variability prevents TSP+", rating:7.3, ratingSource:"Edmunds ~7.5", length:180.5, width:74.1, height:66.1, weight:4050, clearance:7.1, seats:5, trims:"Base $38,500 | ST-Line Select $42,000", pros:["37-mile EV range","Likely partial tax credit (US-built)","Competitive pricing"], cons:["FWD only (unique disadvantage)","Reduced cargo (30.7 cu ft)","Aging platform","Ford reliability concerns"], details:"Tax Credit: Partial likely (Louisville, KY). Warranty: 3yr/36K basic, 5yr/60K powertrain." },
+  { brand:"Honda", name:"CR-V PHEV", size:"compact", type:"phev", hp:230, mpg:40, cargo:34, cargoMax:70, tow:1000, msrp:39000, drivetrain:"FWD/AWD", evRange:47, mpge:80, nhtsa:5, iihs:"TSP+", rating:8.2, ratingSource:"New — promising", length:184.8, width:73.0, height:67.5, weight:4200, clearance:7.8, seats:5, trims:"Sport Direct $39,000 | Sport-L Direct ~$42,500", pros:["Best EV range in compact class (47 mi)","Honda interior quality","Likely $7,500 tax credit (US-built)","Spacious for a PHEV"], cons:["Brand new model — limited track record","Still only 1,000 lb towing","Price approaches RAV4 Prime"], details:"Tax Credit: Likely yes (Ohio/Indiana). Warranty: 3yr/36K basic, 5yr/60K powertrain." },
+  // === MIDSIZE ===
+  { brand:"Kia", name:"Sorento Hybrid", size:"midsize", type:"hybrid", hp:227, mpg:37, cargo:38.4, cargoMax:75.5, tow:2000, msrp:38290, drivetrain:"FWD/AWD", nhtsa:5, iihs:"TSP+", rating:8.0, ratingSource:"C&D 8/10", length:189.0, width:74.8, height:66.7, weight:4048, clearance:7.7, seats:7, trims:"LX FWD $38,290 | LX AWD $40,090 | EX AWD $43,590 | SX AWD $45,590 | SX-Prestige AWD $48,590", pros:["Most affordable 3-row hybrid","Good fuel economy for size (37 MPG)","Kia warranty","Practical for families"], cons:["3rd row is kids-only","2,000 lb towing weak for midsize","Less refined ride than Toyota","Cargo behind 3rd row tight (12.4 cu ft)"], details:"3 rows, 6-7 seats. Warranty: 5yr/60K basic, 10yr/100K powertrain." },
+  { brand:"Hyundai", name:"Tucson PHEV", size:"compact", type:"phev", hp:268, mpg:35, cargo:38.7, cargoMax:74.8, tow:2000, msrp:40500, drivetrain:"AWD std", evRange:33, mpge:80, nhtsa:5, iihs:"TSP+", rating:8.0, ratingSource:"Strong value", length:183.3, width:73.4, height:65.8, weight:4243, clearance:7.3, seats:5, trims:"SEL AWD $40,500 | Limited AWD $45,450", pros:["268 hp — strong power","AWD standard","Cargo barely affected by battery","Hyundai warranty"], cons:["No federal tax credit (Korean-built)","33mi EV range trails CR-V PHEV","Mediocre hybrid-mode MPG (~35)"], details:"Tax Credit: No (South Korea). Warranty: 5yr/60K basic, 10yr/100K powertrain." },
+  { brand:"Hyundai", name:"Santa Fe Hybrid", size:"midsize", type:"hybrid", hp:231, mpg:36, cargo:40.9, cargoMax:72.1, tow:2500, msrp:40500, drivetrain:"AWD std", nhtsa:5, iihs:"TSP+", rating:8.5, ratingSource:"US News 8.5", length:191.1, width:74.8, height:66.3, weight:4145, clearance:7.8, seats:5, trims:"SEL AWD $40,500 | SEL Conv $43,000 | Limited $46,500 | Calligraphy $50,000", pros:["Stunning 2025 redesign","Dual 12.3\" panoramic curved displays","Great fuel economy for midsize","Hyundai warranty","40.9 cu ft cargo"], cons:["Bold styling is polarizing","Optional 3rd row useless for adults","2,500 lb towing low for midsize","Limited long-term reliability data"], details:"Warranty: 5yr/60K basic, 10yr/100K powertrain." },
+  { brand:"Toyota", name:"Highlander Hybrid", size:"midsize", type:"hybrid", hp:243, mpg:34, cargo:41.7, cargoMax:73.3, tow:3500, msrp:40500, drivetrain:"AWD std", nhtsa:5, iihs:"TSP+", rating:8.2, ratingSource:"CR Recommended", length:194.9, width:75.8, height:68.1, weight:4495, clearance:8.0, seats:8, trims:"LE $40,500 | XLE $43,500 | XSE $46,000 | Limited $48,500 | Platinum $51,500", pros:["Proven nameplate","3-row seating (7-8)","3,500 lb towing","Strong resale value"], cons:["New turbo hybrid less proven","Less cargo than Grand Highlander","Tight 3rd row","Prices have crept up"], details:"3 rows, 7-8 seats. Warranty: 3yr/36K basic, 5yr/60K powertrain, 10yr/150K hybrid battery." },
+  { brand:"Mitsubishi", name:"Outlander PHEV", size:"compact", type:"phev", hp:248, mpg:26, cargo:34, cargoMax:67, tow:2000, msrp:40500, drivetrain:"AWD std", evRange:38, mpge:64, nhtsa:4, iihs:"TSP", safetyNote:"4-star NHTSA (frontal concern); headlight issues", rating:7.5, ratingSource:"US News 7.5", length:185.4, width:74.2, height:67.3, weight:4541, clearance:8.0, seats:7, trims:"SEL $40,500 | SE Launch $43,000 | GT $48,000", pros:["3 rows / 7 seats (rare compact PHEV)","38 miles EV range","AWD standard","Decent towing (2,000 lb)"], cons:["Poor gas-only economy (26 MPG)","3rd row extremely tight","Lower brand cachet","Not as refined"], details:"Tax Credit: check eligibility. Warranty: 5yr/60K basic, 10yr/100K powertrain." },
+  { brand:"Ford", name:"Explorer Hybrid", size:"midsize", type:"hybrid", hp:318, mpg:28, cargo:47.9, cargoMax:87.8, tow:5000, msrp:42000, drivetrain:"AWD", nhtsa:4, iihs:"TSP", safetyNote:"4-star NHTSA (rollover concern); headlights limit IIHS", rating:7.2, ratingSource:"Mixed reviews", length:199.3, width:78.9, height:69.9, weight:4969, clearance:7.4, seats:7, trims:"Base $42,000 | ST $48,000 | Platinum $54,000+", pros:["Best towing in class (5,000 lbs)","Most powerful (318 hp V6)","Spacious 3-row","BlueCruise hands-free driving"], cons:["Worst MPG in class (28)","Ford reliability issues / recalls","Hybrid barely saves fuel vs non-hybrid","Quality inconsistencies"], details:"3 rows, 6-7 seats. Warranty: 3yr/36K basic, 5yr/60K powertrain, 8yr/100K hybrid battery." },
+  { brand:"Kia", name:"Sportage PHEV", size:"compact", type:"phev", hp:268, mpg:35, cargo:39.6, cargoMax:74.1, tow:2000, msrp:42990, drivetrain:"AWD std", evRange:34, mpge:84, nhtsa:5, iihs:"TSP+", rating:8.0, ratingSource:"C&D 8/10", length:183.5, width:73.4, height:66.1, weight:4255, clearance:7.1, seats:5, trims:"X-Line AWD $42,990 | X-Line Prestige $46,490 | SX-Prestige $48,090", pros:["268 hp with AWD","34 mi EV range","Cargo unaffected by battery (39.6 cu ft)","Kia warranty"], cons:["No federal tax credit (Korean-built)","Pricier than Tucson PHEV","6-speed transmission concerns"], details:"Tax Credit: No. Warranty: 5yr/60K basic, 10yr/100K powertrain." },
+  { brand:"Toyota", name:"RAV4 Prime", size:"compact", type:"phev", hp:302, mpg:38, cargo:33.1, cargoMax:63.2, tow:2500, msrp:43400, drivetrain:"AWD std", evRange:42, mpge:94, nhtsa:5, iihs:"TSP+", rating:8.5, ratingSource:"Top PHEV pick", length:180.9, width:73.0, height:67.0, weight:4300, clearance:8.1, seats:5, trims:"SE $43,400 | XSE $47,100 | XSE Premium $50,000+", pros:["302 hp — quickest compact hybrid (0-60 5.7s)","42 miles EV range","AWD standard","Toyota reliability","2,500 lb towing"], cons:["$10K+ premium over RAV4 Hybrid","No federal tax credit (Japan)","Less cargo than RAV4 Hybrid","Dealer markups common"], details:"Tax Credit: No (Japan). Warranty: 3yr/36K basic, 5yr/60K powertrain, 10yr/150K hybrid battery." },
+  { brand:"Toyota", name:"Grand Highlander Hybrid", size:"midsize", type:"hybrid", hp:243, mpg:34, cargo:47.5, cargoMax:97.5, tow:3500, msrp:44400, drivetrain:"AWD std", nhtsa:5, iihs:"TSP+", rating:8.5, ratingSource:"CR Recommended | US News 8.5", length:201.4, width:76.4, height:68.5, weight:4600, clearance:8.0, seats:8, trims:"XLE $44,400 | Limited $49,600 | Platinum $53,400", pros:["Class-leading max cargo (97.5 cu ft)","Usable 3rd row (rare)","Toyota reliability","3,500 lb towing (5,000 w/ Hybrid Max)"], cons:["Base hybrid adequate but not quick","Pricing climbs fast on upper trims","Large footprint for parking/garages"], details:"3 rows, 7-8 seats. Warranty: 3yr/36K basic, 5yr/60K powertrain, 10yr/150K hybrid battery." },
+  { brand:"Hyundai", name:"Santa Fe PHEV", size:"midsize", type:"phev", hp:268, mpg:33, cargo:40, cargoMax:72, tow:2500, msrp:45500, drivetrain:"AWD std", evRange:32, mpge:76, nhtsa:5, iihs:"TSP+", rating:8.3, ratingSource:"US News 8.5 (platform)", length:191.1, width:74.8, height:66.3, weight:4480, clearance:7.8, seats:5, trims:"SEL AWD $45,500 | Limited AWD $49,500 | Calligraphy AWD $53,000", pros:["Likely tax credit eligible (US-built, Georgia)","Strong features and tech","Good cargo space","AWD standard"], cons:["30-33 mi EV range (lower end)","Top trims push near $55K","Limited reliability data"], details:"Tax Credit: Likely yes (Georgia). Warranty: 5yr/60K basic, 10yr/100K powertrain." },
+  { brand:"Kia", name:"Sorento PHEV", size:"midsize", type:"phev", hp:261, mpg:34, cargo:38.4, cargoMax:75.5, tow:2000, msrp:48590, drivetrain:"AWD std", evRange:32, mpge:79, nhtsa:5, iihs:"TSP+", rating:7.8, ratingSource:"Decent reviews", length:189.0, width:74.8, height:66.7, weight:4398, clearance:7.7, seats:7, trims:"SX AWD $48,590 | SX-Prestige AWD $52,590", pros:["Rare 3-row PHEV under $55K","32 miles EV range","Kia warranty"], cons:["No federal tax credit (Korean-built)","Expensive for what you get","2,000 lb towing weak","3rd row cramped"], details:"3 rows, 6-7 seats. Tax Credit: No. Warranty: 5yr/60K basic, 10yr/100K powertrain." },
+  // === LUXURY ===
+  { brand:"Lexus", name:"NX 350h", size:"luxury", type:"hybrid", hp:239, mpg:39, cargo:22.7, cargoMax:46.9, tow:2000, msrp:43350, drivetrain:"AWD std", nhtsa:5, iihs:"TSP+", rating:8.8, ratingSource:"US News 8.8 | CR Rec", length:183.5, width:73.4, height:64.8, weight:4150, clearance:7.5, seats:5, trims:"Base $43,350 | Premium ~$45,000 | Luxury $48,600 | F Sport $48,900 | F Sport Prem $50,500+", pros:["Quietest cabin in class","Excellent build quality","Toyota hybrid reliability","Mark Levinson audio outstanding","Strong resale"], cons:["Least cargo space (22.7 cu ft)","Premium price for less space","Some find 239 hp underwhelming"], details:"Warranty: 4yr/50K basic, 6yr/72K powertrain, 10yr/150K hybrid battery." },
+  { brand:"Lexus", name:"RX 350h", size:"luxury", type:"hybrid", hp:246, mpg:37, cargo:29.6, cargoMax:46.2, tow:3500, msrp:50000, drivetrain:"AWD std", nhtsa:5, iihs:"TSP+", rating:8.8, ratingSource:"US News 8.8 | C&D 8/10", length:192.5, width:74.6, height:67.3, weight:4370, clearance:7.5, seats:5, trims:"Base $50,000 | Premium $53,000 | Luxury $57,000 | F Sport $57,500", pros:["Best-selling luxury SUV for a reason","Extremely refined and quiet","3,500 lb towing — strong for luxury","37 MPG excellent for midsize luxury"], cons:["Cargo space smaller than non-luxury midsize","Touch-based infotainment divisive","Starting price climbs quickly with options"], details:"Warranty: 4yr/50K basic, 6yr/72K powertrain, 10yr/150K hybrid battery." },
+  { brand:"Lincoln", name:"Corsair Grand Touring", size:"luxury", type:"phev", hp:266, mpg:33, cargo:27.6, cargoMax:57.6, tow:3000, msrp:52000, drivetrain:"AWD std", evRange:28, mpge:78, nhtsa:5, iihs:"TSP+", rating:7.8, ratingSource:"US News ~7.8", length:180.6, width:74.3, height:63.7, weight:4495, clearance:6.5, seats:5, trims:"Grand Touring $52,000 | Grand Touring Reserve $58,000", pros:["Exceptionally quiet ride","3,000 lb towing","Luxury interior with real wood/leather","Revel audio system"], cons:["Modest EV range (28 mi)","Aging platform","Limited brand cachet vs Lexus/BMW","Mediocre infotainment"], details:"Tax Credit: check eligibility (US-built). Warranty: 4yr/50K basic, 6yr/70K powertrain." },
+  { brand:"Volvo", name:"XC60 Recharge T8", size:"luxury", type:"phev", hp:455, mpg:28, cargo:22.4, cargoMax:63.3, tow:3500, msrp:55000, drivetrain:"AWD std", evRange:35, mpge:60, nhtsa:5, iihs:"TSP+", rating:8.0, ratingSource:"US News 8.0", length:184.6, width:75.4, height:65.3, weight:4784, clearance:8.0, seats:5, trims:"Plus $55,000 | Ultimate $60,000", pros:["455 hp combined — very powerful","35 mi EV range","Exceptional safety reputation","Beautiful Scandinavian interior"], cons:["Small cargo area (22.4 cu ft)","Heavy (4,784 lbs)","Being phased out for EV models","Complex powertrain reliability concerns"], details:"Warranty: 4yr/50K basic, 4yr/50K powertrain. Tax Credit: check eligibility." },
+  { brand:"Lexus", name:"TX 500h", size:"luxury", type:"hybrid", hp:366, mpg:29, cargo:18.1, cargoMax:64.7, tow:3500, msrp:55000, drivetrain:"AWD std", nhtsa:5, iihs:"TSP+", rating:8.5, ratingSource:"US News 8.5", length:199.0, width:76.4, height:68.5, weight:4850, clearance:7.5, seats:7, trims:"Premium $55,000 | Luxury $60,000 | F Sport $62,000", pros:["366 hp performance hybrid","3-row luxury with usable space","Lexus build quality","3,500 lb towing"], cons:["Only 29 MPG (performance focus)","Cargo behind 3rd row is tight","Expensive for the segment"], details:"3-row luxury. Warranty: 4yr/50K basic, 6yr/72K powertrain, 10yr/150K hybrid battery." },
+  { brand:"Toyota", name:"Land Cruiser", size:"full-size", type:"hybrid", hp:326, mpg:23, cargo:30, cargoMax:73, tow:6000, msrp:57000, drivetrain:"AWD std", nhtsa:5, iihs:"TSP+", rating:8.5, ratingSource:"C&D 8.5 | US News 8.5", length:194.9, width:78.0, height:72.0, weight:5390, clearance:8.7, seats:5, trims:"1958 $57,000 | First Edition $60,000 | Land Cruiser $57,000", pros:["Iconic off-road capability","Hybrid is the only powertrain (standard)","6,000 lb towing","8.7\" ground clearance","Toyota reliability"], cons:["Only 23 MPG (it's a body-on-frame truck)","Large and heavy (5,390 lbs)","Limited to 2-row / 5 seats","Premium pricing for non-luxury brand"], details:"Body-on-frame. Returned to US market. Warranty: 3yr/36K basic, 5yr/60K powertrain, 10yr/150K hybrid battery." },
+  { brand:"Volvo", name:"XC90 Recharge T8", size:"luxury", type:"phev", hp:455, mpg:28, cargo:15.8, cargoMax:85.7, tow:5000, msrp:58000, drivetrain:"AWD std", evRange:32, mpge:55, nhtsa:5, iihs:"TSP+", rating:8.2, ratingSource:"US News 8.2", length:194.8, width:79.1, height:69.3, weight:5049, clearance:9.1, seats:7, trims:"Plus $58,000 | Ultimate $64,000", pros:["3-row luxury with 5,000 lb towing","455 hp combined power","32 mi EV range","Volvo safety reputation — 9.1\" clearance"], cons:["Being phased out for EX90 EV","Heavy (5,049 lbs)","15.8 cu ft behind 3rd row tight","Complex powertrain"], details:"3-row luxury. Warranty: 4yr/50K basic, 4yr/50K powertrain. Tax Credit: check eligibility." },
+  { brand:"Lexus", name:"TX 550h+", size:"luxury", type:"phev", hp:404, mpg:36, cargo:18.1, cargoMax:64.7, tow:3500, msrp:58000, drivetrain:"AWD std", evRange:37, mpge:56, nhtsa:5, iihs:"TSP+", rating:8.5, ratingSource:"US News 8.5", length:199.0, width:76.4, height:68.5, weight:5020, clearance:7.5, seats:7, trims:"Premium $58,000 | Luxury $64,000", pros:["37 mi EV range in a 3-row luxury","404 hp combined","Lexus build quality and refinement","3,500 lb towing"], cons:["Heavy (5,020 lbs)","Cargo behind 3rd row tight","Premium pricing","No tax credit expected"], details:"3-row luxury PHEV. Warranty: 4yr/50K basic, 6yr/72K powertrain, 10yr/150K hybrid battery." },
+  { brand:"Lexus", name:"RX 450h+", size:"luxury", type:"phev", hp:304, mpg:36, cargo:29.6, cargoMax:46.2, tow:3500, msrp:58000, drivetrain:"AWD std", evRange:37, mpge:38, nhtsa:5, iihs:"TSP+", rating:8.8, ratingSource:"Top luxury hybrid", length:192.5, width:74.6, height:67.3, weight:4685, clearance:7.5, seats:5, trims:"Base $58,000 | Premium $62,000 | Luxury $66,000", pros:["37 mi EV range","304 hp — quick for luxury","Lexus refinement and quality","3,500 lb towing"], cons:["$58K starting price","No tax credit expected","Cargo not class-leading"], details:"Luxury PHEV. Warranty: 4yr/50K basic, 6yr/72K powertrain, 10yr/150K hybrid battery." },
+  // === FULL-SIZE ===
+  { brand:"Toyota", name:"Sequoia", size:"full-size", type:"hybrid", hp:437, mpg:22, cargo:22.7, cargoMax:86.9, tow:9520, msrp:61000, drivetrain:"AWD std", nhtsa:5, iihs:"TSP+", rating:7.8, ratingSource:"US News 7.8", length:208.1, width:79.9, height:76.0, weight:5950, clearance:9.5, seats:8, trims:"SR5 $61,000 | Limited $67,000 | Platinum $71,000 | TRD Pro $73,000", pros:["9,520 lb towing — best in any hybrid","Hybrid is standard (only powertrain)","Best full-size SUV fuel economy (22 MPG)","Massive 3-row space"], cons:["Huge footprint (208\" long)","Only 22 MPG (still best in class)","Very heavy (5,950 lbs)","Top trims exceed $70K"], details:"Body-on-frame. 3 rows, 8 seats. Warranty: 3yr/36K basic, 5yr/60K powertrain, 10yr/150K hybrid battery." },
+  { brand:"Jeep", name:"Grand Cherokee 4xe", size:"midsize", type:"phev", hp:375, mpg:23, cargo:37.7, cargoMax:70.8, tow:6000, msrp:65000, drivetrain:"AWD std", evRange:25, mpge:56, nhtsa:5, iihs:"TSP", safetyNote:"Only TSP due to headlight ratings on some trims", rating:7.0, ratingSource:"C&D 6.5 | Mixed", length:189.0, width:77.5, height:72.1, weight:5363, clearance:10.9, seats:5, trims:"4xe $65,000 | Trailhawk 4xe $68,000 | Overland 4xe $69,000 | Summit 4xe $72,000+", pros:["Best off-road capability in segment","10.9\" ground clearance (class-leading)","6,000 lb towing","Premium interior on upper trims"], cons:["Modest EV range (25 mi)","Only 23 MPG gas-only","Very heavy (5,363 lbs)","$65K+ starting price","Stellantis reliability concerns"], details:"Tax Credit: check eligibility. Warranty: 3yr/36K basic, 5yr/60K powertrain." },
+  { brand:"Lexus", name:"GX 550h", size:"full-size", type:"hybrid", hp:349, mpg:25, cargo:25.1, cargoMax:64.0, tow:6000, msrp:65000, drivetrain:"AWD std", nhtsa:5, iihs:"TSP+", rating:8.5, ratingSource:"Highly praised", length:196.1, width:76.6, height:73.2, weight:5400, clearance:8.1, seats:7, trims:"Premium $65,000 | Luxury $72,000 | F Sport $72,000 | Overtrail $72,000", pros:["Off-road luxury with body-on-frame","6,000 lb towing","Hybrid standard on most trims","Lexus build quality"], cons:["Only 25 MPG","Heavy (5,400 lbs)","Cargo tight for the size","Top trims exceed $70K"], details:"Body-on-frame luxury. 3 rows. Warranty: 4yr/50K basic, 6yr/72K powertrain, 10yr/150K hybrid battery." },
+  { brand:"BMW", name:"X5 xDrive50e", size:"luxury", type:"phev", hp:483, mpg:23, cargo:29.7, cargoMax:72.3, tow:7200, msrp:67000, drivetrain:"AWD std", evRange:30, mpge:50, nhtsa:5, iihs:"TSP+", rating:9.0, ratingSource:"C&D 9/10", length:194.3, width:78.9, height:69.4, weight:5610, clearance:8.0, seats:5, trims:"xDrive50e $67,000 | xDrive50e w/ packages $72,000+", pros:["483 hp — extremely powerful","C&D 9/10 — best driving dynamics in luxury","7,200 lb towing (remarkable for PHEV)","30 mi EV range","Premium interior"], cons:["$67K+ starting price","Only 23 MPG gas-only","Very heavy (5,610 lbs)","BMW maintenance costs"], details:"Luxury performance PHEV. Warranty: 4yr/50K basic, 4yr/50K powertrain." },
 ];
 
-// ========================
-// RENDERING
-// ========================
-let activeFilters = { size: 'all', type: 'all' };
+let activeFilters = { size: 'all', type: 'all', price: 'all' };
 let activeSort = 'price-asc';
 let expandedCard = null;
 
-function getRatingColor(rating) {
-  if (rating >= 8.3) return 'var(--green)';
-  if (rating >= 7.5) return 'var(--amber)';
-  return 'var(--red)';
-}
-
-function formatPrice(n) {
-  return '$' + n.toLocaleString();
-}
+function getRatingColor(r) { if (r >= 8.3) return 'var(--green)'; if (r >= 7.5) return 'var(--amber)'; return 'var(--red)'; }
+function formatPrice(n) { return '$' + n.toLocaleString(); }
 
 function renderCards() {
   const grid = document.getElementById('vehicle-grid');
@@ -1795,167 +431,112 @@ function renderCards() {
     if (activeFilters.size !== 'all' && v.size !== activeFilters.size) return false;
     if (activeFilters.type === 'hybrid' && v.type !== 'hybrid' && v.type !== 'mild') return false;
     if (activeFilters.type === 'phev' && v.type !== 'phev') return false;
+    if (activeFilters.price !== 'all') {
+      const [min, max] = activeFilters.price.split('-').map(Number);
+      if (v.msrp < min || v.msrp >= max) return false;
+    }
     return true;
   });
-
-  // Sort
   const [key, dir] = activeSort.split('-');
   filtered.sort((a, b) => {
     let va, vb;
-    switch(key) {
-      case 'price': va = a.msrp; vb = b.msrp; break;
-      case 'mpg': va = a.mpg; vb = b.mpg; break;
-      case 'cargo': va = a.cargo; vb = b.cargo; break;
-      case 'hp': va = a.hp; vb = b.hp; break;
-      case 'tow': va = a.tow; vb = b.tow; break;
-    }
+    switch(key) { case 'price': va=a.msrp; vb=b.msrp; break; case 'mpg': va=a.mpg; vb=b.mpg; break; case 'cargo': va=a.cargo; vb=b.cargo; break; case 'hp': va=a.hp; vb=b.hp; break; case 'tow': va=a.tow; vb=b.tow; break; }
     return dir === 'asc' ? va - vb : vb - va;
   });
-
-  if (filtered.length === 0) {
-    grid.innerHTML = '<div class="no-results">No vehicles match your filters. Try adjusting the size or type.</div>';
-    return;
-  }
-
+  if (filtered.length === 0) { grid.innerHTML = '<div class="no-results">No vehicles match your filters. Try adjusting.</div>'; return; }
   grid.innerHTML = filtered.map((v, i) => {
-    const isExpanded = expandedCard === `${v.brand}-${v.name}`;
-    const badgeClass = v.type === 'phev' ? 'badge-phev' : v.type === 'mild' ? 'badge-mild' : 'badge-hybrid';
-    const badgeText = v.type === 'phev' ? 'PHEV' : v.type === 'mild' ? 'Mild HEV' : 'Hybrid';
-    const ratingPct = ((v.rating - 6) / 4) * 100;
-
-    return `
-      <div class="vehicle-card ${isExpanded ? 'expanded' : ''}" onclick="toggleExpand('${v.brand}-${v.name}')" style="animation: fadeInUp 0.4s ease forwards ${i * 0.05}s; opacity: 0;">
-        <div class="card-top">
-          <div>
-            <div class="card-brand">${v.brand}</div>
-            <div class="card-name">${v.name}</div>
-          </div>
-          <span class="card-badge ${badgeClass}">${badgeText}</span>
-        </div>
-        <div class="card-stats">
-          <div><div class="card-stat-value">${v.hp}</div><div class="card-stat-label">HP</div></div>
-          <div><div class="card-stat-value">${v.type === 'phev' && v.evRange ? v.evRange + 'mi' : v.mpg}</div><div class="card-stat-label">${v.type === 'phev' && v.evRange ? 'EV Range' : 'MPG'}</div></div>
-          <div><div class="card-stat-value">${v.cargo}</div><div class="card-stat-label">Cargo ft&sup3;</div></div>
-          <div><div class="card-stat-value">${v.tow ? v.tow.toLocaleString() : 'N/R'}</div><div class="card-stat-label">Tow lbs</div></div>
-        </div>
-        <div class="card-safety">
-          <div class="safety-stars">${Array.from({length: 5}, (_, i) => `<div class="safety-star ${i < v.nhtsa ? 'filled' : 'empty'}"></div>`).join('')}</div>
-          <span class="safety-label">NHTSA</span>
-          <span class="iihs-badge ${v.iihs === 'TSP+' ? 'iihs-tspplus' : 'iihs-tsp'}">${v.iihs === 'TSP+' ? 'IIHS TSP+' : 'IIHS TSP'}</span>
-        </div>
-        <div class="card-footer">
-          <div class="card-price">${formatPrice(v.msrp)} <span>from</span></div>
-          <div class="card-rating">
-            <div class="rating-bar"><div class="rating-bar-fill" style="width: ${ratingPct}%; background: ${getRatingColor(v.rating)};"></div></div>
-            <span class="rating-label">${v.rating}/10</span>
-          </div>
-        </div>
-        <div class="card-details">
-          <div class="details-grid">
-            <div class="detail-section">
-              <h4>Trims & Pricing</h4>
-              <ul><li>${v.trims.split(' | ').join('</li><li>')}</li></ul>
-              <h4 style="margin-top:16px">Key Info</h4>
-              <ul>
-                <li>Drivetrain: ${v.drivetrain}</li>
-                <li>Max Cargo: ${v.cargoMax} cu ft</li>
-                ${v.evRange ? `<li>EV Range: ${v.evRange} miles | ${v.mpge} MPGe</li>` : ''}
-                <li>${v.details}</li>
-              </ul>
-              <h4 style="margin-top:16px">Safety</h4>
-              <ul>
-                <li>NHTSA: ${v.nhtsa}/5 stars overall</li>
-                <li>IIHS: ${v.iihs === 'TSP+' ? 'Top Safety Pick+' : 'Top Safety Pick'}</li>
-                ${v.safetyNote ? `<li class="con">${v.safetyNote}</li>` : '<li class="pro">No notable safety concerns</li>'}
-              </ul>
+    const isExp = expandedCard === `${v.brand}-${v.name}`;
+    const bc = v.type==='phev'?'badge-phev':v.type==='mild'?'badge-mild':'badge-hybrid';
+    const bt = v.type==='phev'?'PHEV':v.type==='mild'?'Mild HEV':'Hybrid';
+    const rp = ((v.rating-6)/4)*100;
+    return `<div class="vehicle-card ${isExp?'expanded':''}" onclick="toggleExpand('${v.brand}-${v.name}')" style="animation: fadeInUp 0.4s ease forwards ${i*0.04}s; opacity: 0;">
+      <div class="card-top"><div><div class="card-brand">${v.brand}</div><div class="card-name">${v.name}</div></div><span class="card-badge ${bc}">${bt}</span></div>
+      <div class="card-stats">
+        <div><div class="card-stat-value">${v.hp}</div><div class="card-stat-label">HP</div></div>
+        <div><div class="card-stat-value">${v.type==='phev'&&v.evRange?v.evRange+'mi':v.mpg}</div><div class="card-stat-label">${v.type==='phev'&&v.evRange?'EV Range':'MPG'}</div></div>
+        <div><div class="card-stat-value">${v.cargo}</div><div class="card-stat-label">Cargo ft&sup3;</div></div>
+        <div><div class="card-stat-value">${v.tow?v.tow.toLocaleString():'N/R'}</div><div class="card-stat-label">Tow lbs</div></div>
+      </div>
+      <div class="card-safety">
+        <div class="safety-stars">${Array.from({length:5},(_,i)=>`<div class="safety-star ${i<v.nhtsa?'filled':'empty'}"></div>`).join('')}</div>
+        <span class="safety-label">NHTSA</span>
+        <span class="iihs-badge ${v.iihs==='TSP+'?'iihs-tspplus':'iihs-tsp'}">${v.iihs==='TSP+'?'IIHS TSP+':'IIHS TSP'}</span>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">${formatPrice(v.msrp)} <span>from</span></div>
+        <div class="card-rating"><div class="rating-bar"><div class="rating-bar-fill" style="width:${rp}%;background:${getRatingColor(v.rating)};"></div></div><span class="rating-label">${v.rating}/10</span></div>
+      </div>
+      <div class="expand-hint">Click to expand details</div>
+      <div class="card-details">
+        <div class="details-grid">
+          <div class="detail-section">
+            <h4>Dimensions & Weight</h4>
+            <div class="dims-grid">
+              <div class="dim-item"><div class="dim-value">${v.length}"</div><div class="dim-label">Length</div></div>
+              <div class="dim-item"><div class="dim-value">${v.width}"</div><div class="dim-label">Width</div></div>
+              <div class="dim-item"><div class="dim-value">${v.height}"</div><div class="dim-label">Height</div></div>
+              <div class="dim-item"><div class="dim-value">${v.weight.toLocaleString()} lb</div><div class="dim-label">Curb Weight</div></div>
+              <div class="dim-item"><div class="dim-value">${v.clearance}"</div><div class="dim-label">Clearance</div></div>
+              <div class="dim-item"><div class="dim-value">${v.seats}</div><div class="dim-label">Seats</div></div>
             </div>
-            <div class="detail-section">
-              <h4>Pros</h4>
-              <ul>${v.pros.map(p => `<li class="pro">${p}</li>`).join('')}</ul>
-              <h4 style="margin-top:16px">Cons</h4>
-              <ul>${v.cons.map(c => `<li class="con">${c}</li>`).join('')}</ul>
-            </div>
+            <h4>Trims & Pricing</h4>
+            <ul><li>${v.trims.split(' | ').join('</li><li>')}</li></ul>
+            <h4 style="margin-top:16px">Key Info</h4>
+            <ul>
+              <li>Drivetrain: ${v.drivetrain}</li>
+              <li>Max Cargo: ${v.cargoMax} cu ft</li>
+              ${v.evRange?`<li>EV Range: ${v.evRange} miles | ${v.mpge} MPGe</li>`:''}
+              <li>${v.details}</li>
+            </ul>
+            <h4 style="margin-top:16px">Safety</h4>
+            <ul>
+              <li>NHTSA: ${v.nhtsa}/5 stars overall</li>
+              <li>IIHS: ${v.iihs==='TSP+'?'Top Safety Pick+':'Top Safety Pick'}</li>
+              ${v.safetyNote?`<li class="con">${v.safetyNote}</li>`:'<li class="pro">No notable safety concerns</li>'}
+            </ul>
+          </div>
+          <div class="detail-section">
+            <h4>Pros</h4>
+            <ul>${v.pros.map(p=>`<li class="pro">${p}</li>`).join('')}</ul>
+            <h4 style="margin-top:16px">Cons</h4>
+            <ul>${v.cons.map(c=>`<li class="con">${c}</li>`).join('')}</ul>
           </div>
         </div>
       </div>
-    `;
+    </div>`;
   }).join('');
 }
 
-function toggleExpand(id) {
-  expandedCard = expandedCard === id ? null : id;
-  renderCards();
-}
+function toggleExpand(id) { expandedCard = expandedCard===id?null:id; renderCards(); }
 
-// Filter buttons
 document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    const filter = btn.dataset.filter;
-    const value = btn.dataset.value;
-    activeFilters[filter] = value;
-    document.querySelectorAll(`.filter-btn[data-filter="${filter}"]`).forEach(b => b.classList.remove('active'));
+    const f = btn.dataset.filter, v = btn.dataset.value;
+    activeFilters[f] = v;
+    document.querySelectorAll(`.filter-btn[data-filter="${f}"]`).forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     expandedCard = null;
     renderCards();
   });
 });
-
-// Sort
-document.getElementById('sort-select').addEventListener('change', (e) => {
-  activeSort = e.target.value;
-  renderCards();
-});
-
-// Initial render
+document.getElementById('sort-select').addEventListener('change', e => { activeSort = e.target.value; renderCards(); });
 renderCards();
+document.getElementById('model-count').textContent = vehicles.length;
 
-// ========================
-// CHECKLIST
-// ========================
 let checkedCount = 0;
-const totalItems = 32;
-
+const totalItems = document.querySelectorAll('.checklist-item').length;
 function toggleCheck(el) {
   el.classList.toggle('checked');
   checkedCount = document.querySelectorAll('.checklist-item.checked').length;
-  const pct = (checkedCount / totalItems) * 100;
-  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-fill').style.width = (checkedCount/totalItems)*100+'%';
   document.getElementById('progress-text').textContent = `${checkedCount} / ${totalItems} checked`;
 }
 
-// ========================
-// SCROLL REVEAL
-// ========================
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-    }
-  });
-}, { threshold: 0.1 });
-
+const observer = new IntersectionObserver(entries => { entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }); }, {threshold:0.1});
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-// ========================
-// COMPARISON BARS ANIMATION
-// ========================
-const barObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.querySelectorAll('.compare-bar-fill').forEach(bar => {
-        bar.style.width = bar.dataset.width + '%';
-      });
-    }
-  });
-}, { threshold: 0.2 });
-
+const barObserver = new IntersectionObserver(entries => { entries.forEach(e => { if(e.isIntersecting) e.target.querySelectorAll('.compare-bar-fill').forEach(b => { b.style.width = b.dataset.width+'%'; }); }); }, {threshold:0.2});
 document.querySelectorAll('.compare-category').forEach(el => barObserver.observe(el));
-
-// Init bars at 0
-document.querySelectorAll('.compare-bar-fill').forEach(bar => {
-  bar.style.width = '0%';
-});
+document.querySelectorAll('.compare-bar-fill').forEach(b => { b.style.width = '0%'; });
 </script>
-
 </body>
 </html>
