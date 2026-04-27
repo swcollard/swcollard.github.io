@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Current — A Primer on EV Charging & PHEV Ownership</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400&family=JetBrains+Mono:wght@400;500;700&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d0d0f;
+    --paper: #f4f1ea;
+    --paper-dim: #e8e3d6;
+    --rule: #1a1a1d;
+    --hot: #ff3b1f;       /* electric red-orange accent */
+    --volt: #d4ff3a;      /* high-voltage yellow-green */
+    --cool: #2563ff;      /* DC blue */
+    --muted: #6b6b6e;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter Tight', system-ui, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.55;
+    overflow-x: hidden;
+  }
+
+  /* ============ MASTHEAD ============ */
+  .masthead {
+    border-bottom: 2px solid var(--ink);
+    padding: 14px 32px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--paper);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .masthead .vol { color: var(--muted); }
+  .masthead nav { display: flex; gap: 22px; }
+  .masthead nav a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .masthead nav a:hover { border-bottom-color: var(--hot); }
+
+  /* ============ HERO ============ */
+  .hero {
+    padding: 60px 32px 80px;
+    border-bottom: 1px solid var(--ink);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: 0; right: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, var(--volt) 0%, transparent 60%);
+    opacity: 0.35;
+    filter: blur(40px);
+    pointer-events: none;
+  }
+  .hero .kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--hot);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero .kicker::before {
+    content: "";
+    width: 32px; height: 1px;
+    background: var(--hot);
+  }
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: clamp(48px, 9vw, 132px);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    max-width: 14ch;
+    margin-bottom: 32px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--hot);
+  }
+  .hero .deck {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(18px, 2.2vw, 24px);
+    font-weight: 400;
+    font-style: italic;
+    max-width: 60ch;
+    color: #2a2a2d;
+    line-height: 1.4;
+    border-left: 3px solid var(--ink);
+    padding-left: 20px;
+    margin-top: 20px;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 40px;
+    margin-top: 50px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .hero-meta div span {
+    display: block;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-size: 10px;
+  }
+
+  /* ============ SECTION CHROME ============ */
+  section { padding: 80px 32px; border-bottom: 1px solid var(--ink); position: relative; }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label .num {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 3px 8px;
+    font-weight: 700;
+  }
+
+  h2.section-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: clamp(36px, 5.5vw, 72px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    max-width: 18ch;
+    margin-bottom: 40px;
+  }
+
+  h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 28px;
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+
+  p { font-size: 16px; max-width: 65ch; }
+  p + p { margin-top: 14px; }
+
+  /* ============ CHARGING LEVELS ============ */
+  .levels-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    margin-top: 30px;
+    border: 1px solid var(--ink);
+  }
+  .level-card {
+    padding: 36px 28px;
+    border-right: 1px solid var(--ink);
+    background: var(--paper);
+    position: relative;
+    transition: background 0.3s;
+    cursor: pointer;
+  }
+  .level-card:last-child { border-right: none; }
+  .level-card:hover { background: var(--paper-dim); }
+  .level-card.l1 { border-top: 6px solid #999; }
+  .level-card.l2 { border-top: 6px solid var(--hot); }
+  .level-card.l3 { border-top: 6px solid var(--cool); }
+
+  .level-card .lvl-num {
+    font-family: 'Fraunces', serif;
+    font-size: 96px;
+    font-weight: 800;
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    margin-bottom: 8px;
+  }
+  .level-card .lvl-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .level-card h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 18px;
+  }
+  .level-card .stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 0;
+    border-top: 1px solid var(--ink);
+    padding-top: 18px;
+    margin-top: 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+  .level-card .stats span:nth-child(odd) {
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 10px;
+  }
+  .level-card .stats span:nth-child(even) { font-weight: 700; }
+  .level-card p { font-size: 14px; line-height: 1.5; margin-bottom: 12px; }
+
+  /* ============ CALCULATOR ============ */
+  .calculator {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 80px 32px;
+    border-bottom: 1px solid var(--ink);
+    position: relative;
+  }
+  .calculator::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+  .calculator * { position: relative; }
+  .calculator .section-label { color: var(--volt); }
+  .calculator .section-label .num { background: var(--volt); color: var(--ink); }
+  .calculator h2.section-title { color: var(--paper); }
+
+  .calc-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    margin-top: 40px;
+  }
+
+  .calc-controls label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 8px;
+    margin-top: 24px;
+  }
+  .calc-controls label:first-child { margin-top: 0; }
+
+  .calc-controls input[type="range"] {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    height: 30px;
+  }
+  .calc-controls input[type="range"]::-webkit-slider-runnable-track {
+    height: 2px;
+    background: #333;
+  }
+  .calc-controls input[type="range"]::-moz-range-track {
+    height: 2px;
+    background: #333;
+  }
+  .calc-controls input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    background: var(--volt);
+    border-radius: 0;
+    margin-top: -10px;
+    cursor: pointer;
+    box-shadow: 0 0 0 4px rgba(212,255,58,0.15);
+  }
+  .calc-controls input[type="range"]::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    background: var(--volt);
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+  }
+  .calc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 4px;
+  }
+  .calc-row .val {
+    font-family: 'Fraunces', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--volt);
+  }
+  .calc-row .val small {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #999;
+    margin-left: 4px;
+  }
+
+  .preset-btns {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  .preset-btns button {
+    background: transparent;
+    border: 1px solid #444;
+    color: var(--paper);
+    padding: 6px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .preset-btns button:hover { border-color: var(--volt); color: var(--volt); }
+  .preset-btns button.active { background: var(--volt); color: var(--ink); border-color: var(--volt); }
+
+  .calc-output {
+    border: 1px solid #333;
+    padding: 36px;
+    background: rgba(0,0,0,0.3);
+  }
+  .calc-output .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 8px;
+  }
+  .calc-output .big-num {
+    font-family: 'Fraunces', serif;
+    font-size: 88px;
+    font-weight: 800;
+    line-height: 0.9;
+    color: var(--volt);
+    letter-spacing: -0.03em;
+  }
+  .calc-output .big-num small {
+    font-size: 24px;
+    color: var(--paper);
+    font-weight: 400;
+    margin-left: 6px;
+  }
+  .calc-output .secondary {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px dashed #444;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+  .calc-output .secondary span { color: #999; }
+  .formula-box {
+    background: rgba(212,255,58,0.08);
+    border-left: 3px solid var(--volt);
+    padding: 20px 24px;
+    margin-top: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .formula-box strong { color: var(--volt); }
+
+  /* ============ CONNECTORS ============ */
+  .connector-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 1px solid var(--ink);
+    margin-top: 30px;
+  }
+  .conn-card {
+    padding: 28px 22px;
+    border-right: 1px solid var(--ink);
+    background: var(--paper);
+    cursor: pointer;
+    transition: background 0.25s;
+  }
+  .conn-card:last-child { border-right: none; }
+  .conn-card:hover { background: var(--paper-dim); }
+  .conn-card.active { background: var(--ink); color: var(--paper); }
+  .conn-card.active .conn-svg path,
+  .conn-card.active .conn-svg circle,
+  .conn-card.active .conn-svg rect { stroke: var(--volt); }
+
+  .conn-svg {
+    width: 100%;
+    height: 90px;
+    margin-bottom: 18px;
+  }
+  .conn-svg path, .conn-svg circle, .conn-svg rect {
+    stroke: var(--ink);
+    stroke-width: 1.5;
+    fill: none;
+    transition: stroke 0.25s;
+  }
+
+  .conn-card h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .conn-card .alias {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .conn-card.active .alias { color: var(--volt); }
+  .conn-card .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.7;
+    border-top: 1px solid currentColor;
+    padding-top: 12px;
+    margin-top: 12px;
+    opacity: 0.85;
+  }
+
+  .conn-detail {
+    margin-top: 32px;
+    padding: 36px;
+    background: var(--paper-dim);
+    border: 1px solid var(--ink);
+    display: none;
+  }
+  .conn-detail.show { display: block; animation: fadeUp 0.4s; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .conn-detail h3 { margin-bottom: 14px; }
+  .conn-detail .detail-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--ink);
+  }
+  .conn-detail .detail-grid div span {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .conn-detail .detail-grid div p {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* ============ COMPATIBILITY MATRIX ============ */
+  .matrix {
+    margin-top: 50px;
+    overflow-x: auto;
+  }
+  .matrix table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    min-width: 700px;
+  }
+  .matrix th, .matrix td {
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--ink);
+    border-right: 1px solid var(--ink);
+  }
+  .matrix th:last-child, .matrix td:last-child { border-right: none; }
+  .matrix th {
+    background: var(--ink);
+    color: var(--paper);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 10px;
+  }
+  .matrix tr:nth-child(even) td { background: var(--paper-dim); }
+  .matrix .yes { color: #1f7a3a; font-weight: 700; }
+  .matrix .no { color: #b03020; }
+  .matrix .adapter { color: #c47a00; font-weight: 700; }
+
+  /* ============ PHEV ============ */
+  .phev-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 60px;
+    margin-top: 30px;
+    align-items: start;
+  }
+  .phev-side {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 40px;
+    position: relative;
+  }
+  .phev-side::before {
+    content: "PHEV";
+    position: absolute;
+    top: 14px; right: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--volt);
+  }
+  .phev-side h3 { color: var(--paper); }
+  .phev-side ul {
+    list-style: none;
+    margin-top: 24px;
+  }
+  .phev-side li {
+    padding: 14px 0;
+    border-bottom: 1px solid #2a2a2d;
+    font-size: 14px;
+    line-height: 1.55;
+    display: flex;
+    gap: 14px;
+  }
+  .phev-side li:last-child { border-bottom: none; }
+  .phev-side li::before {
+    content: counter(list-counter, decimal-leading-zero);
+    counter-increment: list-counter;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--volt);
+    flex-shrink: 0;
+  }
+  .phev-side ul { counter-reset: list-counter; }
+  .phev-side strong { color: var(--volt); font-weight: 500; }
+
+  /* ============ PULL-QUOTE ============ */
+  .pull-quote {
+    padding: 100px 32px;
+    background: var(--volt);
+    border-bottom: 1px solid var(--ink);
+    text-align: center;
+  }
+  .pull-quote blockquote {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(28px, 4.5vw, 56px);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    max-width: 22ch;
+    margin: 0 auto;
+  }
+  .pull-quote cite {
+    display: block;
+    margin-top: 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-style: normal;
+    color: var(--ink);
+  }
+
+  /* ============ SOURCES ============ */
+  .sources {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 80px 32px;
+  }
+  .sources .section-label { color: var(--volt); }
+  .sources .section-label .num { background: var(--volt); color: var(--ink); }
+  .sources h2.section-title { color: var(--paper); }
+  .source-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    border-top: 1px solid #333;
+    margin-top: 30px;
+  }
+  .source-list a {
+    padding: 22px 0;
+    border-bottom: 1px solid #333;
+    color: var(--paper);
+    text-decoration: none;
+    display: flex;
+    gap: 18px;
+    transition: color 0.2s;
+  }
+  .source-list a:nth-child(odd) { padding-right: 30px; }
+  .source-list a:nth-child(even) { padding-left: 30px; border-left: 1px solid #333; }
+  .source-list a:hover { color: var(--volt); }
+  .source-list a:hover .src-num { background: var(--volt); color: var(--ink); }
+  .src-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    background: #2a2a2d;
+    color: var(--volt);
+    padding: 4px 8px;
+    height: fit-content;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .src-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .src-title {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    line-height: 1.3;
+  }
+
+  /* ============ FOOTER ============ */
+  footer {
+    padding: 30px 32px;
+    background: var(--ink);
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-top: 1px solid #333;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 900px) {
+    .levels-grid, .connector-grid { grid-template-columns: 1fr; }
+    .level-card, .conn-card { border-right: none; border-bottom: 1px solid var(--ink); }
+    .calc-wrap, .phev-grid { grid-template-columns: 1fr; gap: 40px; }
+    .source-list { grid-template-columns: 1fr; }
+    .source-list a:nth-child(odd) { padding-right: 0; }
+    .source-list a:nth-child(even) { padding-left: 0; border-left: none; }
+    .conn-detail .detail-grid { grid-template-columns: 1fr; }
+    .masthead nav { display: none; }
+    section, .calculator, .pull-quote, .sources { padding-left: 22px; padding-right: 22px; }
+  }
+
+  /* small caps utility */
+  .smallcaps {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* reading flow */
+  .lede {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    line-height: 1.5;
+    max-width: 60ch;
+    margin-bottom: 30px;
+  }
+  .lede::first-letter {
+    font-size: 64px;
+    font-weight: 800;
+    float: left;
+    line-height: 0.9;
+    margin: 6px 12px 0 0;
+    color: var(--hot);
+  }
+
+  /* superscript references */
+  sup.ref {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--hot);
+    margin-left: 2px;
+    vertical-align: super;
+    cursor: pointer;
+    font-weight: 700;
+  }
+
+  .columns-2 {
+    column-count: 2;
+    column-gap: 40px;
+    max-width: 100%;
+  }
+  .columns-2 p { max-width: none; break-inside: avoid; }
+  @media (max-width: 700px) { .columns-2 { column-count: 1; } }
+</style>
+</head>
+<body>
+
+<!-- ============ MASTHEAD ============ -->
+<header class="masthead">
+  <span class="vol">Vol. 01 / Issue 01 / The Field Guide</span>
+  <nav>
+    <a href="#levels">Levels</a>
+    <a href="#calculator">Calculator</a>
+    <a href="#connectors">Connectors</a>
+    <a href="#phev">PHEV</a>
+    <a href="#sources">Sources</a>
+  </nav>
+</header>
+
+<!-- ============ HERO ============ -->
+<div class="hero">
+  <div class="kicker">A Field Guide to Plugging In</div>
+  <h1>The <em>Current</em> State of Charging.</h1>
+  <p class="deck">
+    Everything you need to understand levels, kilowatts, plug shapes, and the chaotic transition to a single American standard — without the marketing fog.
+  </p>
+  <div class="hero-meta">
+    <div><span>Reading Time</span>~12 minutes</div>
+    <div><span>Region</span>United States</div>
+    <div><span>Last Updated</span>April 2026</div>
+  </div>
+</div>
+
+<!-- ============ SECTION 01: THE BASICS ============ -->
+<section id="basics">
+  <div class="section-label"><span class="num">01</span> The Basics</div>
+  <h2 class="section-title">Two currents. Three levels. One slow-motion standards war.</h2>
+
+  <p class="lede">
+    Every electric vehicle battery stores <strong>direct current</strong> (DC), but the grid delivers <strong>alternating current</strong> (AC). That single fact explains nearly everything about how charging works — including why "Level 1" and "Level 2" cap out where they do, why "Level 3" stations are massive refrigerator-sized boxes, and why charging your car at home is fundamentally different from charging on a road trip.<sup class="ref">1</sup>
+  </p>
+
+  <div class="columns-2">
+    <p>
+      When you plug into AC (Levels 1 and 2), your car's <em>onboard charger</em> does the work of converting AC into DC before it reaches the battery. That onboard charger has a fixed maximum capacity — usually somewhere between 6.6 kW and 11.5 kW for most consumer EVs — which is why a "22 kW" Level 2 wall unit doesn't actually make your car charge at 22 kW unless your car can accept it.<sup class="ref">8</sup>
+    </p>
+    <p>
+      DC fast charging (Level 3) skips the onboard charger entirely. The station itself houses the conversion hardware, then pipes DC directly into the battery pack. That's why DC stations can deliver 50, 150, even 350 kilowatts — and why they require utility-scale electrical service that no residential garage will ever have.<sup class="ref">3</sup>
+    </p>
+  </div>
+</section>
+
+<!-- ============ SECTION 02: LEVELS ============ -->
+<section id="levels">
+  <div class="section-label"><span class="num">02</span> The Three Levels</div>
+  <h2 class="section-title">From a wall outlet to a roadside firehose.</h2>
+
+  <div class="levels-grid">
+    <div class="level-card l1">
+      <div class="lvl-num">L1</div>
+      <div class="lvl-tag">Trickle / Overnight</div>
+      <h4>Standard Wall Outlet</h4>
+      <p>Plug the cable that came with your car into any standard 120-volt household outlet. No installation, no electrician.<sup class="ref">2</sup></p>
+      <p>Practical for PHEVs (small batteries) and EV drivers with very short commutes. Discouraged for full BEVs as a primary method.<sup class="ref">3</sup></p>
+      <div class="stats">
+        <span>Power</span><span>1.2 – 1.9 kW</span>
+        <span>Volts</span><span>120 V AC</span>
+        <span>Range/Hr</span><span>3 – 5 mi</span>
+        <span>Full BEV</span><span>22 – 50 hrs</span>
+        <span>Connector</span><span>J1772 / NACS</span>
+      </div>
+    </div>
+
+    <div class="level-card l2">
+      <div class="lvl-num">L2</div>
+      <div class="lvl-tag">Daily Driver</div>
+      <h4>240V Wall Charger</h4>
+      <p>The workhorse of EV ownership. Installed in homes, workplaces, hotels, and public lots. Requires a 240V circuit — the same kind a clothes dryer uses.<sup class="ref">2</sup></p>
+      <p>Most home units run 7.4 – 11.5 kW; commercial units can reach 19.2 kW (80A). Roughly 5 – 15× faster than Level 1.<sup class="ref">3</sup></p>
+      <div class="stats">
+        <span>Power</span><span>3 – 19.2 kW</span>
+        <span>Volts</span><span>208–240 V AC</span>
+        <span>Range/Hr</span><span>20 – 75 mi</span>
+        <span>Full BEV</span><span>4 – 10 hrs</span>
+        <span>Connector</span><span>J1772 / NACS</span>
+      </div>
+    </div>
+
+    <div class="level-card l3">
+      <div class="lvl-num">L3</div>
+      <div class="lvl-tag">DC Fast / Road Trip</div>
+      <h4>DC Fast Charging</h4>
+      <p>Found at highway corridors, retail centers, and dedicated charging hubs. Bypasses the car's onboard charger to feed DC straight to the battery.<sup class="ref">3</sup></p>
+      <p>Most EVs reach 80% in 20–40 minutes. Charging slows dramatically past 80% — battery management throttles current to prevent damage.<sup class="ref">9</sup></p>
+      <div class="stats">
+        <span>Power</span><span>50 – 350+ kW</span>
+        <span>Volts</span><span>400–800 V DC</span>
+        <span>Range/Hr</span><span>~200 mi/30min</span>
+        <span>20→80%</span><span>20 – 45 min</span>
+        <span>Connector</span><span>CCS / NACS / CHAdeMO</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CALCULATOR ============ -->
+<section class="calculator" id="calculator">
+  <div class="section-label"><span class="num">03</span> Interactive Calculator</div>
+  <h2 class="section-title">Time-to-charge, in your hands.</h2>
+  <p style="color:#bbb; max-width:60ch;">
+    Adjust the sliders. Pick a charging level. The math is straightforward: charging time equals the energy you need to add (kWh) divided by the power being delivered (kW), with a small efficiency penalty.
+  </p>
+
+  <div class="calc-wrap">
+    <div class="calc-controls">
+      <label>Battery Capacity</label>
+      <div class="calc-row">
+        <span class="smallcaps" style="color:#999">Total pack size</span>
+        <span class="val" id="batt-val">75<small>kWh</small></span>
+      </div>
+      <input type="range" id="battery" min="10" max="120" step="1" value="75" />
+      <div class="preset-btns">
+        <button data-batt="14">PHEV (14 kWh)</button>
+        <button data-batt="60">Compact EV</button>
+        <button data-batt="75" class="active">Mid-size</button>
+        <button data-batt="100">Long-range</button>
+        <button data-batt="120">Truck</button>
+      </div>
+
+      <label>Starting State of Charge</label>
+      <div class="calc-row">
+        <span class="smallcaps" style="color:#999">Current battery %</span>
+        <span class="val" id="start-val">20<small>%</small></span>
+      </div>
+      <input type="range" id="start" min="0" max="95" step="5" value="20" />
+
+      <label>Target State of Charge</label>
+      <div class="calc-row">
+        <span class="smallcaps" style="color:#999">Charge to %</span>
+        <span class="val" id="end-val">80<small>%</small></span>
+      </div>
+      <input type="range" id="end" min="10" max="100" step="5" value="80" />
+
+      <label>Charger Power Output</label>
+      <div class="calc-row">
+        <span class="smallcaps" style="color:#999">Real delivered kW</span>
+        <span class="val" id="kw-val">11<small>kW</small></span>
+      </div>
+      <input type="range" id="kw" min="1.4" max="350" step="0.1" value="11" />
+      <div class="preset-btns">
+        <button data-kw="1.4">L1 (1.4 kW)</button>
+        <button data-kw="7.4">L2 Home (7.4)</button>
+        <button data-kw="11" class="active">L2 Fast (11)</button>
+        <button data-kw="19.2">L2 Max (19.2)</button>
+        <button data-kw="50">DC 50</button>
+        <button data-kw="150">DC 150</button>
+        <button data-kw="350">DC 350</button>
+      </div>
+    </div>
+
+    <div class="calc-output">
+      <div class="label">Estimated Charging Time</div>
+      <div class="big-num"><span id="hours">4</span><small>hrs</small> <span id="mins">54</span><small>min</small></div>
+      <div class="secondary">
+        <div><span>Energy added:</span> <strong id="energy-added">45.0</strong> kWh</div>
+        <div><span>Approx. range gained:</span> <strong id="range-gained">155</strong> mi</div>
+        <div><span>Efficiency factor applied:</span> <strong id="eff-factor">90%</strong></div>
+        <div><span>Bottleneck:</span> <strong id="bottleneck">Charger output</strong></div>
+      </div>
+
+      <div class="formula-box">
+        <strong>The math:</strong><br/>
+        Time (hrs) = (Battery × ΔSoC) ÷ (kW × efficiency)<br/>
+        <br/>
+        AC charging is ~88–92% efficient (onboard converter losses). DC fast is ~92–95% efficient but tapers sharply past 80% SoC — real-world 0→100% takes far longer than the math suggests.<sup class="ref">3</sup>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONNECTORS ============ -->
+<section id="connectors">
+  <div class="section-label"><span class="num">04</span> The Plug Wars</div>
+  <h2 class="section-title">Four connectors. One messy transition.</h2>
+
+  <p style="margin-bottom: 30px;">
+    The U.S. currently has four EV connectors in active use: <strong>J1772</strong>, <strong>CCS1</strong>, <strong>CHAdeMO</strong>, and <strong>NACS</strong>. Beginning with model year 2025, virtually every automaker began transitioning to NACS — the connector Tesla developed in 2012 and opened to the industry in 2022.<sup class="ref">4</sup> Tap a connector below for details.
+  </p>
+
+  <div class="connector-grid" id="conn-grid">
+
+    <div class="conn-card" data-conn="j1772">
+      <svg class="conn-svg" viewBox="0 0 100 90">
+        <circle cx="50" cy="45" r="34"/>
+        <circle cx="35" cy="32" r="5"/>
+        <circle cx="65" cy="32" r="5"/>
+        <circle cx="35" cy="48" r="5"/>
+        <circle cx="65" cy="48" r="5"/>
+        <circle cx="50" cy="63" r="4"/>
+      </svg>
+      <h4>J1772</h4>
+      <div class="alias">SAE J1772 / Type 1</div>
+      <div class="meta">
+        AC ONLY · L1 + L2<br/>
+        Up to 19.2 kW
+      </div>
+    </div>
+
+    <div class="conn-card" data-conn="ccs">
+      <svg class="conn-svg" viewBox="0 0 100 90">
+        <path d="M 16 8 A 34 34 0 0 1 84 8 L 84 32 A 34 34 0 0 1 16 32 Z"/>
+        <circle cx="35" cy="18" r="4"/>
+        <circle cx="65" cy="18" r="4"/>
+        <circle cx="35" cy="28" r="4"/>
+        <circle cx="65" cy="28" r="4"/>
+        <circle cx="50" cy="38" r="3"/>
+        <circle cx="35" cy="60" r="7"/>
+        <circle cx="65" cy="60" r="7"/>
+      </svg>
+      <h4>CCS1</h4>
+      <div class="alias">Combined Charging System</div>
+      <div class="meta">
+        AC + DC · L1/L2/L3<br/>
+        Up to 350 kW
+      </div>
+    </div>
+
+    <div class="conn-card" data-conn="nacs">
+      <svg class="conn-svg" viewBox="0 0 100 90">
+        <circle cx="50" cy="45" r="28"/>
+        <circle cx="38" cy="33" r="3.5"/>
+        <circle cx="62" cy="33" r="3.5"/>
+        <circle cx="38" cy="57" r="3.5"/>
+        <circle cx="62" cy="57" r="3.5"/>
+        <circle cx="50" cy="45" r="3"/>
+      </svg>
+      <h4>NACS</h4>
+      <div class="alias">SAE J3400 / Tesla</div>
+      <div class="meta">
+        AC + DC · ALL LEVELS<br/>
+        Up to 250+ kW
+      </div>
+    </div>
+
+    <div class="conn-card" data-conn="chademo">
+      <svg class="conn-svg" viewBox="0 0 100 90">
+        <circle cx="50" cy="45" r="34"/>
+        <circle cx="50" cy="22" r="4"/>
+        <circle cx="32" cy="35" r="5"/>
+        <circle cx="68" cy="35" r="5"/>
+        <circle cx="32" cy="55" r="7"/>
+        <circle cx="68" cy="55" r="7"/>
+        <circle cx="50" cy="68" r="4"/>
+      </svg>
+      <h4>CHAdeMO</h4>
+      <div class="alias">Japanese Standard</div>
+      <div class="meta">
+        DC ONLY · L3<br/>
+        Up to 400 kW (declining)
+      </div>
+    </div>
+  </div>
+
+  <div class="conn-detail" id="conn-detail">
+    <h3 id="cd-title">Click a connector above</h3>
+    <p id="cd-desc"></p>
+    <div class="detail-grid">
+      <div><span>Used by</span><p id="cd-used"></p></div>
+      <div><span>Where you'll see it</span><p id="cd-where"></p></div>
+      <div><span>Status in the U.S.</span><p id="cd-status"></p></div>
+    </div>
+  </div>
+
+  <!-- COMPATIBILITY MATRIX -->
+  <div class="matrix">
+    <h3 style="margin-top:50px; margin-bottom:18px;">USA Compatibility Matrix (2026)</h3>
+    <p class="smallcaps" style="margin-bottom:20px;">Vehicle ports vs. station connectors. Adapter availability noted where applicable.<sup class="ref">10</sup></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Vehicle Brand / Era</th>
+          <th>Native Port</th>
+          <th>J1772 L2</th>
+          <th>CCS1 DCFC</th>
+          <th>Tesla Supercharger</th>
+          <th>CHAdeMO</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Tesla (all models)</td>
+          <td>NACS</td>
+          <td class="adapter">ADAPTER (incl.)</td>
+          <td class="adapter">ADAPTER ($230)</td>
+          <td class="yes">YES</td>
+          <td class="adapter">ADAPTER (~$300)</td>
+        </tr>
+        <tr>
+          <td>Ford / GM (2024 &amp; older)</td>
+          <td>CCS1</td>
+          <td class="yes">YES</td>
+          <td class="yes">YES</td>
+          <td class="adapter">NACS ADAPTER</td>
+          <td class="no">NO</td>
+        </tr>
+        <tr>
+          <td>Ford / GM (2025+)</td>
+          <td>NACS</td>
+          <td class="adapter">ADAPTER (incl.)</td>
+          <td class="adapter">ADAPTER</td>
+          <td class="yes">YES</td>
+          <td class="no">NO</td>
+        </tr>
+        <tr>
+          <td>Hyundai / Kia (through 2025)</td>
+          <td>CCS1</td>
+          <td class="yes">YES</td>
+          <td class="yes">YES</td>
+          <td class="adapter">NACS ADAPTER</td>
+          <td class="no">NO</td>
+        </tr>
+        <tr>
+          <td>Hyundai / Kia (2026+)</td>
+          <td>NACS</td>
+          <td class="adapter">ADAPTER (incl.)</td>
+          <td class="adapter">ADAPTER</td>
+          <td class="yes">YES</td>
+          <td class="no">NO</td>
+        </tr>
+        <tr>
+          <td>Rivian / Polestar / Volvo (2025+)</td>
+          <td>NACS</td>
+          <td class="adapter">ADAPTER (incl.)</td>
+          <td class="adapter">ADAPTER</td>
+          <td class="yes">YES</td>
+          <td class="no">NO</td>
+        </tr>
+        <tr>
+          <td>Nissan LEAF (all)</td>
+          <td>J1772 + CHAdeMO</td>
+          <td class="yes">YES</td>
+          <td class="no">NO</td>
+          <td class="no">NO RELIABLE ADAPTER</td>
+          <td class="yes">YES</td>
+        </tr>
+        <tr>
+          <td>Most PHEVs</td>
+          <td>J1772 (AC only)</td>
+          <td class="yes">YES</td>
+          <td class="no">NO (no DC capability)</td>
+          <td class="no">NO</td>
+          <td class="no">NO</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ PULL QUOTE ============ -->
+<div class="pull-quote">
+  <blockquote>
+    "By 2027, most new cars sold in North America will use NACS. The rest of us will be carrying adapters."
+  </blockquote>
+  <cite>— The Practical Reality of the Transition</cite>
+</div>
+
+<!-- ============ PHEV ============ -->
+<section id="phev">
+  <div class="section-label"><span class="num">05</span> PHEV Ownership</div>
+  <h2 class="section-title">The plug-in hybrid: best of both, if you actually plug it in.</h2>
+
+  <div class="phev-grid">
+    <div>
+      <h3>What a PHEV actually is</h3>
+      <p>
+        A plug-in hybrid (PHEV) sits between a regular hybrid and a full EV. It has both a gasoline engine and a battery pack big enough to drive 20–60 miles on electricity alone, and you can recharge that battery from any wall outlet.<sup class="ref">5</sup>
+      </p>
+      <p style="margin-top:14px;">
+        The math only works if you plug in regularly. Consumer Reports found that the Hyundai Tucson PHEV gets <em>4 fewer mpg</em> than the conventional hybrid version when driven with a depleted battery — meaning a PHEV owner who never charges is paying a premium for worse fuel economy.<sup class="ref">5</sup>
+      </p>
+
+      <h3 style="margin-top:36px;">Charging characteristics</h3>
+      <p>
+        Most PHEVs have small batteries (8–18 kWh) and ship with onboard chargers limited to 3.3–7.7 kW. That means even on a beefy Level 2 station, you'll only pull the speed your car can accept — and most PHEVs <strong>cannot use DC fast chargers at all</strong>.<sup class="ref">9</sup>
+      </p>
+      <p style="margin-top:14px;">
+        Practical numbers: Level 1 (120V) typically tops up a fully depleted PHEV in 5–10 hours overnight. Level 2 (240V) does the same job in 2–4 hours. For most owners, Level 1 is genuinely sufficient.<sup class="ref">9</sup>
+      </p>
+    </div>
+
+    <div class="phev-side">
+      <h3>Battery longevity rules</h3>
+      <p style="color:#bbb; font-size:14px; margin-top:8px;">Drawn from Kelley Blue Book, Consumer Reports, and the Illinois Alliance for Clean Transportation.<sup class="ref">6,7</sup></p>
+      <ul>
+        <li><div><strong>Stay in the 20–80% window</strong> for daily charging. Repeated 0% and 100% extremes accelerate degradation.</div></li>
+        <li><div><strong>Avoid frequent DC fast charging</strong> if your PHEV supports it. Kia estimates fast-charging can cost ~10% of battery life over 8 years vs. Level 2.<sup class="ref">6</sup></div></li>
+        <li><div><strong>Don't let it sit empty.</strong> Run the gas engine for 20–30 min every week or two if parked long-term, and keep the battery off zero.</div></li>
+        <li><div><strong>Pre-condition while plugged in.</strong> Heat or cool the cabin while still on shore power so you start the trip with full electric range.<sup class="ref">7</sup></div></li>
+        <li><div><strong>Cold weather costs range.</strong> PHEV electric range can drop ~34% in winter — heating the cabin is the largest single drain.</div></li>
+        <li><div><strong>Use regenerative braking</strong> deliberately. Smooth deceleration recovers more energy than coasting + brake pedal.</div></li>
+        <li><div><strong>Charge for your routine.</strong> If your daily drive fits inside the EV-only range, plug in nightly. If not, you're paying for capacity you don't use.</div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SOURCES ============ -->
+<section class="sources" id="sources">
+  <div class="section-label"><span class="num">06</span> Sources & Further Reading</div>
+  <h2 class="section-title">Read it from the people who actually know.</h2>
+  <div class="source-list">
+    <a href="https://afdc.energy.gov/vehicles/electric-basics-phev" target="_blank" rel="noopener">
+      <span class="src-num">01</span>
+      <div>
+        <div class="src-meta">U.S. Department of Energy — AFDC</div>
+        <div class="src-title">Plug-In Hybrid Electric Vehicles: How They Work</div>
+      </div>
+    </a>
+    <a href="https://blog.evbox.com/ev-charging-levels" target="_blank" rel="noopener">
+      <span class="src-num">02</span>
+      <div>
+        <div class="src-meta">EVBox</div>
+        <div class="src-title">EV Charging Levels Explained</div>
+      </div>
+    </a>
+    <a href="https://www.power-sonic.com/levels-of-ev-charging/" target="_blank" rel="noopener">
+      <span class="src-num">03</span>
+      <div>
+        <div class="src-meta">Power Sonic</div>
+        <div class="src-title">Levels of EV Charging Explained</div>
+      </div>
+    </a>
+    <a href="https://en.wikipedia.org/wiki/North_American_Charging_Standard" target="_blank" rel="noopener">
+      <span class="src-num">04</span>
+      <div>
+        <div class="src-meta">Wikipedia / SAE</div>
+        <div class="src-title">North American Charging Standard (SAE J3400)</div>
+      </div>
+    </a>
+    <a href="https://www.consumerreports.org/cars/hybrids-evs/is-a-plug-in-hybrid-vehicle-right-for-you-a9339147016/" target="_blank" rel="noopener">
+      <span class="src-num">05</span>
+      <div>
+        <div class="src-meta">Consumer Reports</div>
+        <div class="src-title">Is a Plug-In Hybrid the Right Car for You?</div>
+      </div>
+    </a>
+    <a href="https://www.kbb.com/car-advice/hybrid-battery-health-pro-tips/" target="_blank" rel="noopener">
+      <span class="src-num">06</span>
+      <div>
+        <div class="src-meta">Kelley Blue Book</div>
+        <div class="src-title">Hybrid Battery Health: 7 Pro Tips</div>
+      </div>
+    </a>
+    <a href="https://www.il-act.org/ev-and-phev-best-practices/" target="_blank" rel="noopener">
+      <span class="src-num">07</span>
+      <div>
+        <div class="src-meta">Illinois Alliance for Clean Transportation</div>
+        <div class="src-title">EV and PHEV Best Practices</div>
+      </div>
+    </a>
+    <a href="https://www.evinfrastructurenews.com/ev-technology/level-2-charger-amperage-guide-ev-charging-business" target="_blank" rel="noopener">
+      <span class="src-num">08</span>
+      <div>
+        <div class="src-meta">EV Infrastructure News</div>
+        <div class="src-title">Level 2 Charger Amperage Guide</div>
+      </div>
+    </a>
+    <a href="https://qmerit.com/blog/intro-to-level-1-and-level-2-ev-charging-at-home/" target="_blank" rel="noopener">
+      <span class="src-num">09</span>
+      <div>
+        <div class="src-meta">Qmerit</div>
+        <div class="src-title">Level 1 and Level 2 EV Charger Charging Times</div>
+      </div>
+    </a>
+    <a href="https://www.greencars.com/greencars-101/ev-charging-adapters" target="_blank" rel="noopener">
+      <span class="src-num">10</span>
+      <div>
+        <div class="src-meta">GreenCars</div>
+        <div class="src-title">EV Charging Connectors and Adapters Explained</div>
+      </div>
+    </a>
+    <a href="https://www.chargepoint.com/drivers/support/faqs/what-are-nacs-ccs-and-chademo-connectors-and-who-can-use-them" target="_blank" rel="noopener">
+      <span class="src-num">11</span>
+      <div>
+        <div class="src-meta">ChargePoint</div>
+        <div class="src-title">NACS, CCS &amp; CHAdeMO Connectors Explained</div>
+      </div>
+    </a>
+    <a href="https://www.bppulse.com/en-us/going-electric/know-before-you-charge-types-of-ev-charging-ports" target="_blank" rel="noopener">
+      <span class="src-num">12</span>
+      <div>
+        <div class="src-meta">bp pulse US</div>
+        <div class="src-title">EV Charging Ports Explained</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <span>The Current — A Field Guide</span>
+  <span>Compiled April 2026</span>
+</footer>
+
+<script>
+  // ============ CALCULATOR ============
+  const elBatt = document.getElementById('battery');
+  const elStart = document.getElementById('start');
+  const elEnd = document.getElementById('end');
+  const elKw = document.getElementById('kw');
+
+  const battVal = document.getElementById('batt-val');
+  const startVal = document.getElementById('start-val');
+  const endVal = document.getElementById('end-val');
+  const kwVal = document.getElementById('kw-val');
+
+  const hoursOut = document.getElementById('hours');
+  const minsOut = document.getElementById('mins');
+  const energyOut = document.getElementById('energy-added');
+  const rangeOut = document.getElementById('range-gained');
+  const effOut = document.getElementById('eff-factor');
+  const bottleneckOut = document.getElementById('bottleneck');
+
+  function updateCalc() {
+    const batt = parseFloat(elBatt.value);
+    let start = parseFloat(elStart.value);
+    let end = parseFloat(elEnd.value);
+    const kw = parseFloat(elKw.value);
+
+    // Ensure end > start
+    if (end <= start) {
+      end = Math.min(100, start + 5);
+      elEnd.value = end;
+    }
+
+    // Display values (with kW formatted nicely)
+    battVal.innerHTML = batt + '<small>kWh</small>';
+    startVal.innerHTML = start + '<small>%</small>';
+    endVal.innerHTML = end + '<small>%</small>';
+    kwVal.innerHTML = (kw < 10 ? kw.toFixed(1) : Math.round(kw)) + '<small>kW</small>';
+
+    // Energy required
+    const deltaPct = (end - start) / 100;
+    const energyAdded = batt * deltaPct;
+
+    // Efficiency: AC = ~0.90, DC = ~0.93
+    const isAC = kw <= 19.2;
+    const efficiency = isAC ? 0.90 : 0.93;
+
+    // For DC, charge tapers past 80% — apply a penalty if end > 80
+    let effectiveTime;
+    if (!isAC && end > 80) {
+      // Below 80: full speed. Above 80: ~half speed.
+      const energyTo80 = Math.max(0, batt * (Math.min(80, end) - start) / 100);
+      const energyAbove80 = Math.max(0, batt * (end - Math.max(80, start)) / 100);
+      effectiveTime = (energyTo80 / (kw * efficiency)) + (energyAbove80 / (kw * efficiency * 0.45));
+    } else {
+      effectiveTime = energyAdded / (kw * efficiency);
+    }
+
+    const totalMin = effectiveTime * 60;
+    const hh = Math.floor(totalMin / 60);
+    const mm = Math.round(totalMin % 60);
+
+    hoursOut.textContent = hh;
+    minsOut.textContent = mm.toString().padStart(2, '0');
+    energyOut.textContent = energyAdded.toFixed(1);
+
+    // Range estimate: avg ~3.45 mi/kWh for typical EV, ~3.2 for trucks/PHEVs
+    const miPerKwh = batt > 100 ? 2.8 : (batt < 20 ? 3.0 : 3.45);
+    rangeOut.textContent = Math.round(energyAdded * miPerKwh);
+
+    effOut.textContent = (efficiency * 100).toFixed(0) + '%';
+    bottleneckOut.textContent = isAC ?
+      (kw > 11.5 ? 'Likely car onboard charger' : 'Charger output') :
+      (end > 80 ? 'Battery taper above 80%' : 'Charger output');
+  }
+
+  [elBatt, elStart, elEnd, elKw].forEach(el => el.addEventListener('input', updateCalc));
+
+  // Preset buttons
+  document.querySelectorAll('[data-batt]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-batt]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      elBatt.value = btn.dataset.batt;
+      updateCalc();
+    });
+  });
+  document.querySelectorAll('[data-kw]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-kw]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      elKw.value = btn.dataset.kw;
+      updateCalc();
+    });
+  });
+
+  updateCalc();
+
+  // ============ CONNECTOR SELECTOR ============
+  const connectorData = {
+    j1772: {
+      title: "J1772 — The American AC Standard",
+      desc: "Officially SAE J1772 (also called the 'J plug' or 'Type 1'), this five-pin round connector has been the universal AC charging standard in North America for over a decade. It handles Level 1 (120V) and Level 2 (240V) charging only — no DC fast charging.",
+      used: "Every non-Tesla EV and PHEV sold in the U.S. through model year 2024. Also: every Tesla via the included adapter.",
+      where: "All home Level 2 chargers, workplace chargers, hotels, parking garages, and the AC side of older public stations.",
+      status: "Active and reliable. Will remain in service for decades — millions of vehicles use it. Even NACS-equipped 2025+ EVs ship with a J1772 adapter."
+    },
+    ccs: {
+      title: "CCS1 — The Combined System",
+      desc: "Combined Charging System Type 1 takes the J1772 plug and stacks two additional high-power DC pins beneath it. One inlet handles everything — overnight Level 2 sessions and 350 kW highway fast charging. The connector is bulky (about 2 in × 3 in) and requires both hands in winter conditions.",
+      used: "Ford, GM, Hyundai, Kia, VW, BMW, Volvo, Polestar, Rivian, Mercedes, Porsche — essentially every non-Tesla brand from 2012 through 2024 model years.",
+      where: "Electrify America, EVgo, ChargePoint DC, bp pulse — the entire non-Tesla DC fast charging network. Many stations now feature dual CCS+NACS cables.",
+      status: "Being phased out as new-vehicle standard during 2025–2027. Existing CCS1 vehicles will charge for their full service life. Tesla Superchargers added 'Magic Dock' CCS1 cables at select sites."
+    },
+    nacs: {
+      title: "NACS — The Tesla Standard, Now Universal",
+      desc: "Originally Tesla's proprietary connector (introduced 2012), opened to the industry in 2022, and standardized as SAE J3400 in 2023. Notably smaller and lighter than CCS1 — single compact inlet handles both AC and DC through shared pins. Up to 250 kW at current Superchargers, with V4 hardware capable of more.",
+      used: "All Tesla vehicles. Beginning model year 2025: Ford, GM, Rivian, Polestar, Volvo, Mercedes. Hyundai, Kia, Toyota, BMW, VW following in 2026 model years.",
+      where: "Tesla Supercharger network (largest DC network in the U.S.), Tesla Destination Chargers, and increasingly the major non-Tesla networks (Electrify America, EVgo, ChargePoint, FLO, BC Hydro all adding NACS cables).",
+      status: "Ascendant. Expected to become the dominant standard for both new vehicles and new station deployments by 2027."
+    },
+    chademo: {
+      title: "CHAdeMO — The Japanese Standard",
+      desc: "Developed by Japanese automakers and released before CCS, CHAdeMO is a DC-only fast charging connector. It pioneered bidirectional charging (vehicle-to-home/grid). The name is a pun: 'CHArge de MOve,' suggesting 'tea while you move.'",
+      used: "Nissan LEAF (all model years through 2025) and a small number of older Mitsubishi i-MiEV / Outlander PHEV vehicles. Almost no other manufacturer in the U.S.",
+      where: "A declining footprint. EVgo and a handful of legacy stations still maintain CHAdeMO cables, but new station builds rarely include them.",
+      status: "Sunsetting in North America. Nissan confirmed the next-generation LEAF will adopt NACS. Plan road trips around remaining stations using PlugShare."
+    }
+  };
+
+  const cards = document.querySelectorAll('.conn-card');
+  const detail = document.getElementById('conn-detail');
+  const cdTitle = document.getElementById('cd-title');
+  const cdDesc = document.getElementById('cd-desc');
+  const cdUsed = document.getElementById('cd-used');
+  const cdWhere = document.getElementById('cd-where');
+  const cdStatus = document.getElementById('cd-status');
+
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      cards.forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      const key = card.dataset.conn;
+      const data = connectorData[key];
+      cdTitle.textContent = data.title;
+      cdDesc.textContent = data.desc;
+      cdUsed.textContent = data.used;
+      cdWhere.textContent = data.where;
+      cdStatus.textContent = data.status;
+      detail.classList.add('show');
+    });
+  });
+
+  // Open the first one by default after a beat
+  setTimeout(() => cards[2].click(), 300);
+</script>
+</body>
+</html>
