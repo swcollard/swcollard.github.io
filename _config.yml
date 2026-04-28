@@ -1,12 +1,16 @@
-theme: jekyll-theme-minimal
 title: Samuel Collard
 description: Personal homepage for swcollard's blog and projects
 github_username: swcollard
-paginate: 5
 markdown: kramdown
 permalink: /:year/:title:output_ext
 
 plugins:
-  - jekyll-paginate
   - jekyll-sitemap
   - jekyll-seo-tag
+
+exclude:
+  - docs/
+  - .superpowers/
+  - Gemfile
+  - Gemfile.lock
+  - README.md
