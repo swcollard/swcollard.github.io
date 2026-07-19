@@ -1,16 +1,21 @@
 title: Samuel Collard
 description: Personal homepage for swcollard's blog and projects
 github_username: swcollard
+url: "https://www.samco.dev"
 markdown: kramdown
 permalink: /:year/:title:output_ext
 
 paginate: 5
 paginate_path: "/page:num/"
 
+feed:
+  posts_limit: 5
+
 plugins:
   - jekyll-paginate
   - jekyll-sitemap
   - jekyll-seo-tag
+  - jekyll-feed
 
 exclude:
   - docs/
