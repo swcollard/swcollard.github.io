@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OAuth From Zero</title>
+<meta name="description" content="An interactive beginner's guide to OAuth 2.0 and OpenID Connect: step through the Authorization Code flow with PKCE, build a request, decode a token and take a short quiz.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>:root{color-scheme:light}body{margin:0;padding:0}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one long course page. 66ch reading column, widgets run to 920px, sticky chapter rail on top. */
+:root{
+  --bg:#EDF1F0; --surface:#F8FAF9; --fg:#12201D; --muted:#4B5E5A; --line:#C3D0CD;
+  --accent:#0B6B5A; --accent-ink:#F4FBF9; --stamp:#B8340F; --code-bg:#E0E8E6;
+  --good:#17703A; --bad:#B3261E;
+  --font-display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
+  --font-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1614; --surface:#15211E; --fg:#E4EEEB; --muted:#9DB2AD; --line:#2A3B37;
+    --accent:#4FD1B2; --accent-ink:#072019; --stamp:#FF8F66; --code-bg:#1B2A27;
+    --good:#5BD38A; --bad:#FF8A80; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1614; --surface:#15211E; --fg:#E4EEEB; --muted:#9DB2AD; --line:#2A3B37;
+  --accent:#4FD1B2; --accent-ink:#072019; --stamp:#FF8F66; --code-bg:#1B2A27;
+  --good:#5BD38A; --bad:#FF8A80; color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:calc(120px + env(safe-area-inset-top,0px))}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16.5px;line-height:1.6;-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:30}
+h1,h2,h3,h4{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:1.12;letter-spacing:-0.01em}
+p{margin:0}
+a{color:var(--accent);text-underline-offset:3px}
+code{font-family:var(--font-mono);font-size:.88em;background:var(--code-bg);padding:.1em .35em;border-radius:3px;overflow-wrap:anywhere}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button{font:inherit;color:inherit}
+
+.wrap{max-width:920px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:4px 24px;padding-block:8px}
+.brand{font-family:var(--font-display);font-weight:700;font-size:1.1rem;letter-spacing:-0.01em;color:var(--fg);text-decoration:none;white-space:nowrap}
+.rail{display:flex;gap:2px;overflow-x:auto;flex:1 1 280px;min-width:0;scrollbar-width:thin}
+.rail a{flex:none;font-size:13.5px;font-weight:500;color:var(--muted);text-decoration:none;padding:7px 10px;border-radius:4px;white-space:nowrap}
+.rail a b{font-family:var(--font-mono);font-weight:500;margin-right:5px;color:var(--muted)}
+.rail a:hover{color:var(--fg)}
+.rail a[aria-current="true"]{background:var(--accent);color:var(--accent-ink)}
+.rail a[aria-current="true"] b{color:var(--accent-ink)}
+
+/* hero */
+.hero{padding-block:48px 44px}
+.eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.hero h1{font-size:clamp(2.3rem,7.4vw,4.3rem);font-weight:700;line-height:1.02;letter-spacing:-0.025em;margin-top:14px;max-width:16em}
+.hero h1 .hl{color:var(--accent)}
+.hero .lede{max-width:58ch;margin-top:20px;font-size:1.1rem;color:var(--fg)}
+.hero .meta{margin-top:12px;font-size:14px;color:var(--muted)}
+.cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:9px 18px;border-radius:4px;border:1px solid var(--fg);background:transparent;font-weight:600;font-size:15px;cursor:pointer;text-decoration:none;color:var(--fg)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:disabled{opacity:.4;cursor:default}
+.specimen{margin-top:36px}
+.specimen .cap{font-size:13px;color:var(--muted);margin-bottom:8px}
+
+/* generic blocks */
+.code{font-family:var(--font-mono);font-size:12.5px;line-height:1.55;background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:12px 14px;margin:0;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--fg)}
+.code .k{color:var(--accent);font-weight:500}
+.chapter{border-top:1px solid var(--line);padding-block:60px}
+.chapter-head{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.chapter-head h2{font-size:clamp(1.75rem,4.8vw,2.6rem);font-weight:700}
+.prose{display:flex;flex-direction:column;gap:1em;max-width:66ch}
+.stack{display:flex;flex-direction:column;gap:28px}
+.note{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px;max-width:66ch}
+.note .lab{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--stamp);font-weight:500;display:block;margin-bottom:4px}
+.widget{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:clamp(14px,3vw,24px)}
+.widget h3{font-size:1.2rem}
+.sub{font-size:14.5px;color:var(--muted)}
+.table-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;vertical-align:top;padding:11px 12px;border-bottom:1px solid var(--line)}
+tr:last-child th,tr:last-child td{border-bottom:0}
+thead th{background:var(--code-bg);font-family:var(--font-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:var(--muted)}
+tbody th{font-weight:600;font-size:14px;width:26%}
+
+/* roles */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.card .rfc{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--stamp);font-weight:500}
+.card h3{font-size:1.3rem}
+.card p{font-size:15px;color:var(--muted)}
+
+/* flow widget */
+.flow{display:grid;grid-template-columns:minmax(0,1fr);gap:20px}
+@media (min-width:800px){.flow{grid-template-columns:minmax(0,400px) minmax(0,1fr);gap:30px}}
+.seq{width:100%;height:auto;display:block;max-width:440px}
+.seq .life{stroke:var(--line);stroke-width:1.2;stroke-dasharray:3 4}
+.seq .actor{fill:var(--code-bg);stroke:var(--line)}
+.seq .an{font-family:var(--font-body);font-size:12px;font-weight:600;fill:var(--fg)}
+.seq .as{font-family:var(--font-body);font-size:10px;fill:var(--muted)}
+.seq .arr line{stroke:var(--muted);stroke-width:1.6;transition:stroke .2s}
+.seq .arr.front line{stroke-dasharray:5 4}
+.seq .arr polygon{fill:var(--muted)}
+.seq .arr .lbl{font-family:var(--font-body);font-size:11px;fill:var(--muted);stroke:var(--surface);stroke-width:4;paint-order:stroke}
+.seq .arr .num{font-family:var(--font-mono);font-size:10px;fill:var(--muted)}
+.seq .arr.past{opacity:.75}
+.seq .arr.future{opacity:.3}
+.seq .arr.now line{stroke:var(--accent);stroke-width:2.6}
+.seq .arr.now polygon{fill:var(--accent)}
+.seq .arr.now .lbl{fill:var(--accent);font-weight:600}
+.seq .arr.now .num{fill:var(--accent);font-weight:600}
+.legend{font-size:13px;color:var(--muted);margin-top:6px}
+.panel{display:flex;flex-direction:column;gap:12px;min-width:0}
+.ctrl{display:flex;flex-direction:column;gap:10px}
+.ctrl .row{display:flex;gap:8px}
+.ctrl .row .btn{flex:1}
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dot{width:36px;height:36px;border-radius:4px;border:1px solid var(--line);background:transparent;font-family:var(--font-mono);font-size:13px;cursor:pointer}
+.dot.seen{border-color:var(--accent);color:var(--accent)}
+.dot[aria-current="step"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.stepmeta{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.pill{font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;border:1px solid currentColor;border-radius:999px;padding:2px 10px;font-weight:500}
+.pill.front{color:var(--stamp)}
+.pill.back{color:var(--accent)}
+.pill.user{color:var(--muted)}
+.count{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+.panel h3{font-size:1.4rem}
+.plain{font-size:15.5px;border-top:1px solid var(--line);padding-top:12px}
+.plain b{color:var(--accent)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.two > div{min-width:0}
+.two h3{font-size:1.15rem;margin-bottom:6px}
+.two p{font-size:15.5px;color:var(--muted)}
+
+/* url explorer */
+.urlbox{font-family:var(--font-mono);font-size:13px;line-height:2;overflow-wrap:anywhere;background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:12px 14px}
+.urlbox .base{color:var(--muted)}
+.urlbox .amp{color:var(--muted)}
+.pbtn{font:inherit;background:transparent;border:1px solid transparent;border-bottom-color:var(--muted);border-radius:3px;padding:1px 3px;cursor:pointer;text-align:left;overflow-wrap:anywhere}
+.pbtn .pk{color:var(--accent);font-weight:500}
+.pbtn:hover{border-color:var(--accent)}
+.pbtn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.pbtn[aria-pressed="true"] .pk{color:var(--accent-ink)}
+.pdetail{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.pdetail h4{font-family:var(--font-mono);font-size:1rem;font-weight:500;color:var(--accent)}
+.pdetail .why{font-size:15.5px;color:var(--muted)}
+.build{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;margin-top:6px}
+@media (min-width:720px){.build{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.scopes{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;border:0}
+.scopes legend{font-weight:600;margin-bottom:8px;padding:0}
+.sc{display:flex;gap:10px;align-items:flex-start;min-height:44px;padding:8px 10px;border:1px solid var(--line);border-radius:6px;cursor:pointer;background:var(--bg)}
+.sc input{margin-top:5px;width:18px;height:18px;accent-color:var(--accent);flex:none}
+.sc .t{display:flex;flex-direction:column;min-width:0}
+.sc .t code{align-self:flex-start}
+.sc .t span{font-size:14.5px;color:var(--muted)}
+.risk{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--stamp);border:1px solid var(--stamp);border-radius:999px;padding:0 7px;margin-left:6px;font-weight:500}
+.consent{border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:16px;display:flex;flex-direction:column;gap:12px}
+.consent .cap{font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.consent h4{font-size:1.1rem}
+.consent ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;font-size:15px}
+.consent li::before{content:"+";font-family:var(--font-mono);color:var(--accent);margin-right:8px}
+.consent .warnline{font-size:14px;color:var(--stamp);font-weight:500}
+.consent .btns{display:flex;gap:8px}
+.consent .btns span{flex:1;text-align:center;padding:8px;border:1px solid var(--line);border-radius:4px;font-size:14px;color:var(--muted)}
+.consent .btns span.ok{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+.field{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.field label{font-weight:600;font-size:14.5px}
+.field input{font-family:var(--font-mono);font-size:13px;padding:10px 12px;border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--fg);width:100%;min-height:44px}
+.out{font-family:var(--font-mono);font-size:13px;background:var(--code-bg);border:1px solid var(--line);border-radius:4px;padding:10px 12px;overflow-wrap:anywhere;min-height:44px}
+.hint{font-size:13.5px;color:var(--muted)}
+.hint.bad{color:var(--stamp)}
+
+/* tokens */
+.defs{margin:0;display:flex;flex-direction:column;gap:10px}
+.defs div{display:flex;flex-direction:column;gap:1px}
+.defs dt{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.defs dd{margin:0;font-size:15.5px}
+
+/* jwt */
+.jwt{font-family:var(--font-mono);font-size:13px;line-height:1.6;overflow-wrap:anywhere;background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:12px 14px}
+.jwt .h{color:var(--accent)}
+.jwt .p{color:var(--stamp)}
+.jwt .s{color:var(--muted)}
+.dec{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;margin-top:12px}
+@media (min-width:720px){.dec{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.dec .lab{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.status{margin-top:12px;font-size:15px;font-weight:600;padding:10px 12px;border-radius:4px;border:1px solid currentColor}
+.status.ok{color:var(--good)}
+.status.no{color:var(--bad)}
+.checks{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:4px;max-width:66ch}
+
+/* picker */
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--line);border-radius:6px;background:var(--bg);cursor:pointer;min-height:44px}
+.opt input{margin-top:4px;width:18px;height:18px;accent-color:var(--accent);flex:none}
+.opt.on{border-color:var(--accent);background:var(--surface);outline:1px solid var(--accent)}
+.opt span{font-size:15px}
+.result{margin-top:16px;display:flex;flex-direction:column;gap:10px;padding-top:16px;border-top:1px solid var(--line)}
+.result h3{font-size:1.5rem}
+.result ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:4px;font-size:15.5px}
+
+/* pitfalls */
+.pit{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 28px;margin:0;padding:0;list-style:none}
+.pit li{padding:16px 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:4px;min-width:0}
+.pit h3{font-size:1.1rem}
+.pit .bad{font-size:15px;color:var(--muted)}
+.pit .fix{font-size:15px}
+.pit .fix b{color:var(--accent);font-weight:600}
+
+/* quiz */
+.q{display:flex;flex-direction:column;gap:10px;padding:18px 0;border-top:1px solid var(--line)}
+.q h3{font-size:1.15rem}
+.q .qn{font-family:var(--font-mono);font-size:12px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.choices{display:flex;flex-direction:column;gap:8px}
+.choice{text-align:left;min-height:44px;padding:10px 14px;border:1px solid var(--line);border-radius:6px;background:var(--surface);cursor:pointer;font-size:15.5px}
+.choice:hover:not(:disabled){border-color:var(--accent)}
+.choice:disabled{cursor:default;color:var(--fg)}
+.choice.right{border-color:var(--good);outline:1px solid var(--good)}
+.choice.wrong{border-color:var(--bad);outline:1px solid var(--bad)}
+.explain{font-size:15px;color:var(--muted)}
+.explain b.r{color:var(--good)}
+.explain b.w{color:var(--bad)}
+.scorebar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding-top:18px;border-top:1px solid var(--line)}
+.scorebar strong{font-family:var(--font-display);font-size:1.4rem}
+
+/* glossary */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px 32px;margin:0}
+.gloss div{min-width:0}
+.gloss dt{font-weight:600;font-family:var(--font-mono);font-size:14px;color:var(--accent)}
+.gloss dd{margin:2px 0 0;font-size:15px;color:var(--muted)}
+.reading{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
+.reading li{font-size:15.5px}
+.foot{border-top:1px solid var(--line);padding-block:28px 44px;font-size:13.5px;color:var(--muted)}
+.foot .wrap{display:flex;flex-direction:column;gap:6px}
+@media (max-width:560px){
+  .chapter{padding-block:44px}
+  .hero{padding-block:36px 32px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top">OAuth From Zero</a>
+    <nav class="rail" aria-label="Chapters">
+      <a href="#problem"><b>1</b>Problem</a>
+      <a href="#roles"><b>2</b>Roles</a>
+      <a href="#flow"><b>3</b>Flow</a>
+      <a href="#request"><b>4</b>Request</a>
+      <a href="#tokens"><b>5</b>Tokens</a>
+      <a href="#login"><b>6</b>Login</a>
+      <a href="#pick"><b>7</b>Pick a flow</a>
+      <a href="#pitfalls"><b>8</b>Pitfalls</a>
+      <a href="#quiz">Quiz</a>
+      <a href="#glossary">Glossary</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">A beginner's guide to OAuth 2.0</p>
+      <h1>Let an app use your account <span class="hl">without giving it your password.</span></h1>
+      <p class="lede">OAuth is what runs behind "Connect your account" and "Sign in with" buttons. This guide takes you from zero to reading a real authorization request. You will step through the full flow, build a request, decode a token and finish with a short quiz.</p>
+      <p class="meta">8 chapters. About 20 minutes. No code needed.</p>
+      <div class="cta">
+        <a class="btn primary" href="#problem">Start with chapter 1</a>
+        <a class="btn" href="#flow">Jump to the flow</a>
+      </div>
+      <div class="specimen">
+        <p class="cap">This is a real-looking OAuth request. By chapter 4 you will be able to read every part of it.</p>
+        <pre class="code" aria-label="Example OAuth authorization request"><span class="k">https://auth.snapshelf.example/authorize</span>
+?<span class="k">response_type</span>=code
+&amp;<span class="k">client_id</span>=printly-web-4821
+&amp;<span class="k">redirect_uri</span>=https%3A%2F%2Fprintly.example%2Fcallback
+&amp;<span class="k">scope</span>=photos.read%20profile
+&amp;<span class="k">state</span>=af0ifjsldkj
+&amp;<span class="k">code_challenge</span>=E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM
+&amp;<span class="k">code_challenge_method</span>=S256</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1 -->
+  <section class="chapter" id="problem">
+    <div class="wrap stack">
+      <div class="chapter-head">
+        <span class="eyebrow">Chapter 1</span>
+        <h2>The problem: handing over your password</h2>
+      </div>
+      <div class="prose">
+        <p>Imagine Printly is a service that prints photos, and your photos live at Snapshelf. Printly needs to read them. The old way to make that work was to give Printly your Snapshelf email and password.</p>
+        <p>That works, and it is a bad deal. Printly can now do everything you can do, including deleting every photo or changing your password. It keeps that power until you change the password, which also breaks every other app you trusted. Snapshelf cannot tell Printly's requests from yours.</p>
+        <p>OAuth replaces the password with a pass. Snapshelf gives Printly a token that opens only the doors you approved, expires on its own, and can be cancelled without touching anything else. Think of a valet key. It starts the car, and it will not open the trunk or the glovebox.</p>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th></th><th>Sharing your password</th><th>Using OAuth</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">What the app can do</th><td>Everything you can do</td><td>Only what you approved</td></tr>
+            <tr><th scope="row">How long it lasts</th><td>Until you change your password</td><td>Minutes to hours, then renewed or ended</td></tr>
+            <tr><th scope="row">Cutting it off</th><td>Change your password and break every other app</td><td>Revoke that one app</td></tr>
+            <tr><th scope="row">Who sees your password</th><td>Every app you shared it with</td><td>Only Snapshelf's own login page</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note">
+        <span class="lab">Keep this straight</span>
+        <p>OAuth handles authorization, which is what an app may do for you. Proving who you are is a different job called authentication. Chapter 6 covers the layer that adds it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section class="chapter" id="roles">
+    <div class="wrap stack">
+      <div class="chapter-head">
+        <span class="eyebrow">Chapter 2</span>
+        <h2>Four parts in every conversation</h2>
+      </div>
+      <p class="prose">The spec gives each part a formal name. You will see these names in documentation, so each card shows both.</p>
+      <div class="cards">
+        <article class="card"><span class="rfc">Resource owner</span><h3>You</h3><p>Own the photos and decide which apps may use them.</p></article>
+        <article class="card"><span class="rfc">Client</span><h3>Printly</h3><p>The app that wants access. It never sees your password.</p></article>
+        <article class="card"><span class="rfc">Authorization server</span><h3>Snapshelf login and consent</h3><p>Checks who you are, asks what you allow, and issues tokens.</p></article>
+        <article class="card"><span class="rfc">Resource server</span><h3>Snapshelf photo API</h3><p>Holds the photos. Answers a request only when it carries a valid token.</p></article>
+      </div>
+      <div class="prose">
+        <p>Small services often run the authorization server and the resource server together. They are still two separate jobs, and the flow treats them that way.</p>
+        <p>One thing happens before any of this. Printly's developer registers the app with Snapshelf and receives a <code>client_id</code>. The developer also lists the exact URLs Snapshelf may send users back to. That list matters in chapter 4.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section class="chapter" id="flow">
+    <div class="wrap stack">
+      <div class="chapter-head">
+        <span class="eyebrow">Chapter 3</span>
+        <h2>The flow, one step at a time</h2>
+      </div>
+      <p class="prose">This is the Authorization Code flow with PKCE. It is the one you will use for almost everything. Use the buttons or the arrow keys to move through it.</p>
+      <div class="widget flow" id="flowbox" tabindex="-1">
+        <div>
+          <svg id="seq" class="seq" viewBox="0 0 400 296" role="img" aria-label="Sequence diagram of the Authorization Code flow"></svg>
+          <p class="legend">Dashed arrows pass through your browser. Solid arrows are direct connections.</p>
+        </div>
+        <div class="panel">
+          <div class="ctrl">
+            <div class="row">
+              <button class="btn" id="btn-prev" type="button">Back</button>
+              <button class="btn primary" id="btn-next" type="button">Next</button>
+            </div>
+            <div class="dots" id="dots" role="group" aria-label="Jump to step"></div>
+          </div>
+          <div aria-live="polite" class="panel">
+            <div class="stepmeta"><span class="pill" id="st-pill"></span><span class="count" id="st-count"></span></div>
+            <h3 id="st-title"></h3>
+            <p id="st-text"></p>
+            <pre class="code" id="st-code" hidden></pre>
+            <p class="plain" id="st-plain"></p>
+          </div>
+        </div>
+      </div>
+      <div class="two">
+        <div>
+          <h3>The front channel</h3>
+          <p>Steps 2 and 4 travel through your browser. Anything in a redirect URL lands in history, logs and extensions, so it can leak. That is why this channel only carries a short-lived code that cannot do anything alone.</p>
+        </div>
+        <div>
+          <h3>The back channel</h3>
+          <p>Steps 5 to 8 go directly between servers over HTTPS. Nothing in your browser can see them. Tokens only ever travel here.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="chapter" id="request">
+    <div class="wrap stack">
+      <div class="chapter-head">
+        <span class="eyebrow">Chapter 4</span>
+        <h2>Reading the authorization request</h2>
+      </div>
+      <p class="prose">Step 2 sent your browser to Snapshelf with a long URL. Tap any piece of it below to see what it does and why it is there.</p>
+      <div class="widget">
+        <div class="urlbox" id="urlbox" role="group" aria-label="Authorization URL parts"></div>
+        <div class="pdetail" id="pdetail" aria-live="polite">
+          <h4 id="pd-key"></h4>
+          <code id="pd-val"></code>
+          <p id="pd-what"></p>
+          <p class="why" id="pd-why"></p>
+        </div>
+        <p class="hint" style="margin-top:12px">The odd characters such as <code>%3A%2F%2F</code> are punctuation made safe for URLs. <code>%20</code> is a space.</p>
+      </div>
+
+      <div class="prose">
+        <h3>Scopes decide what the consent screen says</h3>
+        <p>Tick some boxes. The scope part of the URL changes, and so does the screen Snapshelf shows you in step 3.</p>
+      </div>
+      <div class="widget">
+        <div class="build">
+          <fieldset class="scopes" id="scopelist"><legend>Permissions Printly asks for</legend></fieldset>
+          <div class="consent" id="consent" aria-live="polite"></div>
+        </div>
+        <p class="hint" style="margin-top:12px">Ask for the least you need. A leaked token can only do what its scopes allow.</p>
+      </div>
+
+      <div class="prose">
+        <h3>Try PKCE</h3>
+        <p>PKCE is pronounced "pixie". Printly invents a secret called the code verifier. It sends only the hash of that secret in step 2 and reveals the secret itself in step 5. Someone who steals the code from the redirect still lacks the verifier. Edit the verifier and watch the challenge change.</p>
+      </div>
+      <div class="widget">
+        <div class="field" style="margin-top:0">
+          <label for="verifier">code_verifier (kept private by Printly)</label>
+          <input id="verifier" type="text" value="dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk" autocomplete="off" autocapitalize="off" spellcheck="false">
+          <p class="hint" id="pkce-hint"></p>
+        </div>
+        <div class="field">
+          <label for="challenge">code_challenge = base64url( SHA-256( verifier ) ), sent in step 2</label>
+          <output class="out" id="challenge" for="verifier"></output>
+        </div>
+        <div class="cta" style="margin-top:14px">
+          <button class="btn" id="btn-rand" type="button">Generate a random verifier</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section class="chapter" id="tokens">
+    <div class="wrap stack">
+      <div class="chapter-head">
+        <span class="eyebrow">Chapter 5</span>
+        <h2>Access tokens and refresh tokens</h2>
+      </div>
+      <p class="prose">Step 6 returned two tokens. They have different jobs and different risks.</p>
+      <div class="cards">
+        <article class="card">
+          <span class="rfc">Access token</span>
+          <h3>The pass</h3>
+          <dl class="defs">
+            <div><dt>Used for</dt><dd>Calling the API</dd></div>
+            <div><dt>Lifetime</dt><dd>Short, often 5 to 60 minutes</dd></div>
+            <div><dt>Sent to</dt><dd>The resource server, in the Authorization header</dd></div>
+            <div><dt>If it leaks</dt><dd>Works until it expires, within its scopes</dd></div>
+          </dl>
+        </article>
+        <article class="card">
+          <span class="rfc">Refresh token</span>
+          <h3>The renewal slip</h3>
+          <dl class="defs">
+            <div><dt>Used for</dt><dd>Getting new access tokens without asking you again</dd></div>
+            <div><dt>Lifetime</dt><dd>Days to months, or until revoked</dd></div>
+            <div><dt>Sent to</dt><dd>Only the authorization server's token endpoint</dd></div>
+            <div><dt>If it leaks</dt><dd>Serious, so store it carefully and rotate it</dd></div>
+          </dl>
+        </article>
+      </div>
+      <div class="prose">
+        <p>When the access token expires, the API answers <code>401</code>. Printly then asks the token endpoint for a new one:</p>
+      </div>
+      <pre class="code" style="max-width:66ch">POST /token HTTP/1.1
+Host: auth.snapshelf.example
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=refresh_token
+&amp;refresh_token=tGzv3JOkF0XG5Qx2TlKWIA
+&amp;client_id=printly-web-4821</pre>
+      <div class="prose">
+        <p>This design pays off when you change your mind. Open Snapshelf's connected apps page and remove Printly. Snapshelf invalidates Printly's tokens, and nothing else in your account changes.</p>
+        <p>Many access tokens are opaque strings. Client apps should treat them as opaque and never try to read them. Only the API needs to understand what is inside.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section class="chapter" id="login">
+    <div class="wrap stack">
+      <div class="chapter-head">
+        <span class="eyebrow">Chapter 6</span>
+        <h2>Logging in with OpenID Connect</h2>
+      </div>
+      <div class="prose">
+        <p>Now suppose Printly also wants a "Sign in with Snapshelf" button. An access token cannot serve as proof of who you are. It is written for the API, and it tells the app very little about you.</p>
+        <p>OpenID Connect, usually shortened to OIDC, is a thin layer on top of OAuth that fixes this. Add the scope <code>openid</code> to the request and the token response includes an ID token. That is a signed JSON Web Token (JWT) that says who just logged in.</p>
+        <p>A JWT is three pieces joined by dots. Here is one, decoded in your browser.</p>
+      </div>
+      <div class="widget">
+        <div class="jwt" id="jwt-token" aria-label="Encoded ID token"></div>
+        <div class="dec">
+          <div><div class="lab" style="color:var(--accent)">Header</div><pre class="code" id="jwt-head"></pre></div>
+          <div><div class="lab" style="color:var(--stamp)">Payload</div><pre class="code" id="jwt-pay"></pre></div>
+        </div>
+        <div class="status ok" id="jwt-status" aria-live="polite"></div>
+        <div class="cta" style="margin-top:14px">
+          <button class="btn" id="btn-tamper" type="button">Change the email in the payload</button>
+        </div>
+        <p class="hint" style="margin-top:10px">The signature here is a placeholder, and the check is simulated. Real servers verify it with the issuer's public key.</p>
+      </div>
+      <div class="prose">
+        <p>Anyone can read a JWT. The signature does not hide the contents. It proves nobody changed them after Snapshelf signed it.</p>
+        <p>Before trusting an ID token, an app checks that:</p>
+      </div>
+      <ul class="checks">
+        <li>the signature is valid for the issuer's published key</li>
+        <li><code>iss</code> is the server you expected</li>
+        <li><code>aud</code> is your own <code>client_id</code></li>
+        <li><code>exp</code> is still in the future</li>
+        <li><code>nonce</code> matches the one you sent in the request</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section class="chapter" id="pick">
+    <div class="wrap stack">
+      <div class="chapter-head">
+        <span class="eyebrow">Chapter 7</span>
+        <h2>Which flow fits your app?</h2>
+      </div>
+      <p class="prose">OAuth defines several flows, called grant types. Pick the kind of app you are building.</p>
+      <div class="widget">
+        <div class="opts" id="picks" role="radiogroup" aria-label="Kind of app"></div>
+        <div class="result" id="pick-result" aria-live="polite"></div>
+      </div>
+      <div class="note">
+        <span class="lab">Skip these</span>
+        <p>Two older flows are discouraged by current security guidance. The implicit flow returned tokens in the URL. The password flow made apps collect your password, which brings back the original problem. The OAuth 2.1 draft drops both.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 -->
+  <section class="chapter" id="pitfalls">
+    <div class="wrap stack">
+      <div class="chapter-head">
+        <span class="eyebrow">Chapter 8</span>
+        <h2>Seven common mistakes</h2>
+      </div>
+      <p class="prose">Most OAuth security problems come from skipping one of the small checks you have already seen.</p>
+      <ul class="pit">
+        <li><h3>Skipping state</h3><p class="bad">An attacker can feed your app a callback for a login they started.</p><p class="fix"><b>Do this.</b> Generate a random value per request, store it in the session, and compare it on return.</p></li>
+        <li><h3>Loose redirect URIs</h3><p class="bad">Wildcards and prefix matches let attackers steer codes to their own pages.</p><p class="fix"><b>Do this.</b> Register exact URLs and require an exact string match.</p></li>
+        <li><h3>Tokens in URLs</h3><p class="bad">URLs end up in browser history, server logs and Referer headers.</p><p class="fix"><b>Do this.</b> Send access tokens only in the Authorization header.</p></li>
+        <li><h3>Secrets in front-end code</h3><p class="bad">Anything shipped to a browser or phone can be extracted, so a secret there is public.</p><p class="fix"><b>Do this.</b> Treat those apps as public clients. Use PKCE and keep secrets on a server.</p></li>
+        <li><h3>Using an access token as login</h3><p class="bad">It says an app may call an API. It does not say who is using the app.</p><p class="fix"><b>Do this.</b> Use OpenID Connect and validate the ID token.</p></li>
+        <li><h3>Asking for every scope</h3><p class="bad">Long consent screens scare users, and a leaked token can do more.</p><p class="fix"><b>Do this.</b> Request the minimum, and ask for more when a feature needs it.</p></li>
+        <li><h3>Long-lived access tokens</h3><p class="bad">A leaked token works until it expires.</p><p class="fix"><b>Do this.</b> Keep access tokens short and rotate refresh tokens.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- quiz -->
+  <section class="chapter" id="quiz">
+    <div class="wrap stack">
+      <div class="chapter-head">
+        <span class="eyebrow">Check yourself</span>
+        <h2>Six questions</h2>
+      </div>
+      <div id="quiz-list"></div>
+      <div class="scorebar" aria-live="polite">
+        <strong id="score">0 of 6 answered</strong>
+        <button class="btn" id="btn-reset-quiz" type="button">Start over</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- glossary -->
+  <section class="chapter" id="glossary">
+    <div class="wrap stack">
+      <div class="chapter-head">
+        <span class="eyebrow">Reference</span>
+        <h2>Glossary</h2>
+      </div>
+      <dl class="gloss">
+        <div><dt>Resource owner</dt><dd>The person who owns the data and grants access.</dd></div>
+        <div><dt>Client</dt><dd>The app asking for access.</dd></div>
+        <div><dt>Authorization server</dt><dd>Authenticates the user, collects consent and issues tokens.</dd></div>
+        <div><dt>Resource server</dt><dd>The API that holds the data and checks tokens.</dd></div>
+        <div><dt>Scope</dt><dd>A named permission, such as photos.read.</dd></div>
+        <div><dt>Consent</dt><dd>The screen where the user allows or denies the requested scopes.</dd></div>
+        <div><dt>Redirect URI</dt><dd>The pre-registered URL where the user returns after deciding.</dd></div>
+        <div><dt>Authorization code</dt><dd>A short-lived, single-use ticket traded for tokens.</dd></div>
+        <div><dt>Access token</dt><dd>The credential sent with API requests.</dd></div>
+        <div><dt>Refresh token</dt><dd>A long-lived credential used to get new access tokens.</dd></div>
+        <div><dt>Bearer token</dt><dd>A token that works for whoever holds it, so it must be protected.</dd></div>
+        <div><dt>ID token</dt><dd>An OpenID Connect JWT that says who logged in.</dd></div>
+        <div><dt>PKCE</dt><dd>A check that ties the code to the app that asked for it.</dd></div>
+        <div><dt>State</dt><dd>A random value that links the callback to the request that started it.</dd></div>
+        <div><dt>Public client</dt><dd>An app that cannot keep a secret, such as a mobile or single-page app.</dd></div>
+        <div><dt>Confidential client</dt><dd>An app with a server that can keep a client secret.</dd></div>
+        <div><dt>OIDC</dt><dd>OpenID Connect, the login layer built on OAuth 2.0.</dd></div>
+        <div><dt>Grant type</dt><dd>The name of a flow, such as authorization_code.</dd></div>
+      </dl>
+      <div class="prose">
+        <h3>Keep reading</h3>
+      </div>
+      <ul class="reading">
+        <li><a href="https://oauth.net/2/" rel="noopener">oauth.net/2</a>, the community overview of OAuth 2.0</li>
+        <li><a href="https://datatracker.ietf.org/doc/html/rfc6749" rel="noopener">RFC 6749</a>, the OAuth 2.0 framework</li>
+        <li><a href="https://datatracker.ietf.org/doc/html/rfc7636" rel="noopener">RFC 7636</a>, PKCE</li>
+        <li><a href="https://datatracker.ietf.org/doc/html/rfc9700" rel="noopener">RFC 9700</a>, current security best practice for OAuth 2.0</li>
+        <li><a href="https://openid.net/specs/openid-connect-core-1_0.html" rel="noopener">OpenID Connect Core</a></li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>Printly and Snapshelf are made up for this guide, and the .example addresses are reserved for documentation.</p>
+    <p>Sample codes, tokens and the PKCE pair come from the OAuth specs. None of them are real credentials.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var SVGNS="http://www.w3.org/2000/svg";
+function mk(tag,attrs,text){var e=document.createElementNS(SVGNS,tag);for(var k in attrs){e.setAttribute(k,attrs[k])}if(text!=null){e.textContent=text}return e}
+function h(tag,props,text){var e=document.createElement(tag);for(var k in props){if(k==="class"){e.className=props[k]}else{e.setAttribute(k,props[k])}}if(text!=null){e.textContent=text}return e}
+
+/* ---------- Chapter 3: flow stepper ---------- */
+var LANES=[
+  {x:50,a:"You",b:"browser"},
+  {x:150,a:"Printly",b:"the app"},
+  {x:250,a:"Snapshelf",b:"auth server"},
+  {x:350,a:"Snapshelf",b:"photo API"}
+];
+var STEPS=[
+  {f:0,t:1,label:"click Import",chan:"user",
+   title:"You ask Printly to import your photos",
+   text:"You click Import from Snapshelf inside Printly. Printly has no Snapshelf password for you and does not want one. It wants permission.",
+   code:"",
+   plain:"Printly is about to ask Snapshelf for a pass on your behalf."},
+  {f:1,t:2,label:"authorize URL",chan:"front",
+   title:"Printly sends you to Snapshelf",
+   text:"Printly makes two private values and keeps them: a random state and a secret called the code_verifier. Then it redirects your browser to Snapshelf's authorize address with the request you take apart in chapter 4.",
+   code:"HTTP/1.1 302 Found\nLocation: https://auth.snapshelf.example/authorize?response_type=code&client_id=printly-web-4821&redirect_uri=https%3A%2F%2Fprintly.example%2Fcallback&scope=photos.read%20profile&state=af0ifjsldkj&code_challenge=E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM&code_challenge_method=S256",
+   plain:"Printly points your browser at Snapshelf and says who it is and what it wants."},
+  {f:0,t:2,label:"log in, approve",chan:"user",
+   title:"You log in and approve, on Snapshelf",
+   text:"Your browser is now on Snapshelf's own domain. If you are not signed in, you type your password here. Snapshelf then shows what Printly asked for and lets you allow or deny it.",
+   code:"Printly wants to:\n  + View your photos\n  + See your name and avatar\n\n[ Deny ]   [ Allow ]",
+   plain:"Your password goes to Snapshelf and nowhere else. That is the point of the whole flow."},
+  {f:2,t:1,label:"redirect + code",chan:"front",
+   title:"Snapshelf sends you back with a code",
+   text:"If you allow, Snapshelf redirects your browser to the redirect_uri Printly registered. The URL carries an authorization code and the same state Printly sent. Printly checks that the state matches the one it saved. The code is single-use and expires quickly.",
+   code:"HTTP/1.1 302 Found\nLocation: https://printly.example/callback?code=SplxlOBeZQQYbYS6WxSbIA&state=af0ifjsldkj",
+   plain:"A one-time ticket, handed over through your browser. On its own it cannot open anything."},
+  {f:1,t:2,label:"code + verifier",chan:"back",
+   title:"Printly trades the code for a token",
+   text:"Printly's server now calls Snapshelf's token endpoint directly. It sends the code and the code_verifier it kept in step 2. Snapshelf hashes the verifier and compares it with the code_challenge from the first request. Server-side apps also send a client secret here to prove their identity.",
+   code:"POST /token HTTP/1.1\nHost: auth.snapshelf.example\nContent-Type: application/x-www-form-urlencoded\n\ngrant_type=authorization_code\n&code=SplxlOBeZQQYbYS6WxSbIA\n&redirect_uri=https://printly.example/callback\n&client_id=printly-web-4821\n&code_verifier=dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk",
+   plain:"Printly shows the ticket and proves it is the same app that asked in the first place."},
+  {f:2,t:1,label:"tokens",chan:"back",
+   title:"Snapshelf hands over the tokens",
+   text:"The response holds an access token that works for an hour and a refresh token for getting new ones. The scope field lists what was actually granted, which can be less than what was asked.",
+   code:"HTTP/1.1 200 OK\nContent-Type: application/json\n\n{\n  \"access_token\": \"2YotnFZFEjr1zCsicMWpAA\",\n  \"token_type\": \"Bearer\",\n  \"expires_in\": 3600,\n  \"refresh_token\": \"tGzv3JOkF0XG5Qx2TlKWIA\",\n  \"scope\": \"photos.read profile\"\n}",
+   plain:"Printly now has its pass. It never learned your password."},
+  {f:1,t:3,label:"Bearer token",chan:"back",
+   title:"Printly calls the photo API",
+   text:"Each request to the API carries the access token in the Authorization header. The word Bearer means anyone holding the token can use it, so it must stay private and travel only over HTTPS.",
+   code:"GET /v1/photos HTTP/1.1\nHost: api.snapshelf.example\nAuthorization: Bearer 2YotnFZFEjr1zCsicMWpAA",
+   plain:"Printly shows its pass at the door."},
+  {f:3,t:1,label:"photos",chan:"back",
+   title:"The API checks the token and answers",
+   text:"The API confirms the token is valid, unexpired and covers photos.read, then returns your photos. When the token expires the API answers 401, and Printly uses the refresh token to get a new one without bothering you.",
+   code:"HTTP/1.1 200 OK\nContent-Type: application/json\n\n[\n  {\"id\": \"ph_1\", \"title\": \"Lake at dawn\"},\n  {\"id\": \"ph_2\", \"title\": \"Market stall\"}\n]",
+   plain:"Printly gets the photos. Remove it from Snapshelf's connected apps page and its tokens stop working."}
+];
+var CHAN={front:"Front channel, through your browser",back:"Back channel, server to server",user:"You, in your browser"};
+var ROW0=74,GAP=29;
+var svg=$("#seq");
+(function build(){
+  LANES.forEach(function(l){svg.appendChild(mk("line",{x1:l.x,x2:l.x,y1:44,y2:290,"class":"life"}))});
+  LANES.forEach(function(l){
+    svg.appendChild(mk("rect",{x:l.x-44,y:6,width:88,height:36,rx:4,"class":"actor"}));
+    svg.appendChild(mk("text",{x:l.x,y:22,"text-anchor":"middle","class":"an"},l.a));
+    svg.appendChild(mk("text",{x:l.x,y:35,"text-anchor":"middle","class":"as"},l.b));
+  });
+  STEPS.forEach(function(s,i){
+    var y=ROW0+i*GAP,x1=LANES[s.f].x,x2=LANES[s.t].x,d=x2>x1?1:-1,tip=x2-d*2;
+    var g=mk("g",{"class":"arr future"+(s.chan==="front"?" front":"")});
+    g.appendChild(mk("line",{x1:x1+d*2,y1:y,x2:tip-d*7,y2:y}));
+    g.appendChild(mk("polygon",{points:tip+","+y+" "+(tip-d*8)+","+(y-4)+" "+(tip-d*8)+","+(y+4)}));
+    g.appendChild(mk("text",{x:(x1+x2)/2,y:y-6,"text-anchor":"middle","class":"lbl"},s.label));
+    g.appendChild(mk("text",{x:6,y:y+4,"class":"num"},String(i+1)));
+    svg.appendChild(g);
+  });
+})();
+var dotsBox=$("#dots"),dotBtns=[];
+STEPS.forEach(function(s,i){
+  var b=h("button",{"class":"dot",type:"button","aria-label":"Step "+(i+1)},String(i+1));
+  b.addEventListener("click",function(){showStep(i)});
+  dotsBox.appendChild(b);dotBtns.push(b);
+});
+var cur=0,btnPrev=$("#btn-prev"),btnNext=$("#btn-next");
+function showStep(i){
+  cur=Math.max(0,Math.min(STEPS.length-1,i));
+  var s=STEPS[cur];
+  $$(".arr",svg).forEach(function(g,k){
+    g.setAttribute("class","arr "+(k<cur?"past":k===cur?"now":"future")+(STEPS[k].chan==="front"?" front":""));
+  });
+  dotBtns.forEach(function(b,k){
+    b.className="dot"+(k<cur?" seen":"");
+    if(k===cur){b.setAttribute("aria-current","step")}else{b.removeAttribute("aria-current")}
+  });
+  var pill=$("#st-pill");pill.className="pill "+s.chan;pill.textContent=CHAN[s.chan];
+  $("#st-count").textContent="Step "+(cur+1)+" of "+STEPS.length;
+  $("#st-title").textContent=s.title;
+  $("#st-text").textContent=s.text;
+  var code=$("#st-code");
+  if(s.code){code.hidden=false;code.textContent=s.code}else{code.hidden=true;code.textContent=""}
+  var pl=$("#st-plain");pl.textContent="";
+  pl.appendChild(h("b",{},"In plain words: "));pl.appendChild(document.createTextNode(s.plain));
+  btnPrev.disabled=cur===0;
+  btnNext.textContent=cur===STEPS.length-1?"Start over":"Next";
+}
+btnPrev.addEventListener("click",function(){showStep(cur-1)});
+btnNext.addEventListener("click",function(){showStep(cur===STEPS.length-1?0:cur+1)});
+$("#flowbox").addEventListener("keydown",function(e){
+  if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+  if(e.key==="ArrowRight"){showStep(cur+1);e.preventDefault()}
+  else if(e.key==="ArrowLeft"){showStep(cur-1);e.preventDefault()}
+});
+showStep(0);
+
+/* ---------- Chapter 4: URL explorer ---------- */
+var BASE="https://auth.snapshelf.example/authorize";
+var SCOPES=[
+  {id:"photos.read",desc:"View your photos",plain:"View your photos"},
+  {id:"photos.write",desc:"Add and edit photos",plain:"Add and edit your photos"},
+  {id:"photos.delete",desc:"Permanently delete photos",plain:"Permanently delete your photos",risk:true},
+  {id:"profile",desc:"Your name and avatar",plain:"See your name and avatar"},
+  {id:"email",desc:"Your email address",plain:"See your email address"}
+];
+var picked={"photos.read":true,"profile":true};
+var PARAMS=[
+  {k:"response_type",v:function(){return "code"},
+   what:"Tells Snapshelf which kind of answer Printly wants. The value code asks for an authorization code, the ticket from step 4.",
+   why:"Older flows asked for a token right here, which put the token in the URL where it could leak. Asking for a code first keeps tokens off the redirect."},
+  {k:"client_id",v:function(){return "printly-web-4821"},
+   what:"Printly's public ID. Snapshelf issued it when Printly's developer registered the app.",
+   why:"Snapshelf uses it to look up the app's name for the consent screen and the redirect URLs registered for it. It is public, so never treat it as a secret."},
+  {k:"redirect_uri",v:function(){return encodeURIComponent("https://printly.example/callback")},
+   what:"Where Snapshelf sends your browser after you decide. It is shown percent-encoded, the way it travels in a real URL.",
+   why:"The server compares it with the list registered in advance and requires an exact match. Without that check, an attacker could swap in their own site and receive your code."},
+  {k:"scope",v:function(){var a=SCOPES.filter(function(s){return picked[s.id]}).map(function(s){return encodeURIComponent(s.id)});return a.join("%20")},
+   what:"The permissions Printly asks for, separated by spaces. Snapshelf builds the consent screen from this list.",
+   why:"Scopes cap the damage. A token limited to photos.read cannot delete anything, even if it leaks. Ask only for what the feature needs."},
+  {k:"state",v:function(){return "af0ifjsldkj"},
+   what:"A random value Printly makes up and stores before the redirect. Snapshelf returns it unchanged.",
+   why:"When you come back, Printly checks that the value matches. That blocks cross-site request forgery, where an attacker hands your browser a callback for a login they started."},
+  {k:"code_challenge",v:function(){return "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM"},
+   what:"A fingerprint, the SHA-256 hash, of a secret called the code_verifier that Printly keeps.",
+   why:"This is PKCE. The matching secret is revealed only in step 5, over the back channel. A stolen code alone is useless."},
+  {k:"code_challenge_method",v:function(){return "S256"},
+   what:"How the challenge was made. S256 means SHA-256.",
+   why:"Always use S256. The other option, plain, sends the secret as it is and defeats the purpose."}
+];
+var selParam=0,urlbox=$("#urlbox");
+function renderUrl(){
+  urlbox.textContent="";
+  urlbox.appendChild(h("span",{"class":"base"},BASE));
+  urlbox.appendChild(h("span",{"class":"amp"},"?"));
+  PARAMS.forEach(function(p,i){
+    if(i>0){urlbox.appendChild(h("span",{"class":"amp"},"&​"))}
+    var b=h("button",{"class":"pbtn",type:"button","aria-pressed":String(i===selParam)});
+    b.appendChild(h("span",{"class":"pk"},p.k));
+    b.appendChild(document.createTextNode("="+p.v()));
+    b.addEventListener("click",function(){selParam=i;renderUrl();renderDetail()});
+    urlbox.appendChild(b);
+  });
+}
+function renderDetail(){
+  var p=PARAMS[selParam],v=p.v();
+  $("#pd-key").textContent=p.k;
+  $("#pd-val").textContent=v===""?"(empty)":v;
+  $("#pd-what").textContent=p.what;
+  $("#pd-why").textContent="Why it matters: "+p.why;
+}
+function renderConsent(){
+  var c=$("#consent");c.textContent="";
+  c.appendChild(h("span",{"class":"cap"},"Mock consent screen"));
+  var chosen=SCOPES.filter(function(s){return picked[s.id]});
+  c.appendChild(h("h4",{},"Printly wants access to your Snapshelf account"));
+  if(chosen.length===0){
+    c.appendChild(h("p",{"class":"hint"},"No scopes selected. Many servers reject this request or apply a default."));
+  }else{
+    var ul=h("ul",{});
+    chosen.forEach(function(s){ul.appendChild(h("li",{},s.plain))});
+    c.appendChild(ul);
+  }
+  if(picked["photos.delete"]){c.appendChild(h("p",{"class":"warnline"},"Printly will be able to permanently delete photos. Approve only if that is expected."))}
+  var bt=h("div",{"class":"btns","aria-hidden":"true"});
+  bt.appendChild(h("span",{},"Deny"));bt.appendChild(h("span",{"class":"ok"},"Allow"));
+  c.appendChild(bt);
+}
+var sl=$("#scopelist");
+SCOPES.forEach(function(s){
+  var lab=h("label",{"class":"sc"});
+  var cb=h("input",{type:"checkbox",id:"sc-"+s.id.replace(/\./g,"-")});
+  cb.checked=!!picked[s.id];
+  cb.addEventListener("change",function(){picked[s.id]=cb.checked;renderUrl();renderDetail();renderConsent()});
+  var t=h("span",{"class":"t"});
+  var line=h("span",{});
+  line.style.display="flex";line.style.alignItems="center";line.style.flexWrap="wrap";
+  line.appendChild(h("code",{},s.id));
+  if(s.risk){line.appendChild(h("span",{"class":"risk"},"High risk"))}
+  t.appendChild(line);t.appendChild(h("span",{},s.desc));
+  lab.appendChild(cb);lab.appendChild(t);sl.appendChild(lab);
+});
+renderUrl();renderDetail();renderConsent();
+
+/* PKCE */
+function b64u(bytes){var s="";for(var i=0;i<bytes.length;i++){s+=String.fromCharCode(bytes[i])}return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}
+function strB64u(str){return b64u(new TextEncoder().encode(str))}
+var vIn=$("#verifier"),cOut=$("#challenge"),pHint=$("#pkce-hint");
+function updPkce(){
+  var v=vIn.value,n=v.length;
+  if(n<43||n>128){pHint.className="hint bad";pHint.textContent=n+" characters. The spec requires 43 to 128."}
+  else{pHint.className="hint";pHint.textContent=n+" characters. The spec allows 43 to 128."}
+  if(!(window.crypto&&window.crypto.subtle)){cOut.textContent="The Web Crypto API is unavailable in this view.";return}
+  window.crypto.subtle.digest("SHA-256",new TextEncoder().encode(v)).then(function(buf){
+    cOut.textContent=b64u(new Uint8Array(buf));
+  }).catch(function(){cOut.textContent="The hash could not be computed here."});
+}
+vIn.addEventListener("input",updPkce);
+$("#btn-rand").addEventListener("click",function(){
+  try{
+    var a=new Uint8Array(32);window.crypto.getRandomValues(a);vIn.value=b64u(a);updPkce();
+  }catch(e){pHint.className="hint bad";pHint.textContent="Random values are unavailable in this view."}
+});
+updPkce();
+
+/* ---------- Chapter 6: JWT ---------- */
+var HDR={alg:"RS256",typ:"JWT",kid:"snapshelf-2026-10"};
+var PAY={iss:"https://auth.snapshelf.example",sub:"user_8f3a21",aud:"printly-web-4821",iat:1793310000,exp:1793313600,nonce:"n-0S6_WzA2Mj",name:"Sam Rivera",email:"sam@example.com"};
+var SIG="Qm9ndXNTaWduYXR1cmVGb3JEZW1vT25seS1ub3RSZWFs";
+var tampered=false;
+function renderJwt(){
+  var pay=JSON.parse(JSON.stringify(PAY));
+  if(tampered){pay.email="mallory@evil.example"}
+  var tok=$("#jwt-token");tok.textContent="";
+  tok.appendChild(h("span",{"class":"h"},strB64u(JSON.stringify(HDR))));
+  tok.appendChild(document.createTextNode("."));
+  tok.appendChild(h("span",{"class":"p"},strB64u(JSON.stringify(pay))));
+  tok.appendChild(document.createTextNode("."));
+  tok.appendChild(h("span",{"class":"s"},SIG));
+  $("#jwt-head").textContent=JSON.stringify(HDR,null,2);
+  $("#jwt-pay").textContent=JSON.stringify(pay,null,2)+"\n\n// exp = "+new Date(PAY.exp*1000).toUTCString();
+  var st=$("#jwt-status");
+  if(tampered){st.className="status no";st.textContent="Signature check failed. The payload changed after signing, so the API would reject this token."}
+  else{st.className="status ok";st.textContent="Signature check passed. The payload is what Snapshelf signed."}
+  $("#btn-tamper").textContent=tampered?"Undo the change":"Change the email in the payload";
+}
+$("#btn-tamper").addEventListener("click",function(){tampered=!tampered;renderJwt()});
+renderJwt();
+
+/* ---------- Chapter 7: picker ---------- */
+var PICKS=[
+  {id:"web",label:"A website with its own server",
+   name:"Authorization Code flow with PKCE",grant:"authorization_code",
+   why:"The user logs in at the authorization server, and your server trades the code for tokens on the back channel.",
+   tips:["Keep the client secret on the server only.","Use PKCE as well. It costs little and closes a real gap.","Store tokens server-side and give the browser a normal session cookie."]},
+  {id:"spa",label:"A single-page app or a mobile or desktop app",
+   name:"Authorization Code flow with PKCE, no client secret",grant:"authorization_code",
+   why:"These apps are public clients. Anything inside them can be extracted, so PKCE does the job a secret would do.",
+   tips:["On phones, use the system browser for login rather than an embedded web view.","For a single-page app, a small backend that holds the tokens keeps them out of the browser.","Register a redirect URI your app can actually receive."]},
+  {id:"svc",label:"A backend job acting as itself, with no user",
+   name:"Client Credentials flow",grant:"client_credentials",
+   why:"There is no person to ask. The service proves its own identity with its client ID and secret and gets a token for itself.",
+   tips:["No consent screen and no refresh token.","Request narrow scopes for each job.","Rotate the secret on a schedule."]},
+  {id:"tv",label:"A TV, console or gadget with no keyboard",
+   name:"Device Authorization flow",grant:"urn:ietf:params:oauth:grant-type:device_code",
+   why:"The device shows a short code and a web address. You finish the login on your phone, and the device polls until it gets a token.",
+   tips:["Show the code and address in large type.","Poll at the interval the server returns, and stop when the code expires.","Defined in RFC 8628."]}
+];
+var picks=$("#picks"),pres=$("#pick-result");
+function showPick(p){
+  pres.textContent="";
+  pres.appendChild(h("h3",{},p.name));
+  var c=h("p",{});c.appendChild(document.createTextNode("grant_type = "));c.appendChild(h("code",{},p.grant));pres.appendChild(c);
+  pres.appendChild(h("p",{},p.why));
+  var ul=h("ul",{});p.tips.forEach(function(t){ul.appendChild(h("li",{},t))});pres.appendChild(ul);
+}
+PICKS.forEach(function(p,i){
+  var lab=h("label",{"class":"opt"});
+  var r=h("input",{type:"radio",name:"apptype",value:p.id,id:"pick-"+p.id});
+  var sp=h("span",{},p.label);
+  r.addEventListener("change",function(){
+    $$(".opt",picks).forEach(function(o){o.classList.remove("on")});
+    lab.classList.add("on");showPick(p);
+  });
+  lab.appendChild(r);lab.appendChild(sp);picks.appendChild(lab);
+  if(i===0){r.checked=true;lab.classList.add("on");showPick(p)}
+});
+
+/* ---------- Quiz ---------- */
+var QS=[
+  {q:"What job does OAuth do?",
+   o:["Proves who you are to a website","Lets an app act on your account with limited, revocable permission","Encrypts traffic between your browser and a server","Stores your passwords safely"],
+   a:1,e:"OAuth delegates access. Proving identity is authentication, which OpenID Connect adds on top. Encryption in transit is HTTPS."},
+  {q:"In the flow you stepped through, where do you type your Snapshelf password?",
+   o:["Into Printly's login form","On Snapshelf's own login page","Into the API request header","Nowhere, OAuth removes the password"],
+   a:1,e:"The password goes only to the authorization server. You still log in there, and the app never sees it."},
+  {q:"What does the state parameter protect against?",
+   o:["Someone reading your scopes","Forged callbacks, also called cross-site request forgery","Expired access tokens","Stolen refresh tokens"],
+   a:1,e:"Printly saves a random state before the redirect and checks it on return. A callback for a login someone else started will not match."},
+  {q:"Why does Printly swap the code for a token over a back channel?",
+   o:["Tokens are too large for a URL","Redirects through the browser can leak, so only a short-lived code goes that way","The API does not support browsers","To skip the consent screen"],
+   a:1,e:"Browser history, logs and extensions can see redirect URLs. The code is useless alone, and the token travels only server to server."},
+  {q:"A mobile app has no server of its own. Which flow fits?",
+   o:["Client Credentials","Implicit","Authorization Code with PKCE","Resource Owner Password"],
+   a:2,e:"Mobile apps are public clients. Authorization Code with PKCE protects the code without a stored secret. The other three are for services or are discouraged."},
+  {q:"Which token does Printly send with every API request?",
+   o:["The access token","The refresh token","The authorization code","The client ID"],
+   a:0,e:"The access token goes to the resource server. The refresh token goes only to the token endpoint, and the code is used once."}
+];
+var qlist=$("#quiz-list"),answered=0,correct=0,qEls=[];
+function updScore(){
+  var s=$("#score");
+  if(answered<QS.length){s.textContent=answered+" of "+QS.length+" answered"}
+  else{s.textContent="You got "+correct+" of "+QS.length+" right"}
+}
+function buildQuiz(){
+  qlist.textContent="";answered=0;correct=0;qEls=[];
+  QS.forEach(function(item,qi){
+    var box=h("div",{"class":"q"});
+    box.appendChild(h("span",{"class":"qn"},"Question "+(qi+1)));
+    box.appendChild(h("h3",{},item.q));
+    var cs=h("div",{"class":"choices"});
+    var ex=h("p",{"class":"explain"});ex.hidden=true;
+    var btns=[];
+    item.o.forEach(function(txt,oi){
+      var b=h("button",{"class":"choice",type:"button"},txt);
+      b.addEventListener("click",function(){
+        btns.forEach(function(x,k){
+          x.disabled=true;
+          if(k===item.a){x.classList.add("right")}
+        });
+        var ok=oi===item.a;
+        if(!ok){b.classList.add("wrong")}
+        ex.textContent="";
+        ex.appendChild(h("b",{"class":ok?"r":"w"},ok?"Correct. ":"Not quite. "));
+        ex.appendChild(document.createTextNode(item.e));
+        ex.hidden=false;
+        answered++;if(ok)correct++;updScore();
+      });
+      btns.push(b);cs.appendChild(b);
+    });
+    box.appendChild(cs);box.appendChild(ex);qlist.appendChild(box);
+  });
+  updScore();
+}
+$("#btn-reset-quiz").addEventListener("click",buildQuiz);
+buildQuiz();
+
+/* ---------- Chapter rail highlight ---------- */
+(function(){
+  var links=$$(".rail a"),map={};
+  links.forEach(function(a){map[a.getAttribute("href").slice(1)]=a});
+  if(!("IntersectionObserver" in window))return;
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){
+        links.forEach(function(a){a.removeAttribute("aria-current")});
+        var a=map[en.target.id];
+        if(a){
+          a.setAttribute("aria-current","true");
+          var rail=a.parentNode;
+          if(rail.scrollWidth>rail.clientWidth){rail.scrollLeft=a.offsetLeft-rail.clientWidth/2+a.clientWidth/2}
+        }
+      }
+    });
+  },{rootMargin:"-25% 0px -65% 0px"});
+  $$("section.chapter").forEach(function(s){io.observe(s)});
+})();
+})();
+</script>
+
+</body>
+</html>
